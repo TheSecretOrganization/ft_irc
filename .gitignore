@@ -2,6 +2,7 @@
 *.d
 
 # Compiled Object files
+objs
 *.slo
 *.lo
 *.o
@@ -27,6 +28,7 @@
 *.lib
 
 # Executables
+ircserv
 *.exe
 *.out
 *.app
