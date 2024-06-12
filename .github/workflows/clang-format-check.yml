@@ -26,7 +26,7 @@ jobs:
         find . -name '*.cpp' -o -name '*.h' -o -name '*.c' -o -name '*.hpp' | xargs clang-format -i
 
     - name: Check for formatting issues
-      run: git diff --exit-code || (echo "Formatting required" && exit 1)
+      run: git diff --exit-code
       id: format-check
 
     - name: Commit and push changes
