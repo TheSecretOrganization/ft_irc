@@ -13,6 +13,6 @@ private:
 	void onPacket(const std::string &content);
 
 public:
-	Client(const std::string &name, int fd);
+	Client(int fd);
 
 };

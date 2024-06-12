@@ -13,7 +13,7 @@ private:
 	int fd;
 	int port;
 	std::string password;
-	std::vector<Client> clients;
+	std::vector<Client *> clients;
 	SocketPublisher publisher;
 
 	void onPoll();
