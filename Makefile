@@ -3,7 +3,7 @@ NAME        := ircserv
 
 ### UTILS ###
 CC          := c++
-CPPFLAGS    := -std=c++98
+CPPFLAGS    := -Wall -Werror -Wextra -std=c++98
 DEP_FLAGS   := -MMD -MP
 MAKE_FLAG   := --no-print-directory --silent
 RM          := rm -rf
