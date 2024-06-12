@@ -3,7 +3,7 @@ NAME        := ircserv
 
 ### UTILS ###
 CC          := c++
-CPPFLAGS    := -Wall -Wextra -Werror -std=c++98
+CPPFLAGS    := -Wall -Werror -Wextra -std=c++98
 DEP_FLAGS   := -MMD -MP
 MAKE_FLAG   := --no-print-directory --silent
 RM          := rm -rf
@@ -17,7 +17,11 @@ INCLD_DIR   := include
 OBJS_DIR    := objs
 
 ### FILES ###
-SRC         :=	main.cpp
+SRC         :=	main.cpp \
+	Client.cpp \
+	PacketSubscriber.cpp \
+	Server.cpp \
+	SocketPublisher.cpp
 INCLUDES    :=  $(INCLD_DIR)
 INCLD_FLAG  :=  $(addprefix -I , $(INCLUDES))
 OBJS        :=  $(patsubst %.cpp,$(OBJS_DIR)/%.o,$(SRC))
