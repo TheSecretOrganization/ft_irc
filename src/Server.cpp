@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 Server::Server(int port, const std::string& password)
-	: port(port), password(password), fd(-1) {}
+	: fd(-1), port(port), password(password) {}
 
 void Server::start() {
 	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);

@@ -37,4 +37,5 @@ void SocketPublisher::wait() {
 
 void SocketPublisher::unsubscribe(int fd) {
 	// TODO: remove fd from epoll
+	(void)fd;
 }
