@@ -1,12 +1,23 @@
 name: Clang Format Check
 
 on:
-  pull_request:
+  push:
+    branches: [ "main" ]
     paths:
       - '**/*.cpp'
       - '**/*.h'
       - '**/*.c'
       - '**/*.hpp'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '**/*.cpp'
+      - '**/*.h'
+      - '**/*.c'
+      - '**/*.hpp'
+
+permissions:
+  contents: write
 
 jobs:
   clang-format:
@@ -38,3 +49,5 @@ jobs:
         git add .
         git commit -m 'Auto format code with clang-format'
         git push origin ${{ github.head_ref }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
