@@ -28,6 +28,7 @@ jobs:
     - name: Check for formatting issues
       run: git diff --exit-code || echo "Formatting required"
       id: format-check
+      continue-on-error: true
 
     - name: Commit and push changes
       if: steps.format-check.outcome == 'failure'
