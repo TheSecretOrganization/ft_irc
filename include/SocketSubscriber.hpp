@@ -2,7 +2,6 @@
 
 class SocketSubscriber {
 
-public:
+  public:
 	virtual void onPoll() = 0;
-
 };

@@ -4,14 +4,13 @@
 
 class SocketPublisher {
 
-private:
+  private:
 	int fd;
 
-public:
+  public:
 	SocketPublisher();
 
-	void subscribe(int fd, SocketSubscriber &observer);
+	void subscribe(int fd, SocketSubscriber& observer);
 	void wait();
 	void unsubscribe(int fd);
-
 };

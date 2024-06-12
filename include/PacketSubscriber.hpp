@@ -4,12 +4,11 @@
 
 #include "SocketSubscriber.hpp"
 
-class PacketSubscriber: public SocketSubscriber {
+class PacketSubscriber : public SocketSubscriber {
 
-private:
+  private:
 	void onPoll();
 
-public:
-	virtual void onPacket(const std::string &content) = 0;
-
+  public:
+	virtual void onPacket(const std::string& content) = 0;
 };

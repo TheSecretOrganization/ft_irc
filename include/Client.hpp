@@ -4,15 +4,14 @@
 
 #include "PacketSubscriber.hpp"
 
-class Client: public PacketSubscriber {
+class Client : public PacketSubscriber {
 
-private:
+  private:
 	int fd;
 	std::string name;
 
-	void onPacket(const std::string &content);
+	void onPacket(const std::string& content);
 
-public:
+  public:
 	Client(int fd);
-
 };
