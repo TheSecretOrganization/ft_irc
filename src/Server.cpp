@@ -10,8 +10,7 @@
 #include <unistd.h>
 #include <vector>
 
-Server::Server(int port, const std::string& password)
-	: fd(-1), port(port), password(password) {}
+Server::Server() {}
 
 Server::~Server() {
 	for (std::vector<Client*>::iterator it = clients.begin();
@@ -24,7 +23,15 @@ Server::~Server() {
 	close(fd);
 }
 
-void Server::start() {
+Server& Server::getInstance() {
+	static Server instance;
+	return instance;
+}
+
+void Server::start(int port, const std::string& password) {
+	this->port = port;
+	this->password = password;
+	run = true;
 	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
 	if (fd == -1) {
 		perror("socket");
@@ -49,7 +56,7 @@ void Server::start() {
 	observer.subscribe(fd, *this);
 	std::cout << "listening on port " << port << std::endl;
 
-	while (true) {
+	while (run) {
 		observer.poll();
 	}
 }
@@ -69,4 +76,8 @@ void Server::onPoll() {
 	Client* client = new Client(clientFd);
 	clients.push_back(client);
 	observer.subscribe(clientFd, *client);
+}
+
+void Server::setRun(bool newState) {
+	run = newState;
 }
