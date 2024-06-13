@@ -2,15 +2,15 @@
 
 #include <string>
 
-#include "PacketListener.hpp"
+#include "SocketListener.hpp"
 
-class Client : public PacketListener {
+class Client : public SocketListener {
 
   private:
 	int fd;
 	std::string name;
 
-	void onPacket(const std::string& content);
+	void onPoll();
 
   public:
 	Client(int fd);

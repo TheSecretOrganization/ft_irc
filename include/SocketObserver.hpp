@@ -11,6 +11,6 @@ class SocketObserver {
 	SocketObserver();
 
 	void subscribe(int fd, SocketListener& observer);
-	void wait();
+	void poll();
 	void unsubscribe(int fd);
 };

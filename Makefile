@@ -19,7 +19,6 @@ OBJS_DIR    := objs
 ### FILES ###
 SRC         :=	main.cpp \
 	Client.cpp \
-	PacketListener.cpp \
 	Server.cpp \
 	SocketObserver.cpp
 INCLUDES    :=  $(INCLD_DIR)

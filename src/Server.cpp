@@ -37,7 +37,7 @@ void Server::start() {
 	std::cout << "listening on port " << port << std::endl;
 
 	while (true) {
-		observer.wait();
+		observer.poll();
 	}
 }
 

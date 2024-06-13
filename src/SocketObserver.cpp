@@ -23,7 +23,7 @@ void SocketObserver::subscribe(int fd, SocketListener& observer) {
 	}
 }
 
-void SocketObserver::wait() {
+void SocketObserver::poll() {
 	struct epoll_event events[10];
 	int nfds = epoll_wait(fd, events, 10, -1);
 	if (nfds == -1) {
