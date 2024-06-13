@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Client.hpp"
 
 #include <cstdio>
 #include <fcntl.h>
@@ -7,9 +8,21 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <vector>
 
 Server::Server(int port, const std::string& password)
 	: fd(-1), port(port), password(password) {}
+
+Server::~Server() {
+	for (std::vector<Client*>::iterator it = clients.begin();
+		 it != clients.end(); ++it) {
+		observer.unsubscribe((*it)->getFd());
+		delete *it;
+	}
+
+	observer.unsubscribe(fd);
+	close(fd);
+}
 
 void Server::start() {
 	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
@@ -39,10 +52,6 @@ void Server::start() {
 	while (true) {
 		observer.poll();
 	}
-}
-
-void Server::shut() {
-	// TODO: delete socket, close connections
 }
 
 void Server::onPoll() {

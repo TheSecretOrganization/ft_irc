@@ -14,4 +14,7 @@ class Client : public SocketListener {
 
   public:
 	Client(int fd);
+	virtual ~Client();
+
+	int getFd() const;
 };

@@ -9,6 +9,7 @@ class SocketObserver {
 
   public:
 	SocketObserver();
+	~SocketObserver();
 
 	void subscribe(int fd, SocketListener& observer);
 	void poll();

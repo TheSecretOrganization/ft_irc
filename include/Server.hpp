@@ -20,7 +20,7 @@ class Server : public SocketListener {
 
   public:
 	Server(int port, const std::string& password);
+	~Server();
 
 	void start();
-	void shut();
 };
