@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Client.hpp"
 
 #include <cstdio>
 #include <fcntl.h>
@@ -7,11 +8,30 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <vector>
 
-Server::Server(int port, const std::string& password)
-	: fd(-1), port(port), password(password) {}
+Server::Server() {}
 
-void Server::start() {
+Server::~Server() {
+	for (std::vector<Client*>::iterator it = clients.begin();
+		 it != clients.end(); ++it) {
+		observer.unsubscribe((*it)->getFd());
+		delete *it;
+	}
+
+	observer.unsubscribe(fd);
+	close(fd);
+}
+
+Server& Server::getInstance() {
+	static Server instance;
+	return instance;
+}
+
+void Server::start(int port, const std::string& password) {
+	this->port = port;
+	this->password = password;
+	run = true;
 	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
 	if (fd == -1) {
 		perror("socket");
@@ -36,13 +56,9 @@ void Server::start() {
 	observer.subscribe(fd, *this);
 	std::cout << "listening on port " << port << std::endl;
 
-	while (true) {
+	while (run) {
 		observer.poll();
 	}
-}
-
-void Server::shut() {
-	// TODO: delete socket, close connections
 }
 
 void Server::onPoll() {
@@ -60,4 +76,8 @@ void Server::onPoll() {
 	Client* client = new Client(clientFd);
 	clients.push_back(client);
 	observer.subscribe(clientFd, *client);
+}
+
+void Server::setRun(bool newState) {
+	run = newState;
 }

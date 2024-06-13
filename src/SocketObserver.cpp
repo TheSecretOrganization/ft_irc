@@ -1,7 +1,9 @@
 #include "SocketObserver.hpp"
 
+#include <cstddef>
 #include <cstdio>
 #include <sys/epoll.h>
+#include <unistd.h>
 
 SocketObserver::SocketObserver() {
 	fd = epoll_create1(0);
@@ -10,6 +12,8 @@ SocketObserver::SocketObserver() {
 		return;
 	}
 }
+
+SocketObserver::~SocketObserver() { close(fd); }
 
 void SocketObserver::subscribe(int fd, SocketListener& observer) {
 	struct epoll_event ev;
@@ -24,8 +28,8 @@ void SocketObserver::subscribe(int fd, SocketListener& observer) {
 }
 
 void SocketObserver::poll() {
-	struct epoll_event events[10];
-	int nfds = epoll_wait(fd, events, 10, -1);
+	struct epoll_event events[MAX_POLL];
+	int nfds = epoll_wait(fd, events, MAX_POLL, -1);
 	if (nfds == -1) {
 		perror("epoll_wait");
 		return;
@@ -36,6 +40,8 @@ void SocketObserver::poll() {
 }
 
 void SocketObserver::unsubscribe(int fd) {
-	// TODO: remove fd from epoll
-	(void)fd;
+	if (epoll_ctl(this->fd, EPOLL_CTL_DEL, fd, NULL)) {
+		perror("epoll_ctl");
+		return;
+	}
 }

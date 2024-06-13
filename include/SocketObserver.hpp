@@ -2,6 +2,8 @@
 
 #include "SocketListener.hpp"
 
+#define MAX_POLL 10
+
 class SocketObserver {
 
   private:
@@ -9,6 +11,7 @@ class SocketObserver {
 
   public:
 	SocketObserver();
+	~SocketObserver();
 
 	void subscribe(int fd, SocketListener& observer);
 	void poll();

@@ -15,12 +15,16 @@ class Server : public SocketListener {
 	std::string password;
 	std::vector<Client*> clients;
 	SocketObserver observer;
+	bool run;
+
+	Server();
 
 	void onPoll();
 
   public:
-	Server(int port, const std::string& password);
+	~Server();
 
-	void start();
-	void shut();
+	static Server& getInstance();
+	void start(int port, const std::string& password);
+	void setRun(bool newState);
 };
