@@ -1,9 +1,9 @@
-#include "SocketPublisher.hpp"
+#include "SocketObserver.hpp"
 
 #include <cstdio>
 #include <sys/epoll.h>
 
-SocketPublisher::SocketPublisher() {
+SocketObserver::SocketObserver() {
 	fd = epoll_create1(0);
 	if (fd == -1) {
 		perror("epoll_create");
@@ -11,7 +11,7 @@ SocketPublisher::SocketPublisher() {
 	}
 }
 
-void SocketPublisher::subscribe(int fd, SocketSubscriber& observer) {
+void SocketObserver::subscribe(int fd, SocketListener& observer) {
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
 	ev.data.fd = fd;
@@ -23,7 +23,7 @@ void SocketPublisher::subscribe(int fd, SocketSubscriber& observer) {
 	}
 }
 
-void SocketPublisher::wait() {
+void SocketObserver::wait() {
 	struct epoll_event events[10];
 	int nfds = epoll_wait(fd, events, 10, -1);
 	if (nfds == -1) {
@@ -32,10 +32,10 @@ void SocketPublisher::wait() {
 	}
 
 	for (int i = 0; i < nfds; i++)
-		((SocketSubscriber*)events[i].data.ptr)->onPoll();
+		((SocketListener*)events[i].data.ptr)->onPoll();
 }
 
-void SocketPublisher::unsubscribe(int fd) {
+void SocketObserver::unsubscribe(int fd) {
 	// TODO: remove fd from epoll
 	(void)fd;
 }

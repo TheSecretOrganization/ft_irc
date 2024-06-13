@@ -33,11 +33,11 @@ void Server::start() {
 		return;
 	}
 
-	publisher.subscribe(fd, *this);
+	observer.subscribe(fd, *this);
 	std::cout << "listening on port " << port << std::endl;
 
 	while (true) {
-		publisher.wait();
+		observer.wait();
 	}
 }
 
@@ -59,5 +59,5 @@ void Server::onPoll() {
 
 	Client* client = new Client(clientFd);
 	clients.push_back(client);
-	publisher.subscribe(clientFd, *client);
+	observer.subscribe(clientFd, *client);
 }

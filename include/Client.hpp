@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "PacketSubscriber.hpp"
+#include "PacketListener.hpp"
 
-class Client : public PacketSubscriber {
+class Client : public PacketListener {
 
   private:
 	int fd;

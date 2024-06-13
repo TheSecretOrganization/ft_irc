@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "SocketSubscriber.hpp"
+#include "SocketListener.hpp"
 
-class PacketSubscriber : public SocketSubscriber {
+class PacketListener : public SocketListener {
 
   private:
 	void onPoll();

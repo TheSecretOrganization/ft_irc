@@ -4,17 +4,17 @@
 #include <vector>
 
 #include "Client.hpp"
-#include "SocketPublisher.hpp"
-#include "SocketSubscriber.hpp"
+#include "SocketListener.hpp"
+#include "SocketObserver.hpp"
 
-class Server : public SocketSubscriber {
+class Server : public SocketListener {
 
   private:
 	int fd;
 	int port;
 	std::string password;
 	std::vector<Client*> clients;
-	SocketPublisher publisher;
+	SocketObserver observer;
 
 	void onPoll();
 

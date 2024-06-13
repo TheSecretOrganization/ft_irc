@@ -19,9 +19,9 @@ OBJS_DIR    := objs
 ### FILES ###
 SRC         :=	main.cpp \
 	Client.cpp \
-	PacketSubscriber.cpp \
+	PacketListener.cpp \
 	Server.cpp \
-	SocketPublisher.cpp
+	SocketObserver.cpp
 INCLUDES    :=  $(INCLD_DIR)
 INCLD_FLAG  :=  $(addprefix -I , $(INCLUDES))
 OBJS        :=  $(patsubst %.cpp,$(OBJS_DIR)/%.o,$(SRC))
