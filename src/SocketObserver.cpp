@@ -28,8 +28,8 @@ void SocketObserver::subscribe(int fd, SocketListener& observer) {
 }
 
 void SocketObserver::poll() {
-	struct epoll_event events[10];
-	int nfds = epoll_wait(fd, events, 10, -1);
+	struct epoll_event events[MAX_POLL];
+	int nfds = epoll_wait(fd, events, MAX_POLL, -1);
 	if (nfds == -1) {
 		perror("epoll_wait");
 		return;
