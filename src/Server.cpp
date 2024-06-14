@@ -1,63 +1,39 @@
 #include "Server.hpp"
+#include "Client.hpp"
+#include "ServerSocket.hpp"
 
-#include <cstdio>
-#include <fcntl.h>
-#include <iostream>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include <vector>
 
-Server::Server(int port, const std::string& password)
-	: fd(-1), port(port), password(password) {}
+Server::Server() { run = true; }
 
-void Server::start() {
-	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
-	if (fd == -1) {
-		perror("socket");
-		return;
+Server::~Server() {
+	for (std::vector<Client*>::iterator it = clients.begin();
+		 it != clients.end(); ++it) {
+		observer.unsubscribe((*it)->getSocket().getFd());
+		delete *it;
 	}
 
-	sockaddr_in addr;
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons(port);
-	addr.sin_addr.s_addr = INADDR_ANY;
+	observer.unsubscribe(socket.getFd());
+}
 
-	if (bind(fd, (sockaddr*)&addr, sizeof(addr))) {
-		perror("bind");
-		return;
-	}
+Server& Server::getInstance() {
+	static Server instance;
+	return instance;
+}
 
-	if (listen(fd, 5) == -1) {
-		perror("listen");
-		return;
-	}
+void Server::start(int port, const std::string& password) {
+	this->password = password;
+	socket.init(port);
+	observer.subscribe(socket.getFd(), socket);
 
-	publisher.subscribe(fd, *this);
-	std::cout << "listening on port " << port << std::endl;
-
-	while (true) {
-		publisher.wait();
+	while (run) {
+		observer.poll();
 	}
 }
 
-void Server::shut() {
-	// TODO: delete socket, close connections
-}
+void Server::shut() { run = false; }
 
-void Server::onPoll() {
-	int clientFd = accept(fd, NULL, 0);
-	if (clientFd == -1) {
-		perror("accept");
-		return;
-	}
-
-	if (fcntl(clientFd, F_SETFL, O_NONBLOCK) == -1) {
-		perror("fcntl");
-		return;
-	}
-
-	Client* client = new Client(clientFd);
+void Server::addClient(Client* client) {
 	clients.push_back(client);
-	publisher.subscribe(clientFd, *client);
+	observer.subscribe(client->getSocket().getFd(), client->getSocket());
 }

@@ -4,23 +4,25 @@
 #include <vector>
 
 #include "Client.hpp"
-#include "SocketPublisher.hpp"
-#include "SocketSubscriber.hpp"
+#include "ServerSocket.hpp"
+#include "SocketObserver.hpp"
 
-class Server : public SocketSubscriber {
+class Server {
 
   private:
-	int fd;
-	int port;
-	std::string password;
 	std::vector<Client*> clients;
-	SocketPublisher publisher;
+	SocketObserver observer;
+	ServerSocket socket;
+	std::string password;
+	bool run;
 
-	void onPoll();
+	Server();
 
   public:
-	Server(int port, const std::string& password);
+	~Server();
 
-	void start();
+	static Server& getInstance();
+	void start(int port, const std::string& password);
 	void shut();
+	void addClient(Client* client);
 };

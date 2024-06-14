@@ -1,8 +1,18 @@
 #include "Client.hpp"
+#include "ClientSocket.hpp"
 
-Client::Client(int fd) : fd(fd) {}
+#include <iostream>
+#include <string>
 
-void Client::onPacket(const std::string& content) {
-	(void)content;
-	(void)fd;
+Client::Client(int fd) : socket(fd) {
+	std::cout << "new client " << fd << std::endl;
+}
+
+Client::~Client() {}
+
+ClientSocket& Client::getSocket() { return socket; }
+
+void Client::sendMessage(std::string type, std::string message) const {
+	std::string packet = type + "\n" + message;
+	socket.sendPacket(packet);
 }

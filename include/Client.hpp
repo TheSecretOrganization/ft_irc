@@ -2,16 +2,19 @@
 
 #include <string>
 
-#include "PacketSubscriber.hpp"
+#include "ClientSocket.hpp"
 
-class Client : public PacketSubscriber {
+class Client {
 
   private:
-	int fd;
+	ClientSocket socket;
 	std::string name;
-
-	void onPacket(const std::string& content);
 
   public:
 	Client(int fd);
+	~Client();
+
+	ClientSocket& getSocket();
+
+	void sendMessage(std::string type, std::string message) const;
 };
