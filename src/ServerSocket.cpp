@@ -10,13 +10,12 @@
 #include <unistd.h>
 #include <iostream>
 
-ServerSocket::ServerSocket() : fd(-1), port(-1), password("") {}
+ServerSocket::ServerSocket() : fd(-1), port(-1) {}
 
 ServerSocket::~ServerSocket() { close(fd); }
 
-void ServerSocket::init(int port, const std::string& password) {
+void ServerSocket::init(int port) {
 	this->port = port;
-	this->password = password;
 	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
 	if (fd == -1) {
 		perror("socket");

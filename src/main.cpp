@@ -4,7 +4,7 @@
 
 static void	handle_singint(int signal) {
 	(void)signal;
-	Server::getInstance().setRun(false);
+	Server::getInstance().shut();
 }
 
 static void	register_action(int signal, struct sigaction *old, void (*handler)(int))

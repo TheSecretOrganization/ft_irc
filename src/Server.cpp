@@ -22,7 +22,8 @@ Server& Server::getInstance() {
 }
 
 void Server::start(int port, const std::string& password) {
-	socket.init(port, password);
+	this->password = password;
+	socket.init(port);
 	observer.subscribe(socket.getFd(), socket);
 
 	while (run) {
@@ -30,7 +31,7 @@ void Server::start(int port, const std::string& password) {
 	}
 }
 
-void Server::setRun(bool newState) { run = newState; }
+void Server::shut() { run = false; }
 
 void Server::addClient(Client* client) {
 	clients.push_back(client);

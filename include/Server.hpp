@@ -14,6 +14,7 @@ class Server {
 	std::vector<Client*> clients;
 	SocketObserver observer;
 	ServerSocket socket;
+	std::string password;
 	bool run;
 
 	Server();
@@ -23,6 +24,6 @@ class Server {
 
 	static Server& getInstance();
 	void start(int port, const std::string& password);
-	void setRun(bool newState);
+	void shut();
 	void addClient(Client* client);
 };
