@@ -19,8 +19,9 @@ OBJS_DIR    := objs
 ### FILES ###
 SRC         :=	main.cpp \
 	Client.cpp \
+	ClientListener.cpp \
 	Server.cpp \
-	ServerSocket.cpp \
+	ServerListener.cpp \
 	SocketObserver.cpp
 INCLUDES    :=  $(INCLD_DIR)
 INCLD_FLAG  :=  $(addprefix -I , $(INCLUDES))

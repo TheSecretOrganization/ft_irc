@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "SocketListener.hpp"
+#include "Listener.hpp"
 
-class Client : public SocketListener {
+class Client : public Listener {
 
   private:
 	int fd;

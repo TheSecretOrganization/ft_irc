@@ -1,4 +1,4 @@
-#include "ServerSocket.hpp"
+#include "ServerListener.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 
@@ -10,15 +10,15 @@
 #include <unistd.h>
 #include <iostream>
 
-ServerSocket::ServerSocket() : fd(-1), port(-1) {}
+ServerListener::ServerListener() : fd(-1), port(-1) {}
 
-ServerSocket::~ServerSocket() { close(fd); }
+ServerListener::~ServerListener() { close(fd); }
 
-void ServerSocket::init(int port) {
+void ServerListener::init(int port) {
 	this->port = port;
-	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
+	fd = listener(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
 	if (fd == -1) {
-		perror("socket");
+		perror("listener");
 		return;
 	}
 
@@ -40,7 +40,7 @@ void ServerSocket::init(int port) {
 	std::cout << "listening on port " << this->port << std::endl;
 }
 
-void ServerSocket::onPoll() {
+void ServerListener::onPoll() {
 	int clientFd = accept(fd, NULL, 0);
 	if (clientFd == -1) {
 		perror("accept");
@@ -56,4 +56,4 @@ void ServerSocket::onPoll() {
 	Server::getInstance().addClient(client);
 }
 
-int ServerSocket::getFd() const { return fd; }
+int ServerListener::getFd() const { return fd; }

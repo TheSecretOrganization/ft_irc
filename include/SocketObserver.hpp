@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SocketListener.hpp"
+#include "Listener.hpp"
 
 #define MAX_POLL 10
 
@@ -13,7 +13,7 @@ class SocketObserver {
 	SocketObserver();
 	~SocketObserver();
 
-	void subscribe(int fd, SocketListener& observer);
+	void subscribe(int fd, Listener& observer);
 	void poll();
 	void unsubscribe(int fd);
 };

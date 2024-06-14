@@ -5,6 +5,8 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 
+#define TIMEOUT 100
+
 SocketObserver::SocketObserver() {
 	fd = epoll_create1(0);
 	if (fd == -1) {
@@ -15,7 +17,7 @@ SocketObserver::SocketObserver() {
 
 SocketObserver::~SocketObserver() { close(fd); }
 
-void SocketObserver::subscribe(int fd, SocketListener& observer) {
+void SocketObserver::subscribe(int fd, Listener& observer) {
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
 	ev.data.fd = fd;
@@ -29,14 +31,14 @@ void SocketObserver::subscribe(int fd, SocketListener& observer) {
 
 void SocketObserver::poll() {
 	struct epoll_event events[MAX_POLL];
-	int nfds = epoll_wait(fd, events, MAX_POLL, -1);
+	int nfds = epoll_wait(fd, events, MAX_POLL, TIMEOUT);
 	if (nfds == -1) {
 		perror("epoll_wait");
 		return;
 	}
 
 	for (int i = 0; i < nfds; i++)
-		((SocketListener*)events[i].data.ptr)->onPoll();
+		((Listener*)events[i].data.ptr)->onPoll();
 }
 
 void SocketObserver::unsubscribe(int fd) {

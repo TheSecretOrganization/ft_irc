@@ -19,6 +19,7 @@ void Client::onPoll() {
 	char buff[SIZE];
 	std::string content;
 
+	bzero(buff, SIZE);
 	while (content[content.size() - 1] != '\n') {
 		ssize_t size = recv(fd, buff, SIZE, 0);
 		if (size == -1) {
