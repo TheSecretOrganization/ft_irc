@@ -4,22 +4,19 @@
 #include <vector>
 
 #include "Client.hpp"
-#include "SocketListener.hpp"
+#include "ServerSocket.hpp"
 #include "SocketObserver.hpp"
 
-class Server : public SocketListener {
+
+class Server {
 
   private:
-	int fd;
-	int port;
-	std::string password;
 	std::vector<Client*> clients;
 	SocketObserver observer;
+	ServerSocket socket;
 	bool run;
 
 	Server();
-
-	void onPoll();
 
   public:
 	~Server();
@@ -27,4 +24,5 @@ class Server : public SocketListener {
 	static Server& getInstance();
 	void start(int port, const std::string& password);
 	void setRun(bool newState);
+	void addClient(Client* client);
 };
