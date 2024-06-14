@@ -2,15 +2,11 @@
 
 #include "Socket.hpp"
 
-class ClientSocket: public Socket {
-private:
-	int fd;
+class ClientSocket : public Socket {
+  private:
+	void onPoll();
 
-    void onPoll();
-
-public:
-    ClientSocket(int fd);
-    ~ClientSocket();
-
-    int getFd() const;
+  public:
+	ClientSocket(int fd);
+	~ClientSocket();
 };

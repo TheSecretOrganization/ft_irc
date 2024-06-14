@@ -1,6 +1,7 @@
 #include "ServerSocket.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
+#include "Socket.hpp"
 
 #include <cstdio>
 #include <fcntl.h>
@@ -10,9 +11,9 @@
 #include <unistd.h>
 #include <iostream>
 
-ServerSocket::ServerSocket() : fd(-1), port(-1) {}
+ServerSocket::ServerSocket() : Socket(-1), port(-1) {}
 
-ServerSocket::~ServerSocket() { close(fd); }
+ServerSocket::~ServerSocket() {}
 
 void ServerSocket::init(int port) {
 	this->port = port;
@@ -55,5 +56,3 @@ void ServerSocket::onPoll() {
 	Client* client = new Client(clientFd);
 	Server::getInstance().addClient(client);
 }
-
-int ServerSocket::getFd() const { return fd; }

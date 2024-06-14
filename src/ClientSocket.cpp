@@ -1,4 +1,5 @@
 #include "ClientSocket.hpp"
+#include "Socket.hpp"
 
 #include <cstdio>
 #include <iostream>
@@ -9,15 +10,9 @@
 
 #define SIZE 100
 
-ClientSocket::ClientSocket(int fd): fd(fd) {}
+ClientSocket::ClientSocket(int fd): Socket(fd) {}
 
-ClientSocket::~ClientSocket() {
-    close(fd);
-}
-
-int ClientSocket::getFd() const {
-    return fd;
-}
+ClientSocket::~ClientSocket() {}
 
 void ClientSocket::onPoll() {
 	char buff[SIZE];

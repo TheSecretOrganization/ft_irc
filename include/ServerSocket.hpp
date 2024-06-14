@@ -2,17 +2,15 @@
 
 #include "Socket.hpp"
 
-class ServerSocket: public Socket {
-private:
-	int fd;
+class ServerSocket : public Socket {
+  private:
 	int port;
 
-    void onPoll();
+	void onPoll();
 
-public:
-    ServerSocket();
-    ~ServerSocket();
+  public:
+	ServerSocket();
+	~ServerSocket();
 
-    void init(int port);
-    int getFd() const;
+	void init(int port);
 };
