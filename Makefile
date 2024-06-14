@@ -22,6 +22,7 @@ SRC         :=	main.cpp \
 	ClientSocket.cpp \
 	Server.cpp \
 	ServerSocket.cpp \
+	Socket.cpp \
 	SocketObserver.cpp
 INCLUDES    :=  $(INCLD_DIR)
 INCLD_FLAG  :=  $(addprefix -I , $(INCLUDES))
