@@ -1,6 +1,6 @@
 #include "Server.hpp"
 #include "Client.hpp"
-#include "ServerListener.hpp"
+#include "ServerSocket.hpp"
 
 #include <vector>
 
@@ -9,11 +9,11 @@ Server::Server() { run = true; }
 Server::~Server() {
 	for (std::vector<Client*>::iterator it = clients.begin();
 		 it != clients.end(); ++it) {
-		observer.unsubscribe((*it)->getFd());
+		observer.unsubscribe((*it)->getSocket().getFd());
 		delete *it;
 	}
 
-	observer.unsubscribe(listener.getFd());
+	observer.unsubscribe(socket.getFd());
 }
 
 Server& Server::getInstance() {
@@ -23,8 +23,8 @@ Server& Server::getInstance() {
 
 void Server::start(int port, const std::string& password) {
 	this->password = password;
-	listener.init(port);
-	observer.subscribe(listener.getFd(), listener);
+	socket.init(port);
+	observer.subscribe(socket.getFd(), socket);
 
 	while (run) {
 		observer.poll();
@@ -35,5 +35,5 @@ void Server::shut() { run = false; }
 
 void Server::addClient(Client* client) {
 	clients.push_back(client);
-	observer.subscribe(client->getFd(), *client);
+	observer.subscribe(client->getSocket().getFd(), client->getSocket());
 }

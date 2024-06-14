@@ -1,6 +1,6 @@
 #pragma once
 
-class Listener {
+class Socket {
 
   public:
 	virtual void onPoll() = 0;

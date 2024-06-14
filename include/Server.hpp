@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Client.hpp"
-#include "ServerListener.hpp"
+#include "ServerSocket.hpp"
 #include "SocketObserver.hpp"
 
 
@@ -13,7 +13,7 @@ class Server {
   private:
 	std::vector<Client*> clients;
 	SocketObserver observer;
-	ServerListener listener;
+	ServerSocket socket;
 	std::string password;
 	bool run;
 

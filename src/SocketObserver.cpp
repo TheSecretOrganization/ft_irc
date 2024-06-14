@@ -17,7 +17,7 @@ SocketObserver::SocketObserver() {
 
 SocketObserver::~SocketObserver() { close(fd); }
 
-void SocketObserver::subscribe(int fd, Listener& observer) {
+void SocketObserver::subscribe(int fd, Socket& observer) {
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
 	ev.data.fd = fd;
@@ -38,7 +38,7 @@ void SocketObserver::poll() {
 	}
 
 	for (int i = 0; i < nfds; i++)
-		((Listener*)events[i].data.ptr)->onPoll();
+		((Socket*)events[i].data.ptr)->onPoll();
 }
 
 void SocketObserver::unsubscribe(int fd) {

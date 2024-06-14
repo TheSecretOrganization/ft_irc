@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Listener.hpp"
+#include "Socket.hpp"
 
-class ServerListener: public Listener {
+class ServerSocket: public Socket {
 private:
 	int fd;
 	int port;
@@ -10,8 +10,8 @@ private:
     void onPoll();
 
 public:
-    ServerListener();
-    ~ServerListener();
+    ServerSocket();
+    ~ServerSocket();
 
     void init(int port);
     int getFd() const;

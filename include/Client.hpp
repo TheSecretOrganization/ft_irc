@@ -2,19 +2,17 @@
 
 #include <string>
 
-#include "Listener.hpp"
+#include "ClientSocket.hpp"
 
-class Client : public Listener {
+class Client {
 
   private:
-	int fd;
+	ClientSocket socket;
 	std::string name;
-
-	void onPoll();
 
   public:
 	Client(int fd);
-	virtual ~Client();
+	~Client();
 
-	int getFd() const;
+	ClientSocket& getSocket();
 };
