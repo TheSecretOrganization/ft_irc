@@ -15,4 +15,6 @@ class Client {
 	~Client();
 
 	ClientSocket& getSocket();
+
+	void sendMessage(std::string type, std::string message) const;
 };

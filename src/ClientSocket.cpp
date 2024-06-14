@@ -32,3 +32,11 @@ void ClientSocket::onPoll() {
 	content.erase(content.size() - 1, content.size());
 	std::cout << "from " << fd << ": " << content << std::endl;
 }
+
+void ClientSocket::sendPacket(std::string packet) const {
+	packet.append("\r\n");
+	if (send(fd, packet.c_str(), packet.size(), 0) == -1) {
+		perror("Send message");
+		return;
+	}
+}

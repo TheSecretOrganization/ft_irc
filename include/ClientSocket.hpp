@@ -2,6 +2,8 @@
 
 #include "Socket.hpp"
 
+#include <string>
+
 class ClientSocket : public Socket {
   private:
 	void onPoll();
@@ -9,4 +11,6 @@ class ClientSocket : public Socket {
   public:
 	ClientSocket(int fd);
 	~ClientSocket();
+
+	void sendPacket(std::string packet) const;
 };
