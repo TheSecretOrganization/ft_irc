@@ -1,6 +1,8 @@
 #include "Server.hpp"
 #include <csignal>
 #include <cstdio>
+#include <cstdlib>
+#include <iostream>
 
 static void handle_singint(int signal) {
 	(void)signal;
@@ -22,11 +24,43 @@ static void register_action(int signal, struct sigaction* old,
 	}
 }
 
-int main() {
+int	serverParameters(int argc, char *argv[]) {
+	int	port;
+	try
+	{
+		if (argc != 3)
+		{
+			throw std::logic_error("Invalid argument number");
+		}
+
+		port = std::atoi(argv[1]);
+		if (port < 6660 || port > 6669)
+		{
+			throw std::logic_error("Error: Invalid port range");
+		}
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		return (0);
+	}
+
+	std::cout << argv[2] << std::endl;
+	return port;
+}
+
+int main(int argc, char *argv[]) {
+	int	port;
+	port = serverParameters(argc, argv);
+	if (!port)
+	{
+		return (1);
+	}
+
 	register_action(SIGINT, NULL, &handle_singint);
 	register_action(SIGQUIT, NULL, SIG_IGN);
 
-	Server::getInstance().start(6663, "");
+	Server::getInstance().start(port, argv[2]);
 
 	return 0;
 }
