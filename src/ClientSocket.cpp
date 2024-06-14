@@ -3,14 +3,14 @@
 
 #include <cstdio>
 #include <iostream>
+#include <string>
 #include <strings.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <string>
 
 #define SIZE 100
 
-ClientSocket::ClientSocket(int fd): Socket(fd) {}
+ClientSocket::ClientSocket(int fd) : Socket(fd) {}
 
 ClientSocket::~ClientSocket() {}
 

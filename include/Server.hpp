@@ -7,7 +7,6 @@
 #include "ServerSocket.hpp"
 #include "SocketObserver.hpp"
 
-
 class Server {
 
   private:

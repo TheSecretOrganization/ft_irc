@@ -5,11 +5,11 @@
 
 #include <cstdio>
 #include <fcntl.h>
+#include <iostream>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <iostream>
 
 ServerSocket::ServerSocket() : Socket(-1), port(-1) {}
 

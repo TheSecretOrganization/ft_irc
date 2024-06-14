@@ -2,15 +2,15 @@
 #include <csignal>
 #include <cstdio>
 
-static void	handle_singint(int signal) {
+static void handle_singint(int signal) {
 	(void)signal;
 	Server::getInstance().shut();
 }
 
-static void	register_action(int signal, struct sigaction *old, void (*handler)(int))
-{
-	struct sigaction	saction;
-	sigset_t			set;
+static void register_action(int signal, struct sigaction* old,
+							void (*handler)(int)) {
+	struct sigaction saction;
+	sigset_t set;
 
 	sigemptyset(&set);
 	saction.sa_handler = handler;
