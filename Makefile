@@ -66,6 +66,10 @@ fclean: clean
 
 re: fclean all
 
+cre:
+	@clear
+	@make re $(MAKE_FLAG)
+
 debug: fclean all
 
 .PHONY: all clean fclean re debug
