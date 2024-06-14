@@ -16,7 +16,7 @@ ServerListener::~ServerListener() { close(fd); }
 
 void ServerListener::init(int port) {
 	this->port = port;
-	fd = listener(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
+	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
 	if (fd == -1) {
 		perror("listener");
 		return;
