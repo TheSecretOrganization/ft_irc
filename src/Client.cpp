@@ -13,6 +13,7 @@ Client::~Client() {}
 ClientSocket& Client::getSocket() { return socket; }
 
 void Client::sendMessage(std::string type, std::string message) const {
-	std::string packet = type + "\n" + message;
+	(void) type;
+	std::string packet = message;
 	socket.sendPacket(packet);
 }

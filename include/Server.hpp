@@ -25,4 +25,5 @@ class Server {
 	void start(int port, const std::string& password);
 	void shut();
 	void addClient(Client* client);
+	const std::vector<Client *> getClients() const;
 };

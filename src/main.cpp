@@ -1,10 +1,21 @@
 #include "Server.hpp"
 #include <csignal>
 #include <cstdio>
+#include <iostream>
 
 static void handle_singint(int signal) {
 	(void)signal;
 	Server::getInstance().shut();
+}
+
+static void handle_test(int signal) {
+	(void) signal;
+	std::string line;
+	std::cout << "line: ";
+	getline(std::cin, line);
+	Client *client = Server::getInstance().getClients()[0];
+	client->sendMessage("", line);
+	std::cout << "send to " << client->getSocket().getFd() << ": " << line << std::endl;
 }
 
 static void register_action(int signal, struct sigaction* old,
@@ -24,7 +35,7 @@ static void register_action(int signal, struct sigaction* old,
 
 int main() {
 	register_action(SIGINT, NULL, &handle_singint);
-	register_action(SIGQUIT, NULL, SIG_IGN);
+	register_action(SIGQUIT, NULL, &handle_test);
 
 	Server::getInstance().start(6663, "");
 

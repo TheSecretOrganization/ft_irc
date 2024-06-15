@@ -37,3 +37,7 @@ void Server::addClient(Client* client) {
 	clients.push_back(client);
 	observer.subscribe(client->getSocket().getFd(), client->getSocket());
 }
+
+const std::vector<Client *> Server::getClients() const {
+	return clients;
+}
