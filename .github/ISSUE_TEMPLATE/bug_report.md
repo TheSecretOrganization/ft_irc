@@ -13,6 +13,9 @@ A clear and concise description of what the bug is.
 **To Reproduce**
 Steps to reproduce the behavior:
 
+**Commit and branch**
+[commit] on [branch]
+
 **Stacktrace**
 If applicable, add the stacktrace.
 
