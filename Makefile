@@ -26,7 +26,7 @@ SRC         :=	main.cpp \
 	ServerSocket.cpp \
 	Socket.cpp \
 	SocketObserver.cpp \
-	commands/PingCommand.cpp \
+	commands/PingCommand.cpp
 INCLUDES    :=  $(INCLD_DIR)
 INCLD_FLAG  :=  $(addprefix -I , $(INCLUDES))
 OBJS        :=  $(patsubst %.cpp,$(OBJS_DIR)/%.o,$(SRC))
