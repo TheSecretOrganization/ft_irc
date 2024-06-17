@@ -28,5 +28,5 @@ const char *CommandRegistry::DuplicateException::what() const throw() {
 }
 
 const char *CommandRegistry::NotFoundException::what() const throw() {
-	return "duplicate exception";
+	return "not found exception";
 }
