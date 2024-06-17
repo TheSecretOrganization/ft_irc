@@ -30,4 +30,9 @@ class Server {
 	void addClient(Client* client);
 	void deleteClient(Client* client);
 	Client* getClient(int fd);
+
+	class ClientNotFoundException : public std::exception {
+	  public:
+		virtual const char* what() const throw();
+	};
 };
