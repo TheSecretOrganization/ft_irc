@@ -10,7 +10,7 @@ CommandRegistry::~CommandRegistry() {
 		delete it->second;
 }
 
-void CommandRegistry::registerCommand(std::string &name, Command &command) {
+void CommandRegistry::registerCommand(const std::string &name, Command *command) {
 	if (commands.find(name) != commands.end())
 		throw DuplicateException();
 	commands.insert(std::pair<std::string, Command *>(name, &command));

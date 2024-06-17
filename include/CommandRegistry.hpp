@@ -14,7 +14,7 @@ public:
 	CommandRegistry();
 	~CommandRegistry();
 
-	void registerCommand(std::string &name, Command &command);
+	void registerCommand(const std::string &name, Command *command);
 	Command *getCommand(const std::string &name) const;
 
 	class NotFoundException: public std::exception
