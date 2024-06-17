@@ -41,3 +41,12 @@ void Server::addClient(Client* client) {
 	clients.push_back(client);
 	observer.subscribe(client->getSocket().getFd(), client->getSocket());
 }
+
+Client *Server::getClient(int fd) {
+	for (std::vector<Client*>::iterator it = clients.begin()
+	; it != clients.end(); it++) {
+		if ((*it)->getSocket().getFd() == fd)
+			return *it;
+	}
+	return NULL;
+}
