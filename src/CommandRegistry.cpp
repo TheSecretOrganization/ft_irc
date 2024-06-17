@@ -1,7 +1,9 @@
 #include "CommandRegistry.hpp"
 
-CommandRegistry::CommandRegistry() {
+#include "commands/PingCommand.hpp"
 
+CommandRegistry::CommandRegistry() {
+	registerCommand("ping", new PingCommand());
 }
 
 CommandRegistry::~CommandRegistry() {

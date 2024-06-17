@@ -13,6 +13,7 @@ endif
 
 ### DIRECTORIES ###
 SRC_DIR     := src
+CMDS_DIR	:= commands
 INCLD_DIR   := include
 OBJS_DIR    := objs
 
@@ -24,7 +25,8 @@ SRC         :=	main.cpp \
 	Server.cpp \
 	ServerSocket.cpp \
 	Socket.cpp \
-	SocketObserver.cpp
+	SocketObserver.cpp \
+	commands/PingCommand.cpp \
 INCLUDES    :=  $(INCLD_DIR)
 INCLD_FLAG  :=  $(addprefix -I , $(INCLUDES))
 OBJS        :=  $(patsubst %.cpp,$(OBJS_DIR)/%.o,$(SRC))
@@ -55,6 +57,7 @@ $(NAME): $(OBJS)
 $(OBJS_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@printf "$(NEW)$(PURPLE)[$(NAME)] $(UGREEN)Building:$(DEFAULT) $<"
 	@mkdir -p $(OBJS_DIR)
+	@mkdir -p $(OBJS_DIR)/$(CMDS_DIR)
 	@$(CC) $(DEP_FLAGS) $(CPPFLAGS) $(INCLD_FLAG) -c $< -o $@
 
 clean:
