@@ -24,8 +24,7 @@ void CommandRegistry::registerCommand(const std::string& name,
 	std::string lowerName = strtolower(name);
 	if (commands.find(lowerName) != commands.end())
 		throw DuplicateException();
-	commands.insert(
-		std::pair<std::string, Command*>(lowerName, command));
+	commands.insert(std::pair<std::string, Command*>(lowerName, command));
 }
 
 Command* CommandRegistry::getCommand(const std::string& name) const {
