@@ -25,4 +25,16 @@ class Server {
 	void start(int port, const std::string& password);
 	void shut();
 	void addClient(Client* client);
+
+	class InvalidPortRangeException : public std::exception
+	{
+	public:
+			virtual const char *what() const throw();
+	};
+
+	class InvalidArgumentNumberException : public std::exception
+	{
+	public:
+			virtual const char *what() const throw();
+	};
 };

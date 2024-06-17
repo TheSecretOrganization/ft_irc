@@ -30,13 +30,13 @@ int	serverParameters(int argc, char *argv[]) {
 	{
 		if (argc != 3)
 		{
-			throw std::logic_error("Invalid argument number");
+			throw Server::InvalidArgumentNumberException();
 		}
 
 		port = std::atoi(argv[1]);
 		if (port < 6660 || port > 6669)
 		{
-			throw std::logic_error("Error: Invalid port range");
+			throw Server::InvalidPortRangeException();
 		}
 	}
 	catch(const std::exception& e)

@@ -37,3 +37,12 @@ void Server::addClient(Client* client) {
 	clients.push_back(client);
 	observer.subscribe(client->getSocket().getFd(), client->getSocket());
 }
+
+
+const char *Server::InvalidArgumentNumberException::what() const throw() {
+	return "Bad argument number";
+};
+
+const char *Server::InvalidPortRangeException::what() const throw() {
+	return "Invalid port range, use ports between 6660 and 6669 included";
+};
