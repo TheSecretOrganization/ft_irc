@@ -28,7 +28,13 @@ void ClientSocket::onPoll() {
 		content.append(buff);
 		bzero(buff, SIZE);
 	}
-	content = content.erase(content.size() - 2, content.size());
+
+	if (content.size() == 0) {
+		return Server::getInstance().deleteClient(
+			Server::getInstance().getClient(fd));
+	} else {
+		content = content.erase(content.size() - 2, content.size());
+	}
 
 	size_t cs;
 	do {
