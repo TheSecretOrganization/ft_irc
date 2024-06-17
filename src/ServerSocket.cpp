@@ -18,41 +18,51 @@ ServerSocket::~ServerSocket() {}
 void ServerSocket::init(int port) {
 	this->port = port;
 	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
-	if (fd == -1) {
-		perror("socket");
-		return;
-	}
+	if (fd == -1)
+		throw ServerSocket();
 
 	sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(this->port);
 	addr.sin_addr.s_addr = INADDR_ANY;
 
-	if (bind(fd, (sockaddr*)&addr, sizeof(addr))) {
-		perror("bind");
-		return;
-	}
+	if (bind(fd, (sockaddr*)&addr, sizeof(addr)))
+		throw BindException();
 
-	if (listen(fd, 5) == -1) {
-		perror("listen");
-		return;
-	}
+	if (listen(fd, 5) == -1)
+		throw ListenException();
 
 	std::cout << "listening on port " << this->port << std::endl;
 }
 
 void ServerSocket::onPoll() {
 	int clientFd = accept(fd, NULL, 0);
-	if (clientFd == -1) {
-		perror("accept");
-		return;
-	}
+	if (clientFd == -1)
+		throw AcceptException();
 
-	if (fcntl(clientFd, F_SETFL, O_NONBLOCK) == -1) {
-		perror("fcntl");
-		return;
-	}
+	if (fcntl(clientFd, F_SETFL, O_NONBLOCK) == -1)
+		throw FcntlException();
 
 	Client* client = new Client(clientFd);
 	Server::getInstance().addClient(client);
+}
+
+const char* ServerSocket::SocketException::what() const throw() {
+	return "cannot create server's socket";
+}
+
+const char* ServerSocket::BindException::what() const throw() {
+	return "cannot bind server's socket to local address";
+}
+
+const char* ServerSocket::ListenException::what() const throw() {
+	return "cannot listen on local port";
+}
+
+const char* ServerSocket::AcceptException::what() const throw() {
+	return "cannot accpet new connection";
+}
+
+const char* ServerSocket::FcntlException::what() const throw() {
+	return "fcntl exception";
 }

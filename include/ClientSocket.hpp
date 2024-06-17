@@ -2,6 +2,7 @@
 
 #include "Socket.hpp"
 
+#include <exception>
 #include <string>
 
 class ClientSocket : public Socket {
@@ -13,4 +14,10 @@ class ClientSocket : public Socket {
 	~ClientSocket();
 
 	void sendPacket(std::string packet) const;
+
+	class SendException : public std::exception {
+	  public:
+		virtual const char* what() const throw();
+	};
+
 };
