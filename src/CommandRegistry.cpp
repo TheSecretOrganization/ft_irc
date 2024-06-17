@@ -21,10 +21,11 @@ static std::string strtolower(const std::string& str) {
 
 void CommandRegistry::registerCommand(const std::string& name,
 									  Command* command) {
-	if (commands.find(name) != commands.end())
+	std::string lowerName = strtolower(name);
+	if (commands.find(lowerName) != commands.end())
 		throw DuplicateException();
 	commands.insert(
-		std::pair<std::string, Command*>(strtolower(name), command));
+		std::pair<std::string, Command*>(lowerName, command));
 }
 
 Command* CommandRegistry::getCommand(const std::string& name) const {
