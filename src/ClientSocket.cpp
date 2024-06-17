@@ -1,4 +1,5 @@
 #include "ClientSocket.hpp"
+#include "Server.hpp"
 #include "Socket.hpp"
 
 #include <cstdio>
@@ -19,18 +20,35 @@ void ClientSocket::onPoll() {
 	std::string content;
 
 	bzero(buff, SIZE);
-	while (content[content.size() - 1] != '\n') {
-		ssize_t size = recv(fd, buff, SIZE, 0);
-		if (size == -1) {
-			perror("recv");
-			return;
-		}
+	ssize_t size;
+	while ((size = recv(fd, buff, SIZE, 0)) != 0) {
+		if (size == -1)
+			break;
 
 		content.append(buff);
 		bzero(buff, SIZE);
 	}
-	content.erase(content.size() - 1, content.size());
-	std::cout << "from " << fd << ": " << content << std::endl;
+	content = content.erase(content.size() - 2, content.size());
+
+	size_t cs;
+	do {
+		cs = content.find("\n");
+		size_t i = cs == std::string::npos ? content.size() + 1 : cs;
+		std::string command = content.substr(0, i - 1);
+		content = content.erase(0, i + 1);
+
+		i = command.find(" ");
+		i = i == std::string::npos ? command.size() + 1 : i;
+		std::string name = command.substr(0, i);
+
+		try {
+			Command* cmd =
+				Server::getInstance().getCommandRegistry().getCommand(name);
+			cmd->execute(Server::getInstance().getClient(fd), command);
+		} catch (CommandRegistry::NotFoundException& e) {
+			std::cout << name << ": " << e.what() << std::endl;
+		}
+	} while (cs != std::string::npos);
 }
 
 void ClientSocket::sendPacket(std::string packet) const {
