@@ -24,23 +24,18 @@ static void register_action(int signal, struct sigaction* old,
 	}
 }
 
-int	serverParameters(int argc, char *argv[]) {
-	int	port;
-	try
-	{
-		if (argc != 3)
-		{
+int serverParameters(int argc, char* argv[]) {
+	int port;
+	try {
+		if (argc != 3) {
 			throw Server::InvalidArgumentNumberException();
 		}
 
 		port = std::atoi(argv[1]);
-		if (port < 6660 || port > 6669)
-		{
+		if (port < 6660 || port > 6669) {
 			throw Server::InvalidPortRangeException();
 		}
-	}
-	catch(const std::exception& e)
-	{
+	} catch (const std::exception& e) {
 		std::cerr << e.what() << '\n';
 		return (0);
 	}
@@ -49,11 +44,10 @@ int	serverParameters(int argc, char *argv[]) {
 	return port;
 }
 
-int main(int argc, char *argv[]) {
-	int	port;
+int main(int argc, char* argv[]) {
+	int port;
 	port = serverParameters(argc, argv);
-	if (!port)
-	{
+	if (!port) {
 		return (1);
 	}
 

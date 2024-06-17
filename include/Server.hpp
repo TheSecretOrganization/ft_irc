@@ -26,15 +26,13 @@ class Server {
 	void shut();
 	void addClient(Client* client);
 
-	class InvalidPortRangeException : public std::exception
-	{
-	public:
-			virtual const char *what() const throw();
+	class InvalidPortRangeException : public std::exception {
+	  public:
+		virtual const char* what() const throw();
 	};
 
-	class InvalidArgumentNumberException : public std::exception
-	{
-	public:
-			virtual const char *what() const throw();
+	class InvalidArgumentNumberException : public std::exception {
+	  public:
+		virtual const char* what() const throw();
 	};
 };
