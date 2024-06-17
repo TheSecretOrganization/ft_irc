@@ -21,6 +21,10 @@ Server& Server::getInstance() {
 	return instance;
 }
 
+CommandRegistry &Server::getCommandRegistry() {
+	return commandRegistry;
+}
+
 void Server::start(int port, const std::string& password) {
 	this->password = password;
 	socket.init(port);
