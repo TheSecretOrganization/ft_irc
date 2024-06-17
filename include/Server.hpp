@@ -28,5 +28,6 @@ class Server {
 	void start(int port, const std::string& password);
 	void shut();
 	void addClient(Client* client);
+	void deleteClient(Client* client);
 	Client* getClient(int fd);
 };

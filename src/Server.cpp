@@ -2,6 +2,7 @@
 #include "Client.hpp"
 #include "ServerSocket.hpp"
 
+#include <algorithm>
 #include <vector>
 
 Server::Server() { run = true; }
@@ -47,4 +48,12 @@ Client* Server::getClient(int fd) {
 			return *it;
 	}
 	return NULL;
+}
+
+void Server::deleteClient(Client* client) {
+	std::vector<Client*>::iterator it =
+		std::find(clients.begin(), clients.end(), client);
+	observer.unsubscribe((*it)->getSocket().getFd());
+	delete *it;
+	clients.erase(it);
 }
