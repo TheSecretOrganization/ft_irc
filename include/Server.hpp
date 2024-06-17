@@ -24,9 +24,9 @@ class Server {
 	~Server();
 
 	static Server& getInstance();
-	CommandRegistry &getCommandRegistry();
+	CommandRegistry& getCommandRegistry();
 	void start(int port, const std::string& password);
 	void shut();
 	void addClient(Client* client);
-	Client *getClient(int fd);
+	Client* getClient(int fd);
 };

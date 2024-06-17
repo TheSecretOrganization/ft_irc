@@ -2,12 +2,11 @@
 
 #include "Command.hpp"
 
-class PingCommand: public Command {
+class PingCommand : public Command {
 
-public:
+  public:
 	PingCommand();
 	~PingCommand();
 
-	void execute(Client *client, std::string args);
-
+	void execute(Client* client, std::string args);
 };

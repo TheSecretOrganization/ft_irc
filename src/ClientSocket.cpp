@@ -42,9 +42,10 @@ void ClientSocket::onPoll() {
 		std::string name = command.substr(0, i);
 
 		try {
-			Command *cmd = Server::getInstance().getCommandRegistry().getCommand(name);
+			Command* cmd =
+				Server::getInstance().getCommandRegistry().getCommand(name);
 			cmd->execute(Server::getInstance().getClient(fd), command);
-		} catch(CommandRegistry::NotFoundException &e) {
+		} catch (CommandRegistry::NotFoundException& e) {
 			std::cout << name << ": " << e.what() << std::endl;
 		}
 	} while (cs != std::string::npos);
