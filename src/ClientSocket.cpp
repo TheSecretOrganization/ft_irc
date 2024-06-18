@@ -54,7 +54,6 @@ void ClientSocket::onPoll() {
 		command = (i != std::string::npos)
 					  ? command.substr(i + 1, command.size() - (i + 1))
 					  : "";
-		std::cout << "command: " << name << " args: " << command << std::endl;
 		try {
 			Command* cmd =
 				Server::getInstance().getCommandRegistry().getCommand(name);
