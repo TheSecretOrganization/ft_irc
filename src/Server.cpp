@@ -48,3 +48,11 @@ Client* Server::getClient(int fd) {
 	}
 	return NULL;
 }
+
+Channel* Server::getChannel(std::string name) {
+	for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); it++) {
+		if ((*it)->getChannelName() == name)
+			return (*it);
+	}
+	return NULL;
+}

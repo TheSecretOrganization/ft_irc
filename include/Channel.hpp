@@ -31,6 +31,8 @@ public:
 		virtual const char* what() const throw();
 	};
 
+	std::string& getChannelName(void);
+
 	void	setInviteMode(void);
 	void	unsetInviteMode(void);
 

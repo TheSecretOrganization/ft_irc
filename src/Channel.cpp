@@ -42,6 +42,10 @@ Channel::Channel(Client* creator, std::string name, std::string password) : name
 
 Channel::~Channel() {}
 
+std::string& Channel::getChannelName(void) {
+	return name;
+}
+
 void	Channel::setInviteMode(void) {
 	inviteOnly = 1;
 }

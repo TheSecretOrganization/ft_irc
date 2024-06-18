@@ -7,11 +7,13 @@
 #include "CommandRegistry.hpp"
 #include "ServerSocket.hpp"
 #include "SocketObserver.hpp"
+#include "Channel.hpp"
 
 class Server {
 
   private:
 	std::vector<Client*> clients;
+	std::vector<Channel*> channels;
 	SocketObserver observer;
 	ServerSocket socket;
 	CommandRegistry commandRegistry;
@@ -29,4 +31,5 @@ class Server {
 	void shut();
 	void addClient(Client* client);
 	Client* getClient(int fd);
+	Channel* getChannel(std::string name);
 };
