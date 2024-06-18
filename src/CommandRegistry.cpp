@@ -1,9 +1,15 @@
 #include "CommandRegistry.hpp"
 
+#include "commands/NickCommand.hpp"
 #include "commands/PingCommand.hpp"
+#include "commands/CapCommand.hpp"
+#include "commands/UserCommand.hpp"
 
 CommandRegistry::CommandRegistry() {
+	registerCommand("cap", new CapCommand());
+	registerCommand("nick", new NickCommand());
 	registerCommand("ping", new PingCommand());
+	registerCommand("user", new UserCommand());
 }
 
 CommandRegistry::~CommandRegistry() {
