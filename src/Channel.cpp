@@ -2,37 +2,28 @@
 #include <stdexcept>
 #include <algorithm>
 
-bool	checkChannelSyntax(std::string channelName) {
+void	checkChannelSyntax(std::string channelName) {
 	if (channelName[0] != '#')
 	{
 		throw Channel::InvalidChannelPrefixException();
-		return 0;
 	}
 
 	if (channelName.find(" ") != channelName.npos)
 	{
 		throw Channel::ForbiddenChannelNameException(' ');
-		return 0;
 	}
 	if (channelName.find(0x07) != channelName.npos)
 	{
 		throw Channel::ForbiddenChannelNameException(0x07);
-		return 0;
 	}
 	if (channelName.find(",") != channelName.npos)
 	{
 		throw Channel::ForbiddenChannelNameException(',');
-		return 0;
 	}
-
-	return 1;
 }
 
 Channel::Channel(Client* creator, std::string name) : name(name) {
-	if (!checkChannelSyntax(name))
-	{
-		return ;
-	}
+	checkChannelSyntax(name);
 	operators = {creator};
 	usersOnChannel = {creator};
 	topic = "";
@@ -41,10 +32,7 @@ Channel::Channel(Client* creator, std::string name) : name(name) {
 }
 
 Channel::Channel(Client* creator, std::string name, std::string password) : name(name), channelPassword(password) {
-	if (checkChannelSyntax(name))
-	{
-		return ;
-	}
+	checkChannelSyntax(name);
 	operators = {creator};
 	usersOnChannel = {creator};
 	topic = "";
