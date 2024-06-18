@@ -30,6 +30,7 @@ class Server {
 	void addClient(Client* client);
 	void deleteClient(Client* client);
 	Client* getClient(int fd);
+	const std::vector<Client*>& getClients() const;
 
 	class ClientNotFoundException : public std::exception {
 	  public:
