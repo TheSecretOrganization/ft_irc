@@ -8,7 +8,8 @@ class Client {
 
   private:
 	ClientSocket socket;
-	std::string name;
+	std::string realname;
+	std::string username;
 	std::string nickname;
 
   public:
@@ -20,4 +21,8 @@ class Client {
 	void sendMessage(std::string type, std::string message) const;
 	std::string getNickname() const;
 	void setNickname(const std::string& newNickname);
+	std::string getUsername() const;
+	void setUsername(const std::string& newUsername);
+	std::string getRealname() const;
+	void setRealname(const std::string& newRealname);
 };
