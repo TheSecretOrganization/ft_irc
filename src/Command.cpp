@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Command.hpp"
 
 #include <string>
