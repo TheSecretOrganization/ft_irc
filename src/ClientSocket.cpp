@@ -50,9 +50,11 @@ void ClientSocket::onPoll() {
 		content = content.erase(0, i + 1);
 
 		i = command.find(" ");
-		i = i == std::string::npos ? command.size() + 1 : i;
 		std::string name = command.substr(0, i);
-
+		command = (i != std::string::npos)
+					  ? command.substr(i + 1, command.size() - (i + 1))
+					  : "";
+		std::cout << "command: " << name << " args: " << command << std::endl;
 		try {
 			Command* cmd =
 				Server::getInstance().getCommandRegistry().getCommand(name);
