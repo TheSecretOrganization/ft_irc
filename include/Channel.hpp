@@ -18,6 +18,8 @@ public:
 	Channel(Client* creator, std::string name, std::string password);
 	~Channel();
 
+	
+
 	class InvalidChannelPrefixException : public std::exception {
 	  public:
 		virtual const char* what() const throw();
@@ -32,6 +34,8 @@ public:
 	};
 
 	std::string& getChannelName(void);
+	bool	isUserOnChannel(Client* client);
+	bool	isUserOperator(Client* client);
 
 	void	setInviteMode(void);
 	void	unsetInviteMode(void);

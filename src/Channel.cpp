@@ -46,6 +46,29 @@ std::string& Channel::getChannelName(void) {
 	return name;
 }
 
+bool	Channel::isUserOnChannel(Client* client) {
+	int	clientFd = client->getSocket().getFd();
+
+	for (std::vector<Client*>::iterator it = usersOnChannel.begin(); it != usersOnChannel.end(); ++it) {
+		if ((*it)->getSocket().getFd() == clientFd)
+			return 1;
+	}
+	return 0;
+}
+
+bool	Channel::isUserOperator(Client* client) {
+	if (!Channel::isUserOnChannel(client))
+		return 0;
+
+	int	clientFd = client->getSocket().getFd();
+
+	for (std::vector<Client*>::iterator it = operators.begin(); it != operators.end(); ++it) {
+		if ((*it)->getSocket().getFd() == clientFd)
+			return 1;
+	}
+	return 0;
+}
+
 void	Channel::setInviteMode(void) {
 	inviteOnly = 1;
 }

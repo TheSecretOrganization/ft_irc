@@ -31,5 +31,6 @@ class Server {
 	void shut();
 	void addClient(Client* client);
 	Client* getClient(int fd);
+	Client* getClient(std::string nickname);
 	Channel* getChannel(std::string name);
 };

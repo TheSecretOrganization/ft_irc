@@ -49,6 +49,15 @@ Client* Server::getClient(int fd) {
 	return NULL;
 }
 
+Client* Server::getClient(std::string nickname) {
+	for (std::vector<Client*>::iterator it = clients.begin();
+		 it != clients.end(); it++) {
+		if ((*it)->getClientnickName() == nickname)
+			return *it;
+	}
+	return NULL;
+}
+
 Channel* Server::getChannel(std::string name) {
 	for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); it++) {
 		if ((*it)->getChannelName() == name)
