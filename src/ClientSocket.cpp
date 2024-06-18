@@ -3,6 +3,7 @@
 #include "Socket.hpp"
 
 #include <cstdio>
+#include <exception>
 #include <iostream>
 #include <string>
 #include <strings.h>
@@ -28,7 +29,18 @@ void ClientSocket::onPoll() {
 		content.append(buff);
 		bzero(buff, SIZE);
 	}
-	content = content.erase(content.size() - 2, content.size());
+
+	if (content.size() == 0) {
+		try {
+			Server::getInstance().deleteClient(
+				Server::getInstance().getClient(fd));
+		} catch (const std::exception& e) {
+			std::cerr << e.what() << std::endl;
+		}
+		return;
+	} else {
+		content = content.erase(content.size() - 2, content.size());
+	}
 
 	size_t cs;
 	do {
@@ -46,7 +58,7 @@ void ClientSocket::onPoll() {
 				Server::getInstance().getCommandRegistry().getCommand(name);
 			cmd->execute(Server::getInstance().getClient(fd), command);
 		} catch (CommandRegistry::NotFoundException& e) {
-			std::cout << name << ": " << e.what() << std::endl;
+			std::cerr << name << ": " << e.what() << std::endl;
 		}
 	} while (cs != std::string::npos);
 }

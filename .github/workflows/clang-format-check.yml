@@ -1,6 +1,10 @@
 name: Clang Format Check
 
 on:
+  workflow_run:
+    workflows: ["Compile"]
+    types:
+      - completed
   push:
     branches: [ "main" ]
     paths:
