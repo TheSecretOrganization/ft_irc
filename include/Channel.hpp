@@ -18,6 +18,19 @@ public:
 	Channel(Client* creator, std::string name, std::string password);
 	~Channel();
 
+	class InvalidChannelPrefixException : public std::exception {
+	  public:
+		virtual const char* what() const throw();
+	};
+
+	class ForbiddenChannelNameException : public std::exception {
+	  private:
+		char ch;
+	  public:
+		ForbiddenChannelNameException(char ch) : ch(ch) {};
+		virtual const char* what() const throw();
+	};
+
 	void	setInviteMode(void);
 	void	unsetInviteMode(void);
 

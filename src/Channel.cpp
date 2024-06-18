@@ -2,7 +2,37 @@
 #include <stdexcept>
 #include <algorithm>
 
+bool	checkChannelSyntax(std::string channelName) {
+	if (channelName[0] != '#')
+	{
+		throw Channel::InvalidChannelPrefixException();
+		return 0;
+	}
+
+	if (channelName.find(" ") != channelName.npos)
+	{
+		throw Channel::ForbiddenChannelNameException(' ');
+		return 0;
+	}
+	if (channelName.find(0x07) != channelName.npos)
+	{
+		throw Channel::ForbiddenChannelNameException(0x07);
+		return 0;
+	}
+	if (channelName.find(",") != channelName.npos)
+	{
+		throw Channel::ForbiddenChannelNameException(',');
+		return 0;
+	}
+
+	return 1;
+}
+
 Channel::Channel(Client* creator, std::string name) : name(name) {
+	if (!checkChannelSyntax(name))
+	{
+		return ;
+	}
 	operators = {creator};
 	usersOnChannel = {creator};
 	topic = "";
@@ -11,6 +41,10 @@ Channel::Channel(Client* creator, std::string name) : name(name) {
 }
 
 Channel::Channel(Client* creator, std::string name, std::string password) : name(name), channelPassword(password) {
+	if (checkChannelSyntax(name))
+	{
+		return ;
+	}
 	operators = {creator};
 	usersOnChannel = {creator};
 	topic = "";
@@ -79,3 +113,18 @@ void	Channel::changeChannelSize(size_t newSize) {
 void	Channel::unsetSize(void) {
 	channelSize = 0;
 };
+
+const char* Channel::InvalidChannelPrefixException::what() const throw() {
+	return "Invalid channel prefix, you may only use  #";
+}
+
+const char* Channel::ForbiddenChannelNameException::what() const throw() {
+	if (ch == ' ')
+		return "Character ' ' is forbidden in channel name";
+	if (ch == 0x07)
+		return "Character '^G' (BEL) is forbidden in channel name";
+	if (ch == ',')
+		return "Character ',' is forbidden in channel name";
+	else
+		return "Forbidden character used in channel name";
+}
