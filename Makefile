@@ -21,6 +21,7 @@ OBJS_DIR    := objs
 SRC         :=	main.cpp \
 	Client.cpp \
 	ClientSocket.cpp \
+	Command.cpp \
 	CommandRegistry.cpp \
 	Server.cpp \
 	ServerSocket.cpp \
