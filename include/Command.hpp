@@ -4,6 +4,10 @@
 #include <string>
 #include <vector>
 
+enum {
+	USER = 1
+};
+
 class Command {
 
   public:
@@ -15,10 +19,10 @@ class Command {
 	class NeedMoreParamsException : public std::exception {
 	  private:
 		const Client* client;
-		const std::string* args;
+		const int command;
 
 	  public:
-		NeedMoreParamsException(const Client* client, const std::string* args);
+		NeedMoreParamsException(const Client* client, int command);
 		virtual const char* what() const throw();
 	};
 };
