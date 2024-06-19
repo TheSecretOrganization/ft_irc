@@ -25,7 +25,7 @@ Server& Server::getInstance() {
 CommandRegistry& Server::getCommandRegistry() { return commandRegistry; }
 
 void Server::start(int port, const std::string& password) {
-	this->password = password;
+	configuration.setPassword(password);
 	socket.init(port);
 	observer.subscribe(socket.getFd(), socket);
 
@@ -59,6 +59,10 @@ void Server::deleteClient(Client* client) {
 	delete *it;
 	clients.erase(it);
 }
+
+const std::vector<Client*>& Server::getClients() const { return clients; }
+
+const Configuration& Server::getConfiguration() const { return configuration; }
 
 const char* Server::ClientNotFoundException::what() const throw() {
 	return "client not found";
