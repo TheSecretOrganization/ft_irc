@@ -1,7 +1,5 @@
 #include "Command.hpp"
-#include "IrcReplies.hpp"
 
-#include <cstddef>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -35,24 +33,4 @@ std::vector<std::string> Command::split(const std::string& str,
 		result.push_back(tmp);
 	}
 	return result;
-}
-
-Command::NeedMoreParamsException ::NeedMoreParamsException(const Client* client,
-														   int command)
-	: client(client), command(command) {}
-
-const char* Command::NeedMoreParamsException::what() const throw() {
-	if (client == NULL)
-		return ERR_NEEDMOREPARAMS;
-	try {
-		switch (command) {
-		case USER:
-			client->sendMessage(ERR_NEEDMOREPARAMS,
-								client->getNickname() +
-									" USER :Not enough parametersr");
-		}
-	} catch (const std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
-	return ERR_NEEDMOREPARAMS;
 }
