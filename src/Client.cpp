@@ -5,7 +5,9 @@
 #include <iostream>
 #include <string>
 
-Client::Client(int fd) : socket(fd), realname(""), username(""), nickname("") {
+Client::Client(int fd)
+	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
+	  servername("") {
 	std::cout << "new client " << fd << std::endl;
 }
 
@@ -38,4 +40,16 @@ std::string Client::getRealname() const { return realname; }
 
 void Client::setRealname(const std::string& newRealname) {
 	realname = newRealname;
+}
+
+std::string Client::getHostname() const { return hostname; }
+
+void Client::setHostname(const std::string& newHostname) {
+	hostname = newHostname;
+}
+
+std::string Client::getServername() const { return servername; }
+
+void Client::setServername(const std::string& newServername) {
+	servername = newServername;
 }

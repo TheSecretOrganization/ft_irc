@@ -19,13 +19,13 @@ size_t stringToSizeT(const std::string& str) {
 }
 
 void UserCommand::execute(Client* client, std::string args) {
-	if (client->getRealname().empty()) {
+	if (!client->getRealname().empty()) {
 		sendError(client, ERR_ALREADYREGISTRED, _462);
 	}
 
 	std::vector<std::string> splitArgs = split(args, ' ');
-	if (splitArgs.size() < 4 || splitArgs[1] != "0" || splitArgs[2] != "*" ||
-		splitArgs[0].empty()) {
+	if (splitArgs.size() < 4 || splitArgs[0].empty() || splitArgs[1].empty() ||
+		splitArgs[2].empty()) {
 		sendError(client, ERR_NEEDMOREPARAMS, _461, "USER");
 	}
 
@@ -44,5 +44,7 @@ void UserCommand::execute(Client* client, std::string args) {
 	}
 
 	client->setUsername(splitArgs[0]);
+	client->setHostname(splitArgs[1]);
+	client->setServername(splitArgs[2]);
 	client->setRealname(splitArgs[3]);
 }

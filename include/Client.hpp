@@ -11,6 +11,8 @@ class Client {
 	std::string realname;
 	std::string username;
 	std::string nickname;
+	std::string	hostname;
+	std::string servername;
 
   public:
 	Client(int fd);
@@ -25,4 +27,8 @@ class Client {
 	void setUsername(const std::string& newUsername);
 	std::string getRealname() const;
 	void setRealname(const std::string& newRealname);
+	std::string getHostname() const;
+	void setHostname(const std::string& newHostname);
+	std::string getServername() const;
+	void setServername(const std::string& newServername);
 };
