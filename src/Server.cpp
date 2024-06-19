@@ -5,7 +5,9 @@
 #include <algorithm>
 #include <vector>
 
-Server::Server() { run = true; }
+Server::Server() {
+	run = true;
+}
 
 Server::~Server() {
 	for (std::vector<Client*>::iterator it = clients.begin();
@@ -25,7 +27,7 @@ Server& Server::getInstance() {
 CommandRegistry& Server::getCommandRegistry() { return commandRegistry; }
 
 void Server::start(int port, const std::string& password) {
-	this->password = password;
+	configuration.setPassword(password);
 	socket.init(port);
 	observer.subscribe(socket.getFd(), socket);
 

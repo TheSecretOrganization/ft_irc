@@ -17,7 +17,6 @@ class Server {
 	ServerSocket socket;
 	CommandRegistry commandRegistry;
 	Configuration configuration;
-	std::string password;
 	bool run;
 
 	Server();

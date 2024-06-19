@@ -1,30 +1,29 @@
 #include "Configuration.hpp"
 
-#include <cstddef>
+#include <string>
 
-Configuration::Configuration()
-	: userlen(USERLEN), creationDate(CREATION_DATE), serverName(SERVER_NAME),
-	  networkName(NETWORK_NAME), hostname(HOSTNAME), password(""),
-	  version(VERSION) {}
+Configuration::Configuration() {
+	config["userlen"] = USERLEN;
+	config["creationDate"] = CREATION_DATE;
+	config["serverName"] = SERVER_NAME;
+	config["networkName"] = NETWORK_NAME;
+	config["hostname"] = HOSTNAME;
+	config["version"] = VERSION;
+	config["password"] = "";
+	config["umodes"] = UMODES;
+	config["cmodes"] = CMODES;
+	config["cpmodes"] = CPMODES;
+}
 
 Configuration::~Configuration() {}
 
-size_t Configuration::getUserlen() const { return userlen; }
-
-const std::string& Configuration::getCreationDate() const {
-	return creationDate;
+std::string Configuration::getValue(const std::string& key) const {
+	if (config.find(key) != config.end()) {
+		return config.at(key);
+	}
+	return "";
 }
 
-const std::string& Configuration::getServerName() const { return serverName; }
-
-const std::string& Configuration::getNetworkName() const { return networkName; }
-
-const std::string& Configuration::getHostname() const { return hostname; }
-
-const std::string& Configuration::getPassword() const { return password; }
-
-void Configuration::setPassword(const std::string& newPassword) {
-	password = newPassword;
+void Configuration::setPassword(const std::string& password) {
+	config["password"] = password;
 }
-
-const std::string& Configuration::getVersion() const { return version; }
