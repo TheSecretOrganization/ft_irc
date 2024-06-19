@@ -85,6 +85,14 @@ void	Channel::unsetTopic(void) {
 	topic = "";
 }
 
+void	Channel::lockTopic(void) {
+	this->topicLocked = 1;
+}
+
+void	Channel::unlockTopic(void) {
+	this->topicLocked = 0;
+}
+
 void	Channel::setChannelPassword(std::string newPassword) {
 	if (channelPassword.size() == 0)
 	{

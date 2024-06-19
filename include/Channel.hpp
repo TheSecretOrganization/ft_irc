@@ -12,6 +12,7 @@ private:
 	std::vector<Client*>	usersOnChannel;
 	std::string	topic;
 	bool	inviteOnly;
+	bool	topicLocked;
 	size_t	channelSize;
 public:
 	Channel(Client* creator, std::string name);
@@ -42,6 +43,8 @@ public:
 
 	void	changeTopic(std::string newTopic);
 	void	unsetTopic(void);
+	void	lockTopic(void);
+	void	unlockTopic(void);
 
 	void	setChannelPassword(std::string newPassword);
 	void	unsetChannelPassword(void);
