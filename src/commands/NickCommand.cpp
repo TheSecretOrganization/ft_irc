@@ -6,7 +6,6 @@
 #include <cctype>
 #include <cstddef>
 #include <cstring>
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -34,59 +33,10 @@ static bool checkAlreadyInUse(const std::string& nickname) {
 
 void NickCommand::execute(Client* client, std::string args) {
 	if (args.empty())
-		throw NoNicknameGivenException(client);
+		return sendError(client, ERR_NONICKNAMEGIVEN, _431);
 	if (checkNicknameValid(args))
-		throw ErrOneUsNicknameException(client, &args);
+		return sendError(client, ERR_ERRONEUSNICKNAME, _432, args);
 	if (checkAlreadyInUse(args) == false)
-		throw NicknameInUseException(client, &args);
+		return sendError(client, ERR_NICKNAMEINUSE, _433, args);
 	client->setNickname(args);
-}
-
-NickCommand::NoNicknameGivenException::NoNicknameGivenException(Client* client)
-	: client(client) {}
-
-const char* NickCommand::NoNicknameGivenException::what() const throw() {
-	if (client == NULL)
-		return ERR_NONICKNAMEGIVEN;
-	try {
-		client->sendMessage(ERR_NONICKNAMEGIVEN,
-							client->getNickname() + " :No nickname given");
-	} catch (const std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
-	return ERR_NONICKNAMEGIVEN;
-}
-
-NickCommand::ErrOneUsNicknameException::ErrOneUsNicknameException(
-	Client* client, const std::string* args)
-	: client(client), args(args) {}
-
-const char* NickCommand::ErrOneUsNicknameException::what() const throw() {
-	if (client == NULL || args == NULL)
-		return ERR_ERRONEUSNICKNAME;
-	try {
-		client->sendMessage(ERR_ERRONEUSNICKNAME, client->getNickname() + " " +
-													  *args +
-													  " :Erroneus nickname");
-	} catch (const std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
-	return ERR_ERRONEUSNICKNAME;
-}
-
-NickCommand::NicknameInUseException::NicknameInUseException(
-	Client* client, const std::string* args)
-	: client(client), args(args) {}
-
-const char* NickCommand::NicknameInUseException::what() const throw() {
-	if (client == NULL || args == NULL)
-		return ERR_NICKNAMEINUSE;
-	try {
-		client->sendMessage(ERR_NICKNAMEINUSE,
-							client->getNickname() + " " + *args +
-								" :Nickname is already in use");
-	} catch (const std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
-	return ERR_NICKNAMEINUSE;
 }
