@@ -11,7 +11,7 @@ class Client {
 	std::string realname;
 	std::string username;
 	std::string nickname;
-	std::string	hostname;
+	std::string hostname;
 	std::string servername;
 
   public:

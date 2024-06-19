@@ -1,8 +1,8 @@
 #include "CommandRegistry.hpp"
 
+#include "commands/CapCommand.hpp"
 #include "commands/NickCommand.hpp"
 #include "commands/PingCommand.hpp"
-#include "commands/CapCommand.hpp"
 #include "commands/UserCommand.hpp"
 
 CommandRegistry::CommandRegistry() {

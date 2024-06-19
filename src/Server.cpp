@@ -5,9 +5,7 @@
 #include <algorithm>
 #include <vector>
 
-Server::Server() {
-	run = true;
-}
+Server::Server() { run = true; }
 
 Server::~Server() {
 	for (std::vector<Client*>::iterator it = clients.begin();

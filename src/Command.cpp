@@ -1,9 +1,9 @@
 #include "Command.hpp"
 
+#include <exception>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <exception>
 
 void Command::sendError(Client* client, std::string code, std::string message,
 						std::string arg) const {

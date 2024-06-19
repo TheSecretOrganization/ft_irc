@@ -8,9 +8,9 @@ PingCommand::~PingCommand() {}
 void PingCommand::execute(Client* client, std::string args) {
 	std::cout << "Got ping from " << client->getSocket().getFd() << " with "
 			  << args << std::endl;
-    try {
+	try {
 		client->sendMessage("PONG", args);
-    } catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-    }
+	} catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
