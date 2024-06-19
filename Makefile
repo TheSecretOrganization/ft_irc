@@ -23,12 +23,16 @@ SRC         :=	main.cpp \
 	ClientSocket.cpp \
 	Command.cpp \
 	CommandRegistry.cpp \
+	Configuration.cpp \
 	Server.cpp \
 	ServerSocket.cpp \
 	Socket.cpp \
 	SocketObserver.cpp \
 	$(addprefix $(CMDS_DIR)/, \
+		CapCommand.cpp \
+		NickCommand.cpp \
 		PingCommand.cpp \
+		UserCommand.cpp \
 	)
 INCLUDES    :=  $(INCLD_DIR)
 INCLD_FLAG  :=  $(addprefix -I , $(INCLUDES))

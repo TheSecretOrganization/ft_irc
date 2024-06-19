@@ -50,9 +50,10 @@ void ClientSocket::onPoll() {
 		content = content.erase(0, i + 1);
 
 		i = command.find(" ");
-		i = i == std::string::npos ? command.size() + 1 : i;
 		std::string name = command.substr(0, i);
-
+		command = (i != std::string::npos)
+					  ? command.substr(i + 1, command.size() - (i + 1))
+					  : "";
 		try {
 			Command* cmd =
 				Server::getInstance().getCommandRegistry().getCommand(name);
@@ -64,7 +65,9 @@ void ClientSocket::onPoll() {
 }
 
 void ClientSocket::sendPacket(std::string packet) const {
-	packet.append("\r\n");
+	packet = ":" +
+			 Server::getInstance().getConfiguration().getValue("hostname") +
+			 " " + packet + "\r\n";
 	if (send(fd, packet.c_str(), packet.size(), 0) == -1)
 		throw SendException();
 }
