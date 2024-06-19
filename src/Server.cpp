@@ -2,6 +2,7 @@
 #include "Client.hpp"
 #include "ServerSocket.hpp"
 
+#include <algorithm>
 #include <vector>
 
 Server::Server() { run = true; }
@@ -46,7 +47,21 @@ Client* Server::getClient(int fd) {
 		if ((*it)->getSocket().getFd() == fd)
 			return *it;
 	}
-	return NULL;
+	throw ClientNotFoundException();
+}
+
+void Server::deleteClient(Client* client) {
+	std::vector<Client*>::iterator it =
+		std::find(clients.begin(), clients.end(), client);
+	if (it == clients.end())
+		throw ClientNotFoundException();
+	observer.unsubscribe((*it)->getSocket().getFd());
+	delete *it;
+	clients.erase(it);
+}
+
+const char* Server::ClientNotFoundException::what() const throw() {
+	return "client not found";
 }
 
 Client* Server::getClient(std::string nickname) {
