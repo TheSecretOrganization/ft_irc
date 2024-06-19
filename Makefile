@@ -23,6 +23,7 @@ SRC         :=	main.cpp \
 	ClientSocket.cpp \
 	Command.cpp \
 	CommandRegistry.cpp \
+	Configuration.cpp \
 	Server.cpp \
 	ServerSocket.cpp \
 	Socket.cpp \
