@@ -3,15 +3,14 @@
 
 InviteCommand::InviteCommand()
 {
+	command = "INVITE";
+	expectedSize = 2;
 }
 
-InviteCommand::~InviteCommand()
-{
-}
+InviteCommand::~InviteCommand() {}
 
 void	InviteCommand::execute(Client* client, std::string args) {
-	std::vector<std::string> vecArgs;
-	Command::splitArgs(args, &vecArgs);
+	std::vector<std::string> vecArgs = Command::split(args, ' ');
 	if (InviteCommand::needMoreParams(client, vecArgs)) {
 		return ;
 	}
