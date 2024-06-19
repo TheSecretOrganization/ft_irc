@@ -12,23 +12,24 @@ InviteCommand::~InviteCommand()
 void	InviteCommand::execute(Client* client, std::string args) {
 	std::vector<std::string> vecArgs;
 	Command::splitArgs(args, &vecArgs);
-	if (vecArgs.size() != 3) {
-		throw	MissingParamsInCommandException(client, "INVITE");
+	if (InviteCommand::needMoreParams(client, vecArgs)) {
+		return ;
 	}
 
 	Channel* channel = Server::getInstance().getChannel(vecArgs[1]);
-	if (channel == NULL) {
-		throw	NoChannelException(client, "INVITE");
+	if (noSuchChannel(client, channel, vecArgs[1])) {
+		return ;
 	}
 
-	if (!channel->isUserOnChannel(client)) {
-		throw	NotOnChannelException(client, "INVITE");
+	if (notOnChannel(client, channel)) {
+		return ;
+	}
+
+	if (userOnChannel(client, channel, vecArgs[1])) {
+		return ;
 	}
 
 	Client* destinationClient = Server::getInstance().getClient(vecArgs[1]);
-	if (channel->isUserOnChannel(destinationClient)) {
-		throw	UserOnChannelException(client, vecArgs[1], vecArgs[2]);
-	}
 
 	// TODO: RPL_INVITING to client
 	// and send an INVITE to destinationClient, how??
