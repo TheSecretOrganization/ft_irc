@@ -62,6 +62,8 @@ void Server::deleteClient(Client* client) {
 
 const std::vector<Client*>& Server::getClients() const { return clients; }
 
+const Configuration& Server::getConfiguration() const { return configuration; }
+
 const char* Server::ClientNotFoundException::what() const throw() {
 	return "client not found";
 }

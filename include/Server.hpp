@@ -5,6 +5,7 @@
 
 #include "Client.hpp"
 #include "CommandRegistry.hpp"
+#include "Configuration.hpp"
 #include "ServerSocket.hpp"
 #include "SocketObserver.hpp"
 
@@ -15,6 +16,7 @@ class Server {
 	SocketObserver observer;
 	ServerSocket socket;
 	CommandRegistry commandRegistry;
+	Configuration configuration;
 	std::string password;
 	bool run;
 
@@ -31,6 +33,7 @@ class Server {
 	void deleteClient(Client* client);
 	Client* getClient(int fd);
 	const std::vector<Client*>& getClients() const;
+	const Configuration& getConfiguration() const;
 
 	class ClientNotFoundException : public std::exception {
 	  public:
