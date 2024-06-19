@@ -1,6 +1,7 @@
 #include "Client.hpp"
 #include "ClientSocket.hpp"
 
+#include <exception>
 #include <iostream>
 #include <string>
 
@@ -14,7 +15,11 @@ ClientSocket& Client::getSocket() { return socket; }
 
 void Client::sendMessage(std::string type, std::string message) const {
 	std::string packet = type + " " + message;
-	socket.sendPacket(packet);
+	try {
+		socket.sendPacket(packet);
+	} catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 std::string Client::getNickname() const { return nickname; }

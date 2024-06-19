@@ -66,8 +66,10 @@ void ClientSocket::onPoll() {
 
 void ClientSocket::sendPacket(std::string packet) const {
 	packet.append("\r\n");
-	if (send(fd, packet.c_str(), packet.size(), 0) == -1) {
-		perror("Send message");
-		return;
-	}
+	if (send(fd, packet.c_str(), packet.size(), 0) == -1)
+		throw SendException();
+}
+
+const char* ClientSocket::SendException::what() const throw() {
+	return "cannot send packet to client";
 }
