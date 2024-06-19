@@ -5,6 +5,19 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <exception>
+
+void Command::sendError(Client* client, std::string code, std::string message,
+						std::string arg) const {
+	try {
+		if (!arg.empty())
+			client->sendMessage(code, arg + " :" + message);
+		else
+			client->sendMessage(code, ":" + message);
+	} catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
+}
 
 std::vector<std::string> Command::split(const std::string& str,
 										char del) const {
