@@ -16,8 +16,9 @@ NickCommand::~NickCommand() {}
 
 static bool checkNicknameValid(const std::string& nickname) {
 	for (size_t i = 0; nickname[i]; i++) {
-		if (!isalnum(nickname[i]) && !strchr(VALID_CHARS, nickname[i]))
+		if (!isalnum(nickname[i]) && !strchr(VALID_CHARS, nickname[i])) {
 			return false;
+		}
 	}
 	return true;
 }
@@ -34,7 +35,7 @@ static bool checkAlreadyInUse(const std::string& nickname) {
 void NickCommand::execute(Client* client, std::string args) {
 	if (args.empty())
 		return sendError(client, ERR_NONICKNAMEGIVEN, _431);
-	if (checkNicknameValid(args))
+	if (checkNicknameValid(args) == false)
 		return sendError(client, ERR_ERRONEUSNICKNAME, _432, args);
 	if (checkAlreadyInUse(args) == false)
 		return sendError(client, ERR_NICKNAMEINUSE, _433, args);
