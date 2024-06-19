@@ -16,7 +16,7 @@ static void rplWelcome(Client* client) {
 		RPL_WELCOME,
 		client->getNickname() + " :Welcome to the " +
 			Server::getInstance().getConfiguration().getValue("networkName") +
-			"Network, " + client->getNickname() + "[" + "@" + "]");
+			" Network, " + client->getNickname());
 }
 
 static void rplYourHost(Client* client) {
