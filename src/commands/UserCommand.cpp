@@ -11,13 +11,6 @@
 UserCommand::UserCommand() {}
 UserCommand::~UserCommand() {}
 
-size_t stringToSizeT(const std::string& str) {
-	std::stringstream ss(str);
-	size_t result;
-	ss >> result;
-	return (ss.fail() || !ss.eof()) ? 0 : result;
-}
-
 void UserCommand::execute(Client* client, std::string args) {
 	if (!client->getRealname().empty()) {
 		sendError(client, ERR_ALREADYREGISTRED, _462);

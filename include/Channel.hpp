@@ -19,7 +19,7 @@ public:
 	Channel(Client* creator, std::string name, std::string password);
 	~Channel();
 
-	
+	static void	checkChannelSyntax(std::string channelName);
 
 	class InvalidChannelPrefixException : public std::exception {
 	  public:
@@ -48,6 +48,7 @@ public:
 
 	void	setChannelPassword(std::string newPassword);
 	void	unsetChannelPassword(void);
+	const std::string& getChannelPassword(void);
 
 	void	addOperator(Client* newOp);
 	void	removeOperator(Client *oldOp);

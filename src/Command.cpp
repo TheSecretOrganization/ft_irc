@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 void Command::sendError(Client* client, std::string code, std::string message,
 						std::string arg) const {
@@ -17,8 +18,14 @@ void Command::sendError(Client* client, std::string code, std::string message,
 		std::cerr << e.what() << std::endl;
 	}
 }
+
 bool	Command::needMoreParams(Client* client, std::vector<std::string>& vecArgs) {
-	if (vecArgs.size() != expectedSize) {
+	if (expectedSize != 0 && vecArgs.size() != expectedSize) {
+		sendError(client, ERR_NEEDMOREPARAMS, _461, command);
+		return	true;
+	}
+	else if (vecArgs.size() < minSize)
+	{
 		sendError(client, ERR_NEEDMOREPARAMS, _461, command);
 		return	true;
 	}
@@ -50,7 +57,7 @@ bool	Command::userOnChannel(Client* client, Channel* channel, std::string nick) 
 }
 
 std::vector<std::string> Command::split(const std::string& str,
-										char del) const {
+										char del) {
 	std::vector<std::string> result;
 	std::string tmp;
 	for (std::string::const_iterator it = str.begin(); it != str.end(); ++it) {
@@ -65,4 +72,11 @@ std::vector<std::string> Command::split(const std::string& str,
 		result.push_back(tmp);
 	}
 	return result;
+}
+
+size_t stringToSizeT(const std::string& str) {
+	std::stringstream ss(str);
+	size_t result;
+	ss >> result;
+	return (ss.fail() || !ss.eof()) ? 0 : result;
 }

@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <algorithm>
 
-void	checkChannelSyntax(std::string channelName) {
+void	Channel::checkChannelSyntax(std::string channelName) {
 	if (channelName[0] != '#')
 	{
 		throw Channel::InvalidChannelPrefixException();
@@ -104,6 +104,10 @@ void	Channel::setChannelPassword(std::string newPassword) {
 
 void	Channel::unsetChannelPassword(void) {
 	channelPassword = "";
+}
+
+const std::string& Channel::getChannelPassword(void) {
+	return channelPassword;
 }
 
 void	Channel::addOperator(Client* newOp) {
