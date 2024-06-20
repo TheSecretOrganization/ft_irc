@@ -42,7 +42,7 @@ Channel::Channel(Client* creator, std::string name, std::string password) : name
 
 Channel::~Channel() {}
 
-std::string& Channel::getChannelName(void) {
+const std::string& Channel::getChannelName(void) {
 	return name;
 }
 

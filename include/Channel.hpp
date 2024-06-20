@@ -34,7 +34,7 @@ public:
 		virtual const char* what() const throw();
 	};
 
-	std::string& getChannelName(void);
+	const std::string& getChannelName(void);
 	bool	isUserOnChannel(Client* client);
 	bool	isUserOperator(Client* client);
 
