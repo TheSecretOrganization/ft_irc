@@ -1,6 +1,9 @@
 #include "commands/PassCommand.hpp"
+#include "commands/ErrorCommand.hpp"
 #include "Client.hpp"
 #include "Command.hpp"
+
+#define ERR_PASSWORD "Authentification failed"
 
 PassCommand::PassCommand() : Command("PASS", 1, 1) {}
 
@@ -12,8 +15,7 @@ void PassCommand::execute(Client* client, std::string args) {
 	}
 
 	if (passwdMismatch(client, args)) {
-        // TODO: Error
-		return;
+		return ErrorCommand::executeError(client, "");
 	}
     client->setStatus(PASSWD_OK);
 }

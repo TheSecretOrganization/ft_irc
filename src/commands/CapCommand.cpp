@@ -1,4 +1,5 @@
 #include "commands/CapCommand.hpp"
+#include "commands/ErrorCommand.hpp"
 #include "Client.hpp"
 #include "Configuration.hpp"
 #include "IrcReplies.hpp"
@@ -7,6 +8,8 @@
 #include <exception>
 #include <iostream>
 #include <string>
+
+#define ERR_REGISTRATION "Error during registration"
 
 CapCommand::CapCommand() : Command("CAP", 1, 1) {}
 
@@ -62,8 +65,7 @@ void CapCommand::execute(Client* client, std::string args) {
 			client->sendMessage("CAP * LS", ":");
 		} else if (args == "END") {
 			if (client->getStatus() != USER_OK) {
-				// TODO: Error
-				return;
+				return ErrorCommand::executeError(client, ERR_REGISTRATION);
 			} else {
 				client->setStatus(REGISTRED);
 			}
