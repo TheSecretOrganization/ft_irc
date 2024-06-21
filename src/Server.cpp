@@ -3,6 +3,7 @@
 #include "ServerSocket.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <vector>
 
 Server::Server() { run = true; }
@@ -34,7 +35,10 @@ void Server::start(int port, const std::string& password) {
 	}
 }
 
-void Server::shut() { run = false; }
+void Server::shut() {
+	run = false;
+	std::cout << "Bye!" << std::endl;
+}
 
 void Server::addClient(Client* client) {
 	clients.push_back(client);
@@ -63,6 +67,8 @@ void Server::deleteClient(Client* client) {
 const std::vector<Client*>& Server::getClients() const { return clients; }
 
 const Configuration& Server::getConfiguration() const { return configuration; }
+
+bool Server::getRun() const { return run; }
 
 const char* Server::ClientNotFoundException::what() const throw() {
 	return "client not found";
