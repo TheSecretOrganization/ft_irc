@@ -42,6 +42,11 @@ Channel::Channel(Client* creator, std::string name, std::string password) : name
 
 Channel::~Channel() {}
 
+void	Channel::createChannel(Client* client, std::string name, std::string password) {
+	Channel*	newChannel = new Channel(client, name, password);
+	Server::getInstance().addChannel(newChannel);
+}
+
 std::vector<Client*>&	Channel::getUsers(void) {
 	return usersOnChannel;
 }
@@ -134,6 +139,15 @@ void	Channel::unsetChannelPassword(void) {
 
 const std::string& Channel::getChannelPassword(void) {
 	return channelPassword;
+}
+
+void	Channel::addUser(Client* user) {
+	usersOnChannel.push_back(user);
+}
+
+void	Channel::removeUser(Client* user) {
+	std::vector<Client*>::iterator it = std::find(usersOnChannel.begin(), usersOnChannel.end(), user);
+	usersOnChannel.erase(it);
 }
 
 void	Channel::addOperator(Client* newOp) {
