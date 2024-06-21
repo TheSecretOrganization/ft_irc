@@ -1,8 +1,10 @@
 #pragma once
 
+#include "ClientSocket.hpp"
+
 #include <string>
 
-#include "ClientSocket.hpp"
+enum { UNKNOWN = 0, PASSWD_OK, NICK_OK, USER_OK, REGISTRED };
 
 class Client {
 
@@ -13,6 +15,7 @@ class Client {
 	std::string nickname;
 	std::string hostname;
 	std::string servername;
+	int status;
 
   public:
 	Client(int fd);
@@ -31,4 +34,6 @@ class Client {
 	void setHostname(const std::string& newHostname);
 	std::string getServername() const;
 	void setServername(const std::string& newServername);
+	int getStatus() const;
+	void setStatus(int newStatus);
 };

@@ -7,7 +7,7 @@
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
-	  servername("") {
+	  servername(""), status(UNKNOWN) {
 	std::cout << "new client " << fd << std::endl;
 }
 
@@ -53,3 +53,7 @@ std::string Client::getServername() const { return servername; }
 void Client::setServername(const std::string& newServername) {
 	servername = newServername;
 }
+
+int Client::getStatus() const { return status; }
+
+void Client::setStatus(int newStatus) { status = newStatus; }
