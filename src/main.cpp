@@ -2,7 +2,6 @@
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
 #include <exception>
 #include <iostream>
 
@@ -28,36 +27,35 @@ static int register_action(int signal, struct sigaction* old,
 }
 
 int serverParameters(int argc, char* argv[]) {
-	int port;
-	try {
-		if (argc != 3) {
-			throw Server::InvalidArgumentNumberException();
-		}
-
-		port = std::atoi(argv[1]);
-		if (port < 6660 || port > 6669) {
-			throw Server::InvalidPortRangeException();
-		}
-	} catch (const std::exception& e) {
-		std::cerr << e.what() << '\n';
-		return (0);
+	if (argc != 3) {
+		std::cerr << "Usage: ./ircserv [port] [password]" << std::endl;
+		return 0;
 	}
 
-	std::cout << argv[2] << std::endl;
+	int port = std::atoi(argv[1]);
+	if (port < 6660 || port > 6669) {
+		std::cerr << "Error: [port] must be between 6660 and 6669" << std::endl;
+		return 0;
+	}
 	return port;
 }
 
 int main(int argc, char* argv[]) {
-	int port;
-	port = serverParameters(argc, argv);
+	int port = serverParameters(argc, argv);
 	if (!port) {
 		return (1);
 	}
 
-	register_action(SIGINT, NULL, &handle_singint);
-	register_action(SIGQUIT, NULL, SIG_IGN);
+	if (register_action(SIGINT, NULL, &handle_singint) == -1 ||
+		register_action(SIGQUIT, NULL, SIG_IGN) == -1)
+		return -1;
 
-	Server::getInstance().start(port, argv[2]);
+	try {
+		Server::getInstance().start(port, argv[2]);
+	} catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+		return -1;
+	}
 
 	return 0;
 }
