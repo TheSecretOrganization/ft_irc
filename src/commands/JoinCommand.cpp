@@ -44,9 +44,18 @@ std::vector<Channel*> JoinCommand::getTrueChannels(Client* client, std::map<std:
 	return channels;
 }
 
-bool	JoinCommand::checkChannelKey(Client* client, Channel* channel, const std::string& password) {
+bool	JoinCommand::badChannelKey(Client* client, Channel* channel, const std::string& password) {
 	if (channel && channel->getChannelPassword() != password) {
 		sendError(client, ERR_BADCHANNELKEY, _475, channel->getChannelName());
+		return true;
+	}
+	return false;
+}
+
+bool	JoinCommand::isChannelFull(Client* client, Channel* channel) {
+	if (channel->getUsers().size() >= channel->getChannelSize())
+	{
+		sendError(client, ERR_CHANNELISFULL, _471, channel->getChannelName());
 		return true;
 	}
 	return false;
@@ -79,6 +88,27 @@ void	JoinCommand::execute(Client* client, std::string args) {
 	{
 		if (channels[i] == NULL)
 			continue;
-		checkChannelKey(client, channels[i], map.at(channels[i]->getChannelName()));
+		if (badChannelKey(client, channels[i], map.at(channels[i]->getChannelName())))
+		{
+			map.erase(channels[i]->getChannelName());
+			channels.erase(channels.begin() + i);
+			i--;
+			continue;
+		}
 	}
+
+	for (size_t i = 0; i < channels.size(); i++)
+	{
+		if (channels[i] == NULL)
+			continue;
+		if (isChannelFull(client, channels[i]))
+		{
+			map.erase(channels[i]->getChannelName());
+			channels.erase(channels.begin() + i);
+			i--;
+			continue;
+		}
+	}
+
+	
 }
