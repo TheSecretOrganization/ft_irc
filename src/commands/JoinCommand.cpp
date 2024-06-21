@@ -139,7 +139,7 @@ void	JoinCommand::execute(Client* client, std::string args) {
 			Channel::createChannel(client, jt->first, jt->second);
 		else
 		{
-			Channel::addUser(client);
+			channels[i]->addUser(client);
 		}
 		jt++;
 	}
