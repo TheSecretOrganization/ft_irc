@@ -29,21 +29,21 @@ static int register_action(int signal, struct sigaction* old,
 int serverParameters(int argc, char* argv[]) {
 	if (argc != 3) {
 		std::cerr << "Usage: ./ircserv [port] [password]" << std::endl;
-		return 0;
+		return -1;
 	}
 
 	int port = std::atoi(argv[1]);
 	if (port < 6660 || port > 6669) {
 		std::cerr << "Error: [port] must be between 6660 and 6669" << std::endl;
-		return 0;
+		return -1;
 	}
 	return port;
 }
 
 int main(int argc, char* argv[]) {
 	int port = serverParameters(argc, argv);
-	if (!port) {
-		return (1);
+	if (port == -1) {
+		return -1;
 	}
 
 	if (register_action(SIGINT, NULL, &handle_singint) == -1 ||
