@@ -8,7 +8,8 @@
 #include <iostream>
 #include <string>
 
-CapCommand::CapCommand() {}
+CapCommand::CapCommand() : Command("CAP", 1, 1) {}
+
 CapCommand::~CapCommand() {}
 
 static void rplWelcome(Client* client) {
