@@ -61,6 +61,13 @@ void CapCommand::execute(Client* client, std::string args) {
 		if (args == "LS") {
 			client->sendMessage("CAP * LS", ":");
 		} else if (args == "END") {
+			if (client->getStatus() != USER_OK) {
+				// TODO: Error
+				return;
+			} else {
+				client->setStatus(REGISTRED);
+			}
+
 			rplWelcome(client);
 			rplYourHost(client);
 			rplCreated(client);

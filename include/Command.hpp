@@ -23,5 +23,8 @@ class Command {
 	static std::vector<std::string> split(const std::string& str, char del);
 
 	virtual bool needMoreParams(Client* client,
-								std::vector<std::string>& vecArgs);
+								const std::vector<std::string>& vecArgs) const;
+	virtual bool alreadyRegistred(Client* client) const;
+	virtual bool passwdMismatch(Client* client,
+								const std::string& passWd) const;
 };
