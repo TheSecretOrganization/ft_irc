@@ -3,14 +3,16 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <exception>
+#include <iostream>
 
 static void handle_singint(int signal) {
 	(void)signal;
 	Server::getInstance().shut();
 }
 
-static void register_action(int signal, struct sigaction* old,
-							void (*handler)(int)) {
+static int register_action(int signal, struct sigaction* old,
+						   void (*handler)(int)) {
 	struct sigaction saction;
 	sigset_t set;
 
@@ -19,9 +21,10 @@ static void register_action(int signal, struct sigaction* old,
 	saction.sa_mask = set;
 	saction.sa_flags = 0;
 	if (sigaction(signal, &saction, old) == -1) {
-		perror("sigaction");
-		return;
+		std::cerr << "cannot create signal action" << std::endl;
+		return -1;
 	}
+	return 0;
 }
 
 int serverParameters(int argc, char* argv[]) {

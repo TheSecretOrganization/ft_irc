@@ -1,7 +1,9 @@
 #include "ClientSocket.hpp"
+#include "Server.hpp"
 #include "Socket.hpp"
 
 #include <cstdio>
+#include <exception>
 #include <iostream>
 #include <string>
 #include <strings.h>
@@ -19,24 +21,57 @@ void ClientSocket::onPoll() {
 	std::string content;
 
 	bzero(buff, SIZE);
-	while (content[content.size() - 1] != '\n') {
-		ssize_t size = recv(fd, buff, SIZE, 0);
-		if (size == -1) {
-			perror("recv");
-			return;
-		}
+	ssize_t size;
+	while ((size = recv(fd, buff, SIZE, 0)) != 0) {
+		if (size == -1)
+			break;
 
 		content.append(buff);
 		bzero(buff, SIZE);
 	}
-	content.erase(content.size() - 1, content.size());
-	std::cout << "from " << fd << ": " << content << std::endl;
+
+	if (content.size() == 0) {
+		try {
+			Server::getInstance().deleteClient(
+				Server::getInstance().getClient(fd));
+		} catch (const std::exception& e) {
+			std::cerr << e.what() << std::endl;
+		}
+		return;
+	} else {
+		content = content.erase(content.size() - 2, content.size());
+	}
+
+	size_t cs;
+	do {
+		cs = content.find("\n");
+		size_t i = cs == std::string::npos ? content.size() + 1 : cs;
+		std::string command = content.substr(0, i - 1);
+		content = content.erase(0, i + 1);
+
+		i = command.find(" ");
+		std::string name = command.substr(0, i);
+		command = (i != std::string::npos)
+					  ? command.substr(i + 1, command.size() - (i + 1))
+					  : "";
+		try {
+			Command* cmd =
+				Server::getInstance().getCommandRegistry().getCommand(name);
+			cmd->execute(Server::getInstance().getClient(fd), command);
+		} catch (CommandRegistry::NotFoundException& e) {
+			std::cerr << name << ": " << e.what() << std::endl;
+		}
+	} while (cs != std::string::npos);
 }
 
 void ClientSocket::sendPacket(std::string packet) const {
-	packet.append("\r\n");
-	if (send(fd, packet.c_str(), packet.size(), 0) == -1) {
-		perror("Send message");
-		return;
-	}
+	packet = ":" +
+			 Server::getInstance().getConfiguration().getValue("hostname") +
+			 " " + packet + "\r\n";
+	if (send(fd, packet.c_str(), packet.size(), 0) == -1)
+		throw SendException();
+}
+
+const char* ClientSocket::SendException::what() const throw() {
+	return "cannot send packet to client";
 }

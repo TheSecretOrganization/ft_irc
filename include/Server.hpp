@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "Client.hpp"
+#include "CommandRegistry.hpp"
+#include "Configuration.hpp"
 #include "ServerSocket.hpp"
 #include "SocketObserver.hpp"
 
@@ -13,7 +15,8 @@ class Server {
 	std::vector<Client*> clients;
 	SocketObserver observer;
 	ServerSocket socket;
-	std::string password;
+	CommandRegistry commandRegistry;
+	Configuration configuration;
 	bool run;
 
 	Server();
@@ -22,16 +25,17 @@ class Server {
 	~Server();
 
 	static Server& getInstance();
+	CommandRegistry& getCommandRegistry();
 	void start(int port, const std::string& password);
 	void shut();
 	void addClient(Client* client);
+	void deleteClient(Client* client);
+	Client* getClient(int fd);
+	const std::vector<Client*>& getClients() const;
+	const Configuration& getConfiguration() const;
+	bool getRun() const;
 
-	class InvalidPortRangeException : public std::exception {
-	  public:
-		virtual const char* what() const throw();
-	};
-
-	class InvalidArgumentNumberException : public std::exception {
+	class ClientNotFoundException : public std::exception {
 	  public:
 		virtual const char* what() const throw();
 	};

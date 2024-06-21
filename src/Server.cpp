@@ -2,6 +2,8 @@
 #include "Client.hpp"
 #include "ServerSocket.hpp"
 
+#include <algorithm>
+#include <iostream>
 #include <vector>
 
 Server::Server() { run = true; }
@@ -21,8 +23,10 @@ Server& Server::getInstance() {
 	return instance;
 }
 
+CommandRegistry& Server::getCommandRegistry() { return commandRegistry; }
+
 void Server::start(int port, const std::string& password) {
-	this->password = password;
+	configuration.setPassword(password);
 	socket.init(port);
 	observer.subscribe(socket.getFd(), socket);
 
@@ -31,17 +35,41 @@ void Server::start(int port, const std::string& password) {
 	}
 }
 
-void Server::shut() { run = false; }
+void Server::shut() {
+	run = false;
+	std::cout << "Bye!" << std::endl;
+}
 
 void Server::addClient(Client* client) {
 	clients.push_back(client);
 	observer.subscribe(client->getSocket().getFd(), client->getSocket());
 }
 
-const char* Server::InvalidArgumentNumberException::what() const throw() {
-	return "Bad argument number";
-};
+Client* Server::getClient(int fd) {
+	for (std::vector<Client*>::iterator it = clients.begin();
+		 it != clients.end(); it++) {
+		if ((*it)->getSocket().getFd() == fd)
+			return *it;
+	}
+	throw ClientNotFoundException();
+}
 
-const char* Server::InvalidPortRangeException::what() const throw() {
-	return "Invalid port range, use ports between 6660 and 6669 included";
-};
+void Server::deleteClient(Client* client) {
+	std::vector<Client*>::iterator it =
+		std::find(clients.begin(), clients.end(), client);
+	if (it == clients.end())
+		throw ClientNotFoundException();
+	observer.unsubscribe((*it)->getSocket().getFd());
+	delete *it;
+	clients.erase(it);
+}
+
+const std::vector<Client*>& Server::getClients() const { return clients; }
+
+const Configuration& Server::getConfiguration() const { return configuration; }
+
+bool Server::getRun() const { return run; }
+
+const char* Server::ClientNotFoundException::what() const throw() {
+	return "client not found";
+}
