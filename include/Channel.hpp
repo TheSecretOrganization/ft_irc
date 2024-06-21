@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Command.hpp"
 #include "Client.hpp"
+#include "Command.hpp"
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #define DEF_CHAN_SIZE 3
 
