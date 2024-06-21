@@ -32,11 +32,17 @@ class Server {
 	void shut();
 	void addClient(Client* client);
 	void deleteClient(Client* client);
+	void addChannel(Channel* channel);
+	void deleteChannel(Channel* channel);
 	Client* getClient(int fd);
 	const std::vector<Client*>& getClients() const;
 	const Configuration& getConfiguration() const;
 
 	class ClientNotFoundException : public std::exception {
+	  public:
+		virtual const char* what() const throw();
+	};
+	class ChannelNotFoundException : public std::exception {
 	  public:
 		virtual const char* what() const throw();
 	};
