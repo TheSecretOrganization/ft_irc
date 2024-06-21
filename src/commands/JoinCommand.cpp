@@ -61,6 +61,15 @@ bool	JoinCommand::isChannelFull(Client* client, Channel* channel) {
 	return false;
 }
 
+bool	JoinCommand::inviteOnlyChan(Client* client, Channel* channel) {
+	if (channel->isInviteMode() && !channel->isUserInvited(client))
+	{
+		sendError(client, ERR_INVITEONLYCHAN, _473, channel->getChannelName());
+		return true;
+	}
+	return false;
+}
+
 void	JoinCommand::execute(Client* client, std::string args) {
 	if (args == "0") {
 		// TODO: QUIT ALL CHANNELS;
@@ -110,5 +119,30 @@ void	JoinCommand::execute(Client* client, std::string args) {
 		}
 	}
 
-	
+	for (size_t i = 0; i < channels.size(); i++)
+	{
+		if (channels[i] == NULL)
+			continue;
+		if (inviteOnlyChan(client, channels[i]))
+		{
+			map.erase(channels[i]->getChannelName());
+			channels.erase(channels.begin() + i);
+			i--;
+			continue;
+		}
+	}
+
+	std::map<std::string, std::string>::iterator jt = map.begin();
+	for (size_t i = 0; i < channels.size(); i++)
+	{
+		if (channels[i] == NULL)
+			Channel::createChannel(client, jt->first, jt->second);
+		else
+		{
+			Channel::addUser(client);
+		}
+		jt++;
+	}
+
+	//TODO: replies
 }

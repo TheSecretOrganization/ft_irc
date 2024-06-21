@@ -8,9 +8,9 @@
 
 class Command {
   protected:
-	static std::string	command;
-	static size_t		expectedSize;
-	static size_t		minSize;
+	std::string	command;
+	size_t		expectedSize;
+	size_t		minSize;
 
   public:
 	virtual ~Command(){};
