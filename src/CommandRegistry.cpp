@@ -4,12 +4,14 @@
 #include "commands/NickCommand.hpp"
 #include "commands/PingCommand.hpp"
 #include "commands/UserCommand.hpp"
+#include "commands/JoinCommand.hpp"
 
 CommandRegistry::CommandRegistry() {
 	registerCommand("cap", new CapCommand());
 	registerCommand("nick", new NickCommand());
 	registerCommand("ping", new PingCommand());
 	registerCommand("user", new UserCommand());
+	registerCommand("join", new JoinCommand());
 }
 
 CommandRegistry::~CommandRegistry() {

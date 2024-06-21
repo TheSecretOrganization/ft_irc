@@ -1,6 +1,7 @@
 #include "Channel.hpp"
 #include "Server.hpp"
 
+#include <iostream>
 #include <stdexcept>
 #include <algorithm>
 
@@ -47,6 +48,10 @@ Channel::~Channel() {}
 void	Channel::createChannel(Client* client, std::string name, std::string password) {
 	Channel*	newChannel = new Channel(client, name, password);
 	Server::getInstance().addChannel(newChannel);
+
+	std::cout << "Successfully created channel " << name << std::endl;
+	std::cout << "operators: " << (*newChannel->getOperators().begin())->getClientnickName() << std::endl;
+	std::cout << "users: " << (*newChannel->getUsers().begin())->getClientnickName() << std::endl;
 }
 
 std::vector<Client*>&	Channel::getUsers(void) {
