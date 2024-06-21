@@ -4,11 +4,7 @@
 #include <cstddef>
 #include <cstdlib>
 
-JoinCommand::JoinCommand() {
-	command = "JOIN";
-	expectedSize = 0;
-	minSize = 1;
-}
+JoinCommand::JoinCommand() : Command("JOIN", 0, 1) {}
 
 JoinCommand::~JoinCommand() {}
 

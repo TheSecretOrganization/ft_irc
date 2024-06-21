@@ -31,8 +31,10 @@ SRC         :=	main.cpp \
 	SocketObserver.cpp \
 	$(addprefix $(CMDS_DIR)/, \
 		CapCommand.cpp \
+		ErrorCommand.cpp \
 		JoinCommand.cpp \
 		NickCommand.cpp \
+		PassCommand.cpp \
 		PingCommand.cpp \
 		UserCommand.cpp \
 	)
@@ -78,6 +80,10 @@ fclean: clean
 	@$(RM) $(NAME)
 
 re: fclean all
+
+cre:
+	@clear
+	@make re $(MAKE_FLAG)
 
 debug: fclean all
 

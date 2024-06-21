@@ -1,11 +1,7 @@
 #include "commands/InviteCommand.hpp"
 #include "Server.hpp"
 
-InviteCommand::InviteCommand()
-{
-	command = "INVITE";
-	expectedSize = 2;
-}
+InviteCommand::InviteCommand() : Command("INVITE", 2, 2) {}
 
 InviteCommand::~InviteCommand() {}
 

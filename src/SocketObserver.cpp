@@ -1,4 +1,5 @@
 #include "SocketObserver.hpp"
+#include "Server.hpp"
 
 #include <cstddef>
 #include <cstdio>
@@ -28,8 +29,11 @@ void SocketObserver::subscribe(int fd, Socket& observer) {
 void SocketObserver::poll() {
 	struct epoll_event events[MAX_POLL];
 	int nfds = epoll_wait(fd, events, MAX_POLL, TIMEOUT);
-	if (nfds == -1)
+	if (nfds == -1) {
+		if (Server::getInstance().getRun() == false)
+			return;
 		throw EpollWaitException();
+	}
 
 	for (int i = 0; i < nfds; i++)
 		((Socket*)events[i].data.ptr)->onPoll();

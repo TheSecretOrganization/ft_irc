@@ -1,4 +1,6 @@
 #include "commands/UserCommand.hpp"
+#include "Client.hpp"
+#include "Command.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
 
@@ -7,18 +9,18 @@
 #include <string>
 #include <vector>
 
-UserCommand::UserCommand() {}
+UserCommand::UserCommand() : Command("USER", 0, 4) {}
+
 UserCommand::~UserCommand() {}
 
 void UserCommand::execute(Client* client, std::string args) {
-	if (!client->getRealname().empty()) {
-		sendError(client, ERR_ALREADYREGISTRED, _462);
+	if (alreadyRegistred(client)) {
+		return;
 	}
 
 	std::vector<std::string> splitArgs = split(args, ' ');
-	if (splitArgs.size() < 4 || splitArgs[0].empty() || splitArgs[1].empty() ||
-		splitArgs[2].empty()) {
-		sendError(client, ERR_NEEDMOREPARAMS, _461, "USER");
+	if (needMoreParams(client, splitArgs)) {
+		return;
 	}
 
 	size_t userlen = std::atoi(
@@ -31,12 +33,15 @@ void UserCommand::execute(Client* client, std::string args) {
 		splitArgs[3] = splitArgs[3] + " " + splitArgs[i];
 	}
 
-	if (splitArgs[3].empty() || splitArgs[3][0] != ':') {
-		sendError(client, ERR_NEEDMOREPARAMS, _461, "USER");
+	if (splitArgs[3][0] != ':') {
+		sendError(client, ERR_NEEDMOREPARAMS, _461, name);
+		return;
 	}
 
 	client->setUsername(splitArgs[0]);
 	client->setHostname(splitArgs[1]);
 	client->setServername(splitArgs[2]);
 	client->setRealname(splitArgs[3]);
+	if (client->getStatus() == NICK_OK)
+		client->setStatus(USER_OK);
 }

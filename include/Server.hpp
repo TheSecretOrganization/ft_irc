@@ -37,6 +37,7 @@ class Server {
 	Client* getClient(int fd);
 	const std::vector<Client*>& getClients() const;
 	const Configuration& getConfiguration() const;
+	bool getRun() const;
 
 	class ClientNotFoundException : public std::exception {
 	  public:
