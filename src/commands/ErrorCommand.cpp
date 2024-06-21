@@ -12,12 +12,12 @@ ErrorCommand::ErrorCommand() : Command("ERROR", 1, 1) {}
 ErrorCommand::~ErrorCommand() {}
 
 void ErrorCommand::execute(Client* client, std::string args) {
-    if (args.empty())
-        args = DEFAULT_ERR_MSG;
-    sendError(client, ERROR, args);
-    try {
-        Server::getInstance().deleteClient(client);
-    } catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-    }
+	if (args.empty())
+		args = DEFAULT_ERR_MSG;
+	sendError(client, ERROR, args);
+	try {
+		Server::getInstance().deleteClient(client);
+	} catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
 }

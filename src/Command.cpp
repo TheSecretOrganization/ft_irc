@@ -63,7 +63,8 @@ bool Command::alreadyRegistred(Client* client) const {
 }
 
 bool Command::passwdMismatch(Client* client, const std::string& passWd) const {
-	if (passWd != Server::getInstance().getConfiguration().getValue("password")) {
+	if (passWd !=
+		Server::getInstance().getConfiguration().getValue("password")) {
 		sendError(client, ERR_PASSWDMISMATCH, _464);
 		return true;
 	}

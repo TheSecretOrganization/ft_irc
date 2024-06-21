@@ -64,7 +64,10 @@ void CapCommand::execute(Client* client, std::string args) {
 			client->sendMessage("CAP * LS", ":");
 		} else if (args == "END") {
 			if (client->getStatus() != USER_OK) {
-				return Server::getInstance().getCommandRegistry().getCommand("error")->execute(client, ERR_REGISTRATION);
+				return Server::getInstance()
+					.getCommandRegistry()
+					.getCommand("error")
+					->execute(client, ERR_REGISTRATION);
 			} else {
 				client->setStatus(REGISTRED);
 			}
