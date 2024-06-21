@@ -10,6 +10,7 @@ private:
 	std::string	channelPassword;
 	std::vector<Client*>	operators;
 	std::vector<Client*>	usersOnChannel;
+	std::vector<Client*>	inviteList;
 	std::string	topic;
 	bool	inviteOnly;
 	bool	topicLocked;
@@ -19,7 +20,9 @@ public:
 	Channel(Client* creator, std::string name, std::string password);
 	~Channel();
 
-	
+	static void	createChannel(Client* client, std::string name, std::string password);
+
+	static void	checkChannelSyntax(std::string channelName);
 
 	class InvalidChannelPrefixException : public std::exception {
 	  public:
@@ -34,12 +37,18 @@ public:
 		virtual const char* what() const throw();
 	};
 
+	std::vector<Client*>&	getUsers(void);
+	std::vector<Client*>&	getOperators(void);
+	std::vector<Client*>&	getInviteList(void);
+
 	const std::string& getChannelName(void);
 	bool	isUserOnChannel(Client* client);
 	bool	isUserOperator(Client* client);
+	bool	isUserInvited(Client* client);
 
 	void	setInviteMode(void);
 	void	unsetInviteMode(void);
+	bool	isInviteMode(void);
 
 	void	changeTopic(std::string newTopic);
 	void	unsetTopic(void);
@@ -48,10 +57,15 @@ public:
 
 	void	setChannelPassword(std::string newPassword);
 	void	unsetChannelPassword(void);
+	const std::string& getChannelPassword(void);
+
+	static void	addUser(Client* user);
+	static void	removeUser(Client* user);
 
 	void	addOperator(Client* newOp);
 	void	removeOperator(Client *oldOp);
 
+	size_t	getChannelSize(void);
 	void	changeChannelSize(size_t newSize);
 	void	unsetSize(void);
 };
