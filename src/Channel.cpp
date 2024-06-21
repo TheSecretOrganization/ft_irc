@@ -46,6 +46,14 @@ std::vector<Client*>&	Channel::getUsers(void) {
 	return usersOnChannel;
 }
 
+std::vector<Client*>&	Channel::getOperators(void) {
+	return operators;
+}
+
+std::vector<Client*>&	Channel::getInviteList(void) {
+	return inviteList;
+}
+
 const std::string& Channel::getChannelName(void) {
 	return name;
 }
@@ -67,6 +75,16 @@ bool	Channel::isUserOperator(Client* client) {
 	int	clientFd = client->getSocket().getFd();
 
 	for (std::vector<Client*>::iterator it = operators.begin(); it != operators.end(); ++it) {
+		if ((*it)->getSocket().getFd() == clientFd)
+			return 1;
+	}
+	return 0;
+}
+
+bool	Channel::isUserInvited(Client* client) {
+	int	clientFd = client->getSocket().getFd();
+
+	for (std::vector<Client*>::iterator it = inviteList.begin(); it != inviteList.end(); ++it) {
 		if ((*it)->getSocket().getFd() == clientFd)
 			return 1;
 	}

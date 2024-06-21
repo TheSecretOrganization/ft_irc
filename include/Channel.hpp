@@ -10,6 +10,7 @@ private:
 	std::string	channelPassword;
 	std::vector<Client*>	operators;
 	std::vector<Client*>	usersOnChannel;
+	std::vector<Client*>	inviteList;
 	std::string	topic;
 	bool	inviteOnly;
 	bool	topicLocked;
@@ -35,10 +36,13 @@ public:
 	};
 
 	std::vector<Client*>&	getUsers(void);
+	std::vector<Client*>&	getOperators(void);
+	std::vector<Client*>&	getInviteList(void);
 
 	const std::string& getChannelName(void);
 	bool	isUserOnChannel(Client* client);
 	bool	isUserOperator(Client* client);
+	bool	isUserInvited(Client* client);
 
 	void	setInviteMode(void);
 	void	unsetInviteMode(void);
