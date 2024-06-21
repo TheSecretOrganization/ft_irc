@@ -42,4 +42,6 @@ void NickCommand::execute(Client* client, std::string args) {
 	if (checkAlreadyInUse(args) == false)
 		return sendError(client, ERR_NICKNAMEINUSE, _433, args);
 	client->setNickname(args);
+	if (client->getStatus() == PASSWD_OK)
+		client->setStatus(NICK_OK);
 }

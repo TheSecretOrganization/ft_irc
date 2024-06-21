@@ -1,5 +1,7 @@
 #include "Command.hpp"
+#include "Client.hpp"
 #include "IrcReplies.hpp"
+#include "Server.hpp"
 
 #include <exception>
 #include <iostream>
@@ -41,12 +43,29 @@ std::vector<std::string> Command::split(const std::string& str, char del) {
 }
 
 bool Command::needMoreParams(Client* client,
-							 std::vector<std::string>& vecArgs) {
+							 const std::vector<std::string>& vecArgs) const {
 	if (expectedSize != 0 && vecArgs.size() != expectedSize) {
 		sendError(client, ERR_NEEDMOREPARAMS, _461, name);
 		return true;
 	} else if (vecArgs.size() < minSize) {
 		sendError(client, ERR_NEEDMOREPARAMS, _461, name);
+		return true;
+	}
+	return false;
+}
+
+bool Command::alreadyRegistred(Client* client) const {
+	if (client->getStatus() == REGISTRED) {
+		sendError(client, ERR_ALREADYREGISTRED, _462);
+		return true;
+	}
+	return false;
+}
+
+bool Command::passwdMismatch(Client* client, const std::string& passWd) const {
+	if (passWd !=
+		Server::getInstance().getConfiguration().getValue("password")) {
+		sendError(client, ERR_PASSWDMISMATCH, _464);
 		return true;
 	}
 	return false;

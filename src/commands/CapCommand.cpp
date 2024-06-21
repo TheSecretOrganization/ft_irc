@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 
+#define ERR_REGISTRATION "Error during registration"
+
 CapCommand::CapCommand() : Command("CAP", 1, 1) {}
 
 CapCommand::~CapCommand() {}
@@ -61,6 +63,15 @@ void CapCommand::execute(Client* client, std::string args) {
 		if (args == "LS") {
 			client->sendMessage("CAP * LS", ":");
 		} else if (args == "END") {
+			if (client->getStatus() != USER_OK) {
+				return Server::getInstance()
+					.getCommandRegistry()
+					.getCommand("error")
+					->execute(client, ERR_REGISTRATION);
+			} else {
+				client->setStatus(REGISTRED);
+			}
+
 			rplWelcome(client);
 			rplYourHost(client);
 			rplCreated(client);

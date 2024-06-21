@@ -1,4 +1,5 @@
 #include "commands/UserCommand.hpp"
+#include "Client.hpp"
 #include "Command.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
@@ -13,8 +14,7 @@ UserCommand::UserCommand() : Command("USER", 0, 4) {}
 UserCommand::~UserCommand() {}
 
 void UserCommand::execute(Client* client, std::string args) {
-	if (!client->getRealname().empty()) {
-		sendError(client, ERR_ALREADYREGISTRED, _462);
+	if (alreadyRegistred(client)) {
 		return;
 	}
 
@@ -42,4 +42,6 @@ void UserCommand::execute(Client* client, std::string args) {
 	client->setHostname(splitArgs[1]);
 	client->setServername(splitArgs[2]);
 	client->setRealname(splitArgs[3]);
+	if (client->getStatus() == NICK_OK)
+		client->setStatus(USER_OK);
 }

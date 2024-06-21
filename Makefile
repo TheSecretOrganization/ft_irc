@@ -30,7 +30,9 @@ SRC         :=	main.cpp \
 	SocketObserver.cpp \
 	$(addprefix $(CMDS_DIR)/, \
 		CapCommand.cpp \
+		ErrorCommand.cpp \
 		NickCommand.cpp \
+		PassCommand.cpp \
 		PingCommand.cpp \
 		UserCommand.cpp \
 	)
