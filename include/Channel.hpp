@@ -59,8 +59,8 @@ public:
 	void	unsetChannelPassword(void);
 	const std::string& getChannelPassword(void);
 
-	void	addUser(Client* user);
-	void	removeUser(Client* user);
+	static void	addUser(Client* user);
+	static void	removeUser(Client* user);
 
 	void	addOperator(Client* newOp);
 	void	removeOperator(Client *oldOp);
