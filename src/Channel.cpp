@@ -42,6 +42,10 @@ Channel::Channel(Client* creator, std::string name, std::string password) : name
 
 Channel::~Channel() {}
 
+std::vector<Client*>&	Channel::getUsers(void) {
+	return usersOnChannel;
+}
+
 const std::string& Channel::getChannelName(void) {
 	return name;
 }
@@ -126,6 +130,10 @@ void	Channel::removeOperator(Client* oldOp) {
 		return ;
 	}
 	operators.erase(std::find(operators.begin(), operators.end(), oldOp));
+}
+
+size_t	Channel::getChannelSize(void) {
+	return channelSize;
 }
 
 void	Channel::changeChannelSize(size_t newSize) {

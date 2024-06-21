@@ -34,6 +34,8 @@ public:
 		virtual const char* what() const throw();
 	};
 
+	std::vector<Client*>&	getUsers(void);
+
 	const std::string& getChannelName(void);
 	bool	isUserOnChannel(Client* client);
 	bool	isUserOperator(Client* client);
@@ -53,6 +55,7 @@ public:
 	void	addOperator(Client* newOp);
 	void	removeOperator(Client *oldOp);
 
+	size_t	getChannelSize(void);
 	void	changeChannelSize(size_t newSize);
 	void	unsetSize(void);
 };
