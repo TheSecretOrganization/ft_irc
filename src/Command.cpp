@@ -1,11 +1,11 @@
 #include "Command.hpp"
 #include "IrcReplies.hpp"
+#include "Server.hpp"
 
 #include <exception>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <sstream>
 
 void Command::sendError(Client* client, std::string code, std::string message,
 						std::string arg) const {
@@ -72,11 +72,4 @@ std::vector<std::string> Command::split(const std::string& str,
 		result.push_back(tmp);
 	}
 	return result;
-}
-
-size_t stringToSizeT(const std::string& str) {
-	std::stringstream ss(str);
-	size_t result;
-	ss >> result;
-	return (ss.fail() || !ss.eof()) ? 0 : result;
 }

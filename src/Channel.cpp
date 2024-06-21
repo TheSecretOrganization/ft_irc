@@ -1,4 +1,6 @@
 #include "Channel.hpp"
+#include "Server.hpp"
+
 #include <stdexcept>
 #include <algorithm>
 
@@ -24,8 +26,8 @@ void	Channel::checkChannelSyntax(std::string channelName) {
 
 Channel::Channel(Client* creator, std::string name) : name(name) {
 	checkChannelSyntax(name);
-	operators = {creator};
-	usersOnChannel = {creator};
+	operators.push_back(creator);
+	usersOnChannel.push_back(creator);
 	topic = "";
 	inviteOnly = 0;
 	channelSize = DEF_CHAN_SIZE;
@@ -33,8 +35,8 @@ Channel::Channel(Client* creator, std::string name) : name(name) {
 
 Channel::Channel(Client* creator, std::string name, std::string password) : name(name), channelPassword(password) {
 	checkChannelSyntax(name);
-	operators = {creator};
-	usersOnChannel = {creator};
+	operators.push_back(creator);
+	usersOnChannel.push_back(creator);
 	topic = "";
 	inviteOnly = 0;
 	channelSize = DEF_CHAN_SIZE;

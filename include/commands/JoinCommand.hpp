@@ -1,5 +1,8 @@
 #pragma once
+
 #include "Command.hpp"
+
+#include <map>
 
 class JoinCommand : public Command
 {

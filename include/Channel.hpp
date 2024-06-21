@@ -1,8 +1,11 @@
 #pragma once
-#include "Server.hpp"
+
+#include "Command.hpp"
 #include <vector>
 
 #define DEF_CHAN_SIZE 3
+
+class Command;
 
 class Channel {
 private:

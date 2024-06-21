@@ -3,8 +3,7 @@
 #include "Server.hpp"
 
 #include <cstddef>
-#include <iostream>
-#include <sstream>
+#include <cstdlib>
 #include <string>
 #include <vector>
 
@@ -22,8 +21,8 @@ void UserCommand::execute(Client* client, std::string args) {
 		sendError(client, ERR_NEEDMOREPARAMS, _461, "USER");
 	}
 
-	size_t userlen = stringToSizeT(
-		Server::getInstance().getConfiguration().getValue("userlen"));
+	size_t userlen = std::atoi(
+		Server::getInstance().getConfiguration().getValue("userlen").c_str());
 	if (splitArgs[0].size() > userlen) {
 		splitArgs[0] = splitArgs[0].substr(0, userlen);
 	}

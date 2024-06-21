@@ -1,5 +1,8 @@
-#include "JoinCommand.hpp"
+#include "commands/JoinCommand.hpp"
 #include "IrcReplies.hpp"
+#include "Server.hpp"
+#include <cstddef>
+#include <cstdlib>
 
 JoinCommand::JoinCommand() {
 	command = "JOIN";
@@ -81,11 +84,11 @@ void	JoinCommand::execute(Client* client, std::string args) {
 	}
 
 
-	std::map<std::string, std::string> map = vecArgs.size() > 1 
-	? channelMap(split(vecArgs[0], ','), vecArgs[1]) 
+	std::map<std::string, std::string> map = vecArgs.size() > 1
+	? channelMap(split(vecArgs[0], ','), vecArgs[1])
 	: channelMap(split(vecArgs[0], ','), "");
 
-	if (map.size() > stringToSizeT(Server::getInstance().getConfiguration().getValue("chanlimit"))) {
+	if (map.size() > (size_t)std::atoi(Server::getInstance().getConfiguration().getValue("chanlimit").c_str())) {
 		sendError(client, ERR_TOOMANYCHANNELS, _405);
 	}
 
