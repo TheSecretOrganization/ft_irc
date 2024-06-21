@@ -31,6 +31,7 @@ SRC         :=	main.cpp \
 	$(addprefix $(CMDS_DIR)/, \
 		CapCommand.cpp \
 		NickCommand.cpp \
+		PassCommand.cpp \
 		PingCommand.cpp \
 		UserCommand.cpp \
 	)
