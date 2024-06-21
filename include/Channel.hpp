@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Command.hpp"
+#include "Client.hpp"
+
 #include <vector>
+#include <string>
 
 #define DEF_CHAN_SIZE 3
 
