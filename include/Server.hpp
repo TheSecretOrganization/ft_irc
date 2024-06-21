@@ -3,12 +3,12 @@
 #include <string>
 #include <vector>
 
+#include "Channel.hpp"
 #include "Client.hpp"
 #include "CommandRegistry.hpp"
 #include "Configuration.hpp"
 #include "ServerSocket.hpp"
 #include "SocketObserver.hpp"
-#include "Channel.hpp"
 
 class Server {
 

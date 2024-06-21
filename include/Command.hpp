@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Client.hpp"
 #include "Channel.hpp"
-
+#include "Client.hpp"
 
 #include <cstddef>
 #include <string>
@@ -30,8 +29,11 @@ class Command {
 	virtual bool passwdMismatch(Client* client,
 								const std::string& passWd) const;
 
-	virtual bool	needMoreParams(Client* client, const std::vector<std::string>& vecArgs) const;
-	virtual bool	noSuchChannel(Client* client, Channel* channel, std::string channelName) const;
-	virtual bool	notOnChannel(Client* client, Channel* channel) const;
-	virtual bool	userOnChannel(Client* client, Channel* channel, std::string nick) const;
+	virtual bool needMoreParams(Client* client,
+								const std::vector<std::string>& vecArgs) const;
+	virtual bool noSuchChannel(Client* client, Channel* channel,
+							   std::string channelName) const;
+	virtual bool notOnChannel(Client* client, Channel* channel) const;
+	virtual bool userOnChannel(Client* client, Channel* channel,
+							   std::string nick) const;
 };

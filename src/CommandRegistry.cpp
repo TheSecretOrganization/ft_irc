@@ -2,11 +2,11 @@
 
 #include "commands/CapCommand.hpp"
 #include "commands/ErrorCommand.hpp"
+#include "commands/JoinCommand.hpp"
 #include "commands/NickCommand.hpp"
 #include "commands/PassCommand.hpp"
 #include "commands/PingCommand.hpp"
 #include "commands/UserCommand.hpp"
-#include "commands/JoinCommand.hpp"
 
 CommandRegistry::CommandRegistry() {
 	registerCommand("cap", new CapCommand());

@@ -5,23 +5,23 @@ InviteCommand::InviteCommand() : Command("INVITE", 2, 2) {}
 
 InviteCommand::~InviteCommand() {}
 
-void	InviteCommand::execute(Client* client, std::string args) {
+void InviteCommand::execute(Client* client, std::string args) {
 	std::vector<std::string> vecArgs = Command::split(args, ' ');
 	if (needMoreParams(client, vecArgs)) {
-		return ;
+		return;
 	}
 
 	Channel* channel = Server::getInstance().getChannel(vecArgs[1]);
 	if (noSuchChannel(client, channel, vecArgs[1])) {
-		return ;
+		return;
 	}
 
 	if (notOnChannel(client, channel)) {
-		return ;
+		return;
 	}
 
 	if (userOnChannel(client, channel, vecArgs[1])) {
-		return ;
+		return;
 	}
 
 	Client* destinationClient = Server::getInstance().getClient(vecArgs[1]);

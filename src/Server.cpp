@@ -64,12 +64,11 @@ void Server::deleteClient(Client* client) {
 	clients.erase(it);
 }
 
-void Server::addChannel(Channel* channel) {
-	channels.push_back(channel);
-}
+void Server::addChannel(Channel* channel) { channels.push_back(channel); }
 
 void Server::deleteChannel(Channel* channel) {
-	std::vector<Channel*>::iterator it = std::find(channels.begin(), channels.end(), channel);
+	std::vector<Channel*>::iterator it =
+		std::find(channels.begin(), channels.end(), channel);
 	if (it == channels.end())
 		throw ChannelNotFoundException();
 	channels.erase(it);
@@ -86,7 +85,6 @@ const char* Server::ClientNotFoundException::what() const throw() {
 	return "client not found";
 }
 
-
 const char* Server::ChannelNotFoundException::what() const throw() {
 	return "channel not found";
 }
@@ -101,7 +99,8 @@ Client* Server::getClient(std::string nickname) {
 }
 
 Channel* Server::getChannel(std::string name) {
-	for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); it++) {
+	for (std::vector<Channel*>::iterator it = channels.begin();
+		 it != channels.end(); it++) {
 		if ((*it)->getChannelName() == name)
 			return (*it);
 	}
