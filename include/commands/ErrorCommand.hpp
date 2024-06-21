@@ -10,5 +10,4 @@ class ErrorCommand : public Command {
 	~ErrorCommand();
 
 	void execute(Client* client, std::string args);
-    static void executeError(Client* client, std::string args);
 };

@@ -21,8 +21,3 @@ void ErrorCommand::execute(Client* client, std::string args) {
         std::cerr << e.what() << std::endl;
     }
 }
-
-void ErrorCommand::executeError(Client *client, std::string args) {
-    ErrorCommand error;
-    error.execute(client, args);
-}
