@@ -1,5 +1,6 @@
 #include "commands/NickCommand.hpp"
 #include "Client.hpp"
+#include "Command.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
 
@@ -11,7 +12,8 @@
 
 #define VALID_CHARS "{}[]|\\"
 
-NickCommand::NickCommand() {}
+NickCommand::NickCommand() : Command("NICK", 1, 1) {}
+
 NickCommand::~NickCommand() {}
 
 static bool checkNicknameValid(const std::string& nickname) {
