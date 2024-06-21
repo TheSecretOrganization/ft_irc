@@ -46,6 +46,7 @@ public:
 
 	void	setInviteMode(void);
 	void	unsetInviteMode(void);
+	bool	isInviteMode(void);
 
 	void	changeTopic(std::string newTopic);
 	void	unsetTopic(void);

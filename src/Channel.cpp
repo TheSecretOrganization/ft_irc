@@ -99,6 +99,10 @@ void	Channel::unsetInviteMode(void) {
 	inviteOnly = 0;
 }
 
+bool	Channel::isInviteMode(void) {
+	return inviteOnly;
+}
+
 void	Channel::changeTopic(std::string newTopic) {
 	topic = newTopic;
 }
