@@ -7,7 +7,7 @@
 #define ERROR "ERROR"
 #define DEFAULT_ERR_MSG "Unknown server error"
 
-ErrorCommand::ErrorCommand() : Command("ERROR", 1, 1) {}
+ErrorCommand::ErrorCommand() : Command(ERROR, 1, 1) {}
 
 ErrorCommand::~ErrorCommand() {}
 
