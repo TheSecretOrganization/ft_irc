@@ -26,18 +26,23 @@ class Server {
   public:
 	~Server();
 
-	static Server& getInstance();
-	CommandRegistry& getCommandRegistry();
 	void start(int port, const std::string& password);
 	void shut();
 	void addClient(Client* client);
 	void deleteClient(Client* client);
 	void addChannel(Channel* channel);
 	void deleteChannel(Channel* channel);
+
+	static Server& getInstance();
+	CommandRegistry& getCommandRegistry();
 	Client* getClient(int fd);
 	const std::vector<Client*>& getClients() const;
 	const Configuration& getConfiguration() const;
 	bool getRun() const;
+	Client* getClient(std::string nickname);
+	Channel* getChannel(std::string name);
+	const std::vector<Channel*>& getChannels() const;
+	std::vector<Channel*> getClientChannels(Client* client) const;
 
 	class ClientNotFoundException : public std::exception {
 	  public:
@@ -47,6 +52,4 @@ class Server {
 	  public:
 		virtual const char* what() const throw();
 	};
-	Client* getClient(std::string nickname);
-	Channel* getChannel(std::string name);
 };
