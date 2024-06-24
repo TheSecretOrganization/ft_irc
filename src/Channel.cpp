@@ -2,8 +2,10 @@
 #include "Server.hpp"
 
 #include <algorithm>
+#include <exception>
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 
 void Channel::checkChannelSyntax(std::string channelName) {
 	if (channelName[0] != '#') {
@@ -177,4 +179,18 @@ const char* Channel::ForbiddenChannelNameException::what() const throw() {
 		return "Character ',' is forbidden in channel name";
 	else
 		return "Forbidden character used in channel name";
+}
+
+void Channel::sendMessage(Client* client, const std::string& message) {
+	try {
+		client->sendMessage("PRIVMSG", message);
+	} catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
+}
+
+void Channel::sendAll(const std::string& message) {
+	for (std::vector<Client*>::iterator it = usersOnChannel.begin(); it != usersOnChannel.end(); it++) {
+		sendMessage(*it, message);
+	}
 }
