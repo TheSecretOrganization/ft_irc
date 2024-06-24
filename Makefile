@@ -19,6 +19,7 @@ OBJS_DIR    := objs
 
 ### FILES ###
 SRC         :=	main.cpp \
+	Channel.cpp \
 	Client.cpp \
 	ClientSocket.cpp \
 	Command.cpp \
@@ -31,6 +32,7 @@ SRC         :=	main.cpp \
 	$(addprefix $(CMDS_DIR)/, \
 		CapCommand.cpp \
 		ErrorCommand.cpp \
+		JoinCommand.cpp \
 		NickCommand.cpp \
 		PassCommand.cpp \
 		PingCommand.cpp \

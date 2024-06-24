@@ -12,6 +12,7 @@
 #define UMODES "d"
 #define CMODES "itkol"
 #define CPMODES "kol"
+#define CHANLIMIT "4"
 
 class Configuration {
   private:

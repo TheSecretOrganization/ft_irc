@@ -9,11 +9,14 @@ Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
 	  servername(""), status(UNKNOWN) {
 	std::cout << "new client " << fd << std::endl;
+	nickname = "";
 }
 
 Client::~Client() {}
 
 ClientSocket& Client::getSocket() { return socket; }
+
+std::string Client::getClientnickName(void) { return nickname; }
 
 void Client::sendMessage(std::string type, std::string message) const {
 	std::string packet = type + " " + message;
