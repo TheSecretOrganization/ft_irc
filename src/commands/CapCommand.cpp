@@ -55,6 +55,8 @@ static void rplISupport(Client* client) {
 		RPL_ISUPPORT,
 		client->getNickname() + " USERLEN=" +
 			Server::getInstance().getConfiguration().getValue("userlen") +
+			" CHANLIMIT = " +
+			Server::getInstance().getConfiguration().getValue("chanlimit") +
 			" :are supported by this server");
 }
 
