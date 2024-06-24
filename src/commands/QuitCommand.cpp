@@ -4,6 +4,7 @@
 #include "Server.hpp"
 
 #include <string>
+#include <vector>
 
 QuitCommand::QuitCommand(): Command("QUIT", 0, 0) {}
 
@@ -13,9 +14,13 @@ void QuitCommand::execute(Client* client, std::string args) {
     if (args.empty())
         args = "left the server";
 
-    std::string msg = "Quit: " + client->getNickname() + " " + args;
+    std::string message = "Quit: " + client->getNickname() + " " + args;
+    std::vector<Channel*> channels = Server::getInstance().getClientChannels(client);
 
-    //TODO: send message to other clients
+    for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); it++) {
+        (*it)->removeUser(client);
+        (*it)->sendAll(message);
+    }
 
     Server::getInstance().getCommandRegistry().getCommand("ERROR")->execute(client, "Quit: Bye for now!");
 }
