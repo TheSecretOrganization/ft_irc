@@ -182,7 +182,8 @@ const char* Channel::ForbiddenChannelNameException::what() const throw() {
 }
 
 void Channel::sendMessage(const std::string& message) {
-	for (std::vector<Client*>::iterator it = usersOnChannel.begin(); it != usersOnChannel.end(); it++) {
+	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
+		 it != usersOnChannel.end(); it++) {
 		try {
 			(*it)->sendMessage("PRIVMSG", message);
 		} catch (const std::exception& e) {
