@@ -2,8 +2,8 @@
 
 #include "CommandRegistry.hpp"
 
-class ClientCommands: public CommandRegistry {
-public:
-    ClientCommands();
-    ~ClientCommands();
+class ClientCommands : public CommandRegistry {
+  public:
+	ClientCommands();
+	~ClientCommands();
 };
