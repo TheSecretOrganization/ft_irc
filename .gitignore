@@ -32,3 +32,6 @@ ircserv
 *.exe
 *.out
 *.app
+
+# Others
+.vscode

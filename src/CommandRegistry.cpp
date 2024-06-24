@@ -2,6 +2,7 @@
 
 #include "commands/CapCommand.hpp"
 #include "commands/ErrorCommand.hpp"
+#include "commands/JoinCommand.hpp"
 #include "commands/NickCommand.hpp"
 #include "commands/PassCommand.hpp"
 #include "commands/PingCommand.hpp"
@@ -14,6 +15,7 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("user", new UserCommand());
 	registerCommand("pass", new PassCommand());
 	registerCommand("error", new ErrorCommand());
+	registerCommand("join", new JoinCommand());
 }
 
 CommandRegistry::~CommandRegistry() {

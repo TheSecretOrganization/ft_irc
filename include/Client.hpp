@@ -22,6 +22,7 @@ class Client {
 	~Client();
 
 	ClientSocket& getSocket();
+	std::string getClientnickName(void);
 
 	void sendMessage(std::string type, std::string message) const;
 	std::string getNickname() const;

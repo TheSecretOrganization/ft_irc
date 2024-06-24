@@ -13,6 +13,7 @@ Configuration::Configuration() {
 	config["umodes"] = UMODES;
 	config["cmodes"] = CMODES;
 	config["cpmodes"] = CPMODES;
+	config["chanlimit"] = CHANLIMIT;
 }
 
 Configuration::~Configuration() {}
