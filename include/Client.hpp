@@ -21,10 +21,10 @@ class Client {
 	Client(int fd);
 	~Client();
 
+	void sendMessage(std::string type, std::string message) const;
+
 	ClientSocket& getSocket();
 	std::string getClientnickName(void);
-
-	void sendMessage(std::string type, std::string message) const;
 	std::string getNickname() const;
 	void setNickname(const std::string& newNickname);
 	std::string getUsername() const;

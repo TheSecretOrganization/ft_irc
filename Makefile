@@ -36,6 +36,7 @@ SRC         :=	main.cpp \
 		NickCommand.cpp \
 		PassCommand.cpp \
 		PingCommand.cpp \
+		QuitCommand.cpp \
 		UserCommand.cpp \
 	)
 INCLUDES    :=  $(INCLD_DIR)

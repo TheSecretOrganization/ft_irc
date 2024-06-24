@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Channel.hpp"
 #include "Client.hpp"
 #include "ServerSocket.hpp"
 
@@ -105,4 +106,17 @@ Channel* Server::getChannel(std::string name) {
 			return (*it);
 	}
 	return NULL;
+}
+
+const std::vector<Channel*>& Server::getChannels() const { return channels; }
+
+std::vector<Channel*> Server::getChannels(Client* client) const {
+	std::vector<Channel*> clientChannels;
+
+	for (size_t i = 0; i < channels.size(); i++) {
+		if (channels[i]->isUserOnChannel(client))
+			clientChannels.push_back(channels[i]);
+	}
+
+	return clientChannels;
 }

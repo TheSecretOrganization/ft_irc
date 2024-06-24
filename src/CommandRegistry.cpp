@@ -6,6 +6,7 @@
 #include "commands/NickCommand.hpp"
 #include "commands/PassCommand.hpp"
 #include "commands/PingCommand.hpp"
+#include "commands/QuitCommand.hpp"
 #include "commands/UserCommand.hpp"
 
 CommandRegistry::CommandRegistry() {
@@ -16,6 +17,7 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("pass", new PassCommand());
 	registerCommand("error", new ErrorCommand());
 	registerCommand("join", new JoinCommand());
+	registerCommand("quit", new QuitCommand());
 }
 
 CommandRegistry::~CommandRegistry() {
