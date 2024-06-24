@@ -5,8 +5,10 @@
 
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "ClientCommands.hpp"
 #include "CommandRegistry.hpp"
 #include "Configuration.hpp"
+#include "ServerCommands.hpp"
 #include "ServerSocket.hpp"
 #include "SocketObserver.hpp"
 
@@ -17,7 +19,8 @@ class Server {
 	std::vector<Channel*> channels;
 	SocketObserver observer;
 	ServerSocket socket;
-	CommandRegistry commandRegistry;
+	ClientCommands clientCommands;
+	ServerCommands serverCommands;
 	Configuration configuration;
 	bool run;
 
@@ -34,7 +37,8 @@ class Server {
 	void deleteChannel(Channel* channel);
 
 	static Server& getInstance();
-	CommandRegistry& getCommandRegistry();
+	CommandRegistry& getClientCommands();
+	CommandRegistry& getServerCommands();
 	Client* getClient(int fd);
 	const std::vector<Client*>& getClients() const;
 	const Configuration& getConfiguration() const;

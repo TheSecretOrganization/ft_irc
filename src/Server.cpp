@@ -24,7 +24,9 @@ Server& Server::getInstance() {
 	return instance;
 }
 
-CommandRegistry& Server::getCommandRegistry() { return commandRegistry; }
+CommandRegistry& Server::getClientCommands() { return clientCommands; }
+
+CommandRegistry& Server::getServerCommands() { return serverCommands; }
 
 void Server::start(int port, const std::string& password) {
 	configuration.setPassword(password);
