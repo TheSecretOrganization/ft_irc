@@ -13,6 +13,7 @@
 #define CMODES "itkol"
 #define CPMODES "kol"
 #define CHANLIMIT "4"
+#define MOTD "Have a nice day :)"
 
 class Configuration {
   private:

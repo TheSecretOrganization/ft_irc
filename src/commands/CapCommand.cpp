@@ -78,9 +78,14 @@ void CapCommand::execute(Client* client, std::string args) {
 			rplMyInfo(client);
 			rplYourHost(client);
 			rplISupport(client);
-			Server::getInstance().getCommandRegistry().getCommand("lusers")->execute(client, "");
-			// TODO: MOTD
-			sendError(client, ERR_NOMOTD, _422, client->getNickname());
+			Server::getInstance()
+				.getCommandRegistry()
+				.getCommand("lusers")
+				->execute(client, "");
+			Server::getInstance()
+				.getCommandRegistry()
+				.getCommand("motd")
+				->execute(client, "");
 		}
 	} catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;

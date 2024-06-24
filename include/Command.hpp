@@ -36,4 +36,5 @@ class Command {
 	virtual bool notOnChannel(Client* client, Channel* channel) const;
 	virtual bool userOnChannel(Client* client, Channel* channel,
 							   std::string nick) const;
+	virtual bool noSuchServer(Client* client, const std::string& server) const;
 };
