@@ -110,7 +110,7 @@ Channel* Server::getChannel(std::string name) {
 
 const std::vector<Channel*>& Server::getChannels() const { return channels; }
 
-std::vector<Channel*> Server::getClientChannels(Client* client) const {
+std::vector<Channel*> Server::getChannels(Client* client) const {
 	std::vector<Channel*> clientChannels;
 
 	for (size_t i = 0; i < channels.size(); i++) {

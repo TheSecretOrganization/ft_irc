@@ -15,11 +15,11 @@ void QuitCommand::execute(Client* client, std::string args) {
         args = "left the server";
 
     std::string message = "Quit: " + client->getNickname() + " " + args;
-    std::vector<Channel*> channels = Server::getInstance().getClientChannels(client);
+    std::vector<Channel*> channels = Server::getInstance().getChannels(client);
 
     for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); it++) {
         (*it)->removeUser(client);
-        (*it)->sendAll(message);
+        (*it)->sendMessage(message);
     }
 
     Server::getInstance().getCommandRegistry().getCommand("ERROR")->execute(client, "Quit: Bye for now!");

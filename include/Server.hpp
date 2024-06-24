@@ -42,7 +42,7 @@ class Server {
 	Client* getClient(std::string nickname);
 	Channel* getChannel(std::string name);
 	const std::vector<Channel*>& getChannels() const;
-	std::vector<Channel*> getClientChannels(Client* client) const;
+	std::vector<Channel*> getChannels(Client* client) const;
 
 	class ClientNotFoundException : public std::exception {
 	  public:
