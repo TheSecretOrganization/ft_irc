@@ -3,6 +3,7 @@
 #include "commands/CapCommand.hpp"
 #include "commands/ErrorCommand.hpp"
 #include "commands/JoinCommand.hpp"
+#include "commands/LusersCommand.hpp"
 #include "commands/NickCommand.hpp"
 #include "commands/PassCommand.hpp"
 #include "commands/PingCommand.hpp"
@@ -18,6 +19,7 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("error", new ErrorCommand());
 	registerCommand("join", new JoinCommand());
 	registerCommand("quit", new QuitCommand());
+	registerCommand("lusers", new LusersCommand());
 }
 
 CommandRegistry::~CommandRegistry() {
