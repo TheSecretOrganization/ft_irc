@@ -61,6 +61,8 @@ void ClientSocket::onPoll() {
 			cmd->execute(Server::getInstance().getClient(fd), command);
 		} catch (CommandRegistry::NotFoundException& e) {
 			std::cerr << name << ": " << e.what() << std::endl;
+		} catch (Server::ClientNotFoundException& e) {
+			std::cerr << "client not found" << std::endl;
 		}
 	} while (cs != std::string::npos);
 }
