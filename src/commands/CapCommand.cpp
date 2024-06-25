@@ -80,6 +80,14 @@ void CapCommand::execute(Client* client, std::string args) {
 			rplMyInfo(client);
 			rplYourHost(client);
 			rplISupport(client);
+			Server::getInstance()
+				.getClientCommands()
+				.getCommand("lusers")
+				->execute(client, "");
+			Server::getInstance()
+				.getClientCommands()
+				.getCommand("motd")
+				->execute(client, "");
 		}
 	} catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;

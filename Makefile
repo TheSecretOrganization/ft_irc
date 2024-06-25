@@ -35,6 +35,8 @@ SRC         :=	main.cpp \
 		CapCommand.cpp \
 		ErrorCommand.cpp \
 		JoinCommand.cpp \
+		LusersCommand.cpp \
+		MotdCommand.cpp \
 		NickCommand.cpp \
 		PassCommand.cpp \
 		PingCommand.cpp \

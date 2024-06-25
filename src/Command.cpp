@@ -96,3 +96,13 @@ bool Command::passwdMismatch(Client* client, const std::string& passWd) const {
 	}
 	return false;
 }
+
+bool Command::noSuchServer(Client* client, const std::string& server) const {
+	if (!server.empty() &&
+		server !=
+			Server::getInstance().getConfiguration().getValue("hostname")) {
+		sendError(client, ERR_NOSUCHSERVER, _402, server);
+		return true;
+	}
+	return false;
+}

@@ -55,7 +55,6 @@ void ClientSocket::onPoll() {
 					  ? command.substr(i + 1, command.size() - (i + 1))
 					  : "";
 		try {
-			std::cout << "name: " << name << std::endl;
 			Command* cmd =
 				Server::getInstance().getClientCommands().getCommand(name);
 			cmd->execute(Server::getInstance().getClient(fd), command);

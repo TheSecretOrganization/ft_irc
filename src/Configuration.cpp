@@ -14,6 +14,7 @@ Configuration::Configuration() {
 	config["cmodes"] = CMODES;
 	config["cpmodes"] = CPMODES;
 	config["chanlimit"] = CHANLIMIT;
+	config["motd"] = MOTD;
 }
 
 Configuration::~Configuration() {}
