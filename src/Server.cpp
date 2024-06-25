@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <cerrno>
 
 Server::Server() { run = true; }
 
@@ -16,7 +17,12 @@ Server::~Server() {
 		delete *it;
 	}
 
-	observer.unsubscribe(socket.getFd());
+	try {
+		observer.unsubscribe(socket.getFd());
+	} catch (SocketObserver::EpollCtlDelException &e) {
+		if (errno == ENOENT) return;
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 Server& Server::getInstance() {
