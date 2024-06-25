@@ -49,7 +49,9 @@ int serverParameters(int argc, char* argv[]) {
 
 	for (size_t i = 0; i < pw.size(); i++) {
 		if (!isalnum(pw[i])) {
-			std::cerr << "Error: [password] can't contain non-alphanumeric characters" << std::endl;
+			std::cerr
+				<< "Error: [password] can't contain non-alphanumeric characters"
+				<< std::endl;
 			return -1;
 		}
 	}
