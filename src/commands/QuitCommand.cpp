@@ -23,6 +23,6 @@ void QuitCommand::execute(Client* client, std::string args) {
 		(*it)->sendMessage(message);
 	}
 
-	Server::getInstance().getCommandRegistry().getCommand("ERROR")->execute(
+	Server::getInstance().getServerCommands().getCommand("ERROR")->execute(
 		client, "Quit: Bye for now!");
 }
