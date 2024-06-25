@@ -55,6 +55,8 @@ static void rplISupport(Client* client) {
 		RPL_ISUPPORT,
 		client->getNickname() + " USERLEN=" +
 			Server::getInstance().getConfiguration().getValue("userlen") +
+			" CHANLIMIT = " +
+			Server::getInstance().getConfiguration().getValue("chanlimit") +
 			" :are supported by this server");
 }
 
@@ -65,7 +67,7 @@ void CapCommand::execute(Client* client, std::string args) {
 		} else if (args == "END") {
 			if (client->getStatus() != USER_OK) {
 				return Server::getInstance()
-					.getCommandRegistry()
+					.getServerCommands()
 					.getCommand("error")
 					->execute(client, ERR_REGISTRATION);
 			} else {
@@ -79,11 +81,11 @@ void CapCommand::execute(Client* client, std::string args) {
 			rplYourHost(client);
 			rplISupport(client);
 			Server::getInstance()
-				.getCommandRegistry()
+				.getClientCommands()
 				.getCommand("lusers")
 				->execute(client, "");
 			Server::getInstance()
-				.getCommandRegistry()
+				.getClientCommands()
 				.getCommand("motd")
 				->execute(client, "");
 		}
