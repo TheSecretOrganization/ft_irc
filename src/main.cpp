@@ -1,9 +1,12 @@
 #include "Server.hpp"
+#include <cctype>
 #include <csignal>
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <string>
 
 static void handle_singint(int signal) {
 	(void)signal;
@@ -37,6 +40,20 @@ int serverParameters(int argc, char* argv[]) {
 		std::cerr << "Error: [port] must be between 6660 and 6669" << std::endl;
 		return -1;
 	}
+
+	std::string pw = argv[2];
+	if (pw.empty()) {
+		std::cerr << "Error: [password] can't be empty" << std::endl;
+		return -1;
+	}
+
+	for (size_t i = 0; i < pw.size(); i++) {
+		if (!isalnum(pw[i])) {
+			std::cerr << "Error: [password] can't contain non-alphanumeric characters" << std::endl;
+			return -1;
+		}
+	}
+
 	return port;
 }
 
