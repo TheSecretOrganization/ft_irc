@@ -4,9 +4,9 @@
 #include "ServerSocket.hpp"
 
 #include <algorithm>
+#include <cerrno>
 #include <iostream>
 #include <vector>
-#include <cerrno>
 
 Server::Server() { run = true; }
 
@@ -19,8 +19,9 @@ Server::~Server() {
 
 	try {
 		observer.unsubscribe(socket.getFd());
-	} catch (SocketObserver::EpollCtlDelException &e) {
-		if (errno == ENOENT) return;
+	} catch (SocketObserver::EpollCtlDelException& e) {
+		if (errno == ENOENT)
+			return;
 		std::cerr << e.what() << std::endl;
 	}
 }
