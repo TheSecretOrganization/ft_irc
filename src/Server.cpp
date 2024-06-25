@@ -4,6 +4,7 @@
 #include "ServerSocket.hpp"
 
 #include <algorithm>
+#include <cerrno>
 #include <iostream>
 #include <vector>
 
@@ -16,7 +17,13 @@ Server::~Server() {
 		delete *it;
 	}
 
-	observer.unsubscribe(socket.getFd());
+	try {
+		observer.unsubscribe(socket.getFd());
+	} catch (SocketObserver::EpollCtlDelException& e) {
+		if (errno == ENOENT)
+			return;
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 Server& Server::getInstance() {
