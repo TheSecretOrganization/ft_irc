@@ -197,5 +197,8 @@ void Channel::inviteUser(Client* user) {inviteList.push_back(user); }
 void Channel::uninviteUser(Client* user) {
 	std::vector<Client*>::iterator it =
 		std::find(inviteList.begin(), inviteList.end(), user);
+	if (it == inviteList.end()) {
+		return;
+	}
 	inviteList.erase(it);
 }
