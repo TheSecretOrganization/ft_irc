@@ -22,7 +22,7 @@ void Client::sendMessage(std::string type, std::string message) const {
 	std::string packet = type + " " + message;
 	try {
 		socket.sendPacket(packet);
-	} catch (const std::exception& e) {
+	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << std::endl;
 	}
 }
@@ -34,7 +34,7 @@ void Client::sendError(const std::string& code, const std::string& message,
 			sendMessage(code, arg + " :" + message);
 		else
 			sendMessage(code, ":" + message);
-	} catch (const std::exception& e) {
+	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << std::endl;
 	}
 }
