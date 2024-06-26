@@ -97,7 +97,7 @@ const char* Server::ChannelNotFoundException::what() const throw() {
 	return "channel not found";
 }
 
-Client* Server::getClient(std::string nickname) {
+Client* Server::getClient(const std::string& nickname) {
 	for (std::vector<Client*>::iterator it = clients.begin();
 		 it != clients.end(); it++) {
 		if ((*it)->getClientnickName() == nickname)
@@ -106,7 +106,7 @@ Client* Server::getClient(std::string nickname) {
 	return NULL;
 }
 
-Channel* Server::getChannel(std::string name) {
+Channel* Server::getChannel(const std::string& name) {
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end(); it++) {
 		if ((*it)->getChannelName() == name)

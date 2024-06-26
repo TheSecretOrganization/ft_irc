@@ -39,8 +39,8 @@ class Server {
 	const std::vector<Client*>& getClients() const;
 	const Configuration& getConfiguration() const;
 	bool getRun() const;
-	Client* getClient(std::string nickname);
-	Channel* getChannel(std::string name);
+	Client* getClient(const std::string& nickname);
+	Channel* getChannel(const std::string& name);
 	const std::vector<Channel*>& getChannels() const;
 	std::vector<Channel*> getChannels(Client* client) const;
 
