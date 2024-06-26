@@ -45,7 +45,8 @@ void InviteCommand::execute(Client* client, std::string args) {
 		std::cerr << e.what() << '\n';
 	}
 
-	channel->inviteUser(destinationClient);
+	if (!channel->isUserInvited(destinationClient))
+		channel->inviteUser(destinationClient);
 
 	try {
 		destinationClient->sendMessage(":" + client->getClientnickName() +
