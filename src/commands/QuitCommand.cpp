@@ -21,6 +21,7 @@ void QuitCommand::execute(Client* client, std::string args) {
 		 it != channels.end(); it++) {
 		(*it)->removeUser(client);
 		(*it)->sendMessage(message);
+		client->decrementJoinedChannels();
 	}
 
 	Server::getInstance().getServerCommands().getCommand("ERROR")->execute(
