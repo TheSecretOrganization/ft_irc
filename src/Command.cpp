@@ -13,9 +13,9 @@ Command::Command(const std::string& name, size_t expectedSize, size_t minSize)
 
 Command::~Command() {}
 
-void Command::sendError(Client* client, const std::string &code,
-						const std::string &message,
-						const std::string &arg) const {
+void Command::sendError(Client* client, const std::string& code,
+						const std::string& message,
+						const std::string& arg) const {
 	client->sendError(code, message, arg);
 }
 

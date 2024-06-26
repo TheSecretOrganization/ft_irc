@@ -1,11 +1,11 @@
 #include "commands/CapCommand.hpp"
 
-#include "commands/LusersCommand.hpp"
-#include "commands/MotdCommand.hpp"
 #include "Client.hpp"
 #include "Configuration.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
+#include "commands/LusersCommand.hpp"
+#include "commands/MotdCommand.hpp"
 
 #include <exception>
 #include <iostream>

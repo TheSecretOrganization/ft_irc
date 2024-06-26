@@ -2,13 +2,13 @@
 
 #include "commands/CapCommand.hpp"
 #include "commands/JoinCommand.hpp"
+#include "commands/LusersCommand.hpp"
+#include "commands/MotdCommand.hpp"
 #include "commands/NickCommand.hpp"
 #include "commands/PassCommand.hpp"
 #include "commands/PingCommand.hpp"
 #include "commands/QuitCommand.hpp"
 #include "commands/UserCommand.hpp"
-#include "commands/LusersCommand.hpp"
-#include "commands/MotdCommand.hpp"
 
 CommandRegistry::CommandRegistry() {
 	registerCommand("CAP", new CapCommand());

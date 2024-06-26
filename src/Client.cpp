@@ -27,8 +27,8 @@ void Client::sendMessage(std::string type, std::string message) const {
 	}
 }
 
-void Client::sendError(const std::string &code, const std::string &message,
-					   const std::string &arg) const {
+void Client::sendError(const std::string& code, const std::string& message,
+					   const std::string& arg) const {
 	try {
 		if (!message.empty())
 			sendMessage(code, arg + " :" + message);
