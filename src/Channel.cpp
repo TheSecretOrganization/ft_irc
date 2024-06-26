@@ -198,7 +198,7 @@ void Channel::uninviteUser(Client* user) {
 	std::vector<Client*>::iterator it =
 		std::find(inviteList.begin(), inviteList.end(), user);
 	if (it == inviteList.end()) {
-		return;
+		throw Server::ClientNotFoundException();
 	}
 	inviteList.erase(it);
 }
