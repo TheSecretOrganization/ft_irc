@@ -13,16 +13,10 @@ Command::Command(const std::string& name, size_t expectedSize, size_t minSize)
 
 Command::~Command() {}
 
-void Command::sendError(Client* client, std::string code, std::string message,
-						std::string arg) const {
-	try {
-		if (!arg.empty())
-			client->sendMessage(code, arg + " :" + message);
-		else
-			client->sendMessage(code, ":" + message);
-	} catch (const std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
+void Command::sendError(Client* client, const std::string &code,
+						const std::string &message,
+						const std::string &arg) const {
+	client->sendError(code, message, arg);
 }
 
 bool Command::needMoreParams(Client* client,
