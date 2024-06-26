@@ -1,5 +1,7 @@
 #include "commands/InviteCommand.hpp"
 #include "Server.hpp"
+#include "IrcReplies.hpp"
+#include <iostream>
 
 InviteCommand::InviteCommand() : Command("INVITE", 2, 2) {}
 
@@ -9,6 +11,12 @@ void InviteCommand::execute(Client* client, std::string args) {
 	std::vector<std::string> vecArgs = Command::split(args, ' ');
 	if (needMoreParams(client, vecArgs)) {
 		return;
+	}
+
+	Client* destinationClient = Server::getInstance().getClient(vecArgs[1]);
+	if (!destinationClient) {
+		sendError(client, ERR_NOSUCHNICK, _401, vecArgs[1]);
+		return ;
 	}
 
 	Channel* channel = Server::getInstance().getChannel(vecArgs[1]);
@@ -28,8 +36,7 @@ void InviteCommand::execute(Client* client, std::string args) {
 		return;
 	}
 
-	Client* destinationClient = Server::getInstance().getClient(vecArgs[1]);
-
-	// TODO: RPL_INVITING to client
-	// and send an INVITE to destinationClient, how??
+	client->sendMessage(RPL_INVITING, client->getClientnickName() + " " + destinationClient->getClientnickName() + " " + channel->getChannelName());
+	channel->inviteUser(destinationClient);
+	destinationClient->sendMessage(":" + client->getClientnickName() + " INVITE", destinationClient->getClientnickName() + " " + channel->getChannelName());
 }

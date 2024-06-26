@@ -79,4 +79,7 @@ class Channel {
 	void unsetSize(void);
 
 	void sendMessage(const std::string& message);
+
+	void inviteUser(Client* user);
+	void uninviteUser(Client* user);
 };
