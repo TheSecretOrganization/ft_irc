@@ -20,7 +20,7 @@ void QuitCommand::execute(Client* client, std::string args) {
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end(); it++) {
 		(*it)->removeUser(client);
-		(*it)->sendMessage(message);
+		(*it)->sendMessage("PRIVMSG", message);
 	}
 
 	Server::getInstance().getServerCommands().getCommand("ERROR")->execute(

@@ -6,6 +6,7 @@
 #include "commands/NickCommand.hpp"
 #include "commands/PassCommand.hpp"
 #include "commands/PingCommand.hpp"
+#include "commands/PrivmsgCommand.hpp"
 #include "commands/QuitCommand.hpp"
 #include "commands/UserCommand.hpp"
 
@@ -19,6 +20,7 @@ ClientCommands::ClientCommands() {
 	registerCommand("quit", new QuitCommand());
 	registerCommand("lusers", new LusersCommand());
 	registerCommand("motd", new MotdCommand());
+	registerCommand("privmsg", new PrivmsgCommand());
 }
 
 ClientCommands::~ClientCommands() {}

@@ -17,53 +17,57 @@ CapCommand::~CapCommand() {}
 static void rplWelcome(Client* client) {
 	client->sendMessage(
 		RPL_WELCOME,
-		client->getNickname() + " :Welcome to the " +
+		"Welcome to the " +
 			Server::getInstance().getConfiguration().getValue("networkName") +
 			" Network, " + client->getNickname() + "!" + client->getUsername() +
-			"@" + client->getHostname());
+			"@" + client->getHostname(),
+		client->getNickname());
 }
 
 static void rplYourHost(Client* client) {
 	client->sendMessage(
 		RPL_YOURHOST,
-		client->getNickname() + " :Your host is " +
+		"Your host is " +
 			Server::getInstance().getConfiguration().getValue("serverName") +
 			", running version " +
-			Server::getInstance().getConfiguration().getValue("version"));
+			Server::getInstance().getConfiguration().getValue("version"),
+		client->getNickname());
 }
 
 static void rplCreated(Client* client) {
 	client->sendMessage(
 		RPL_CREATED,
-		client->getNickname() + " :This server was created " +
-			Server::getInstance().getConfiguration().getValue("creationDate"));
+		"This server was created " +
+			Server::getInstance().getConfiguration().getValue("creationDate"),
+		client->getNickname());
 }
 
 static void rplMyInfo(Client* client) {
 	client->sendMessage(
 		RPL_MYINFO,
-		client->getNickname() + " " +
-			Server::getInstance().getConfiguration().getValue("serverName") +
-			" " + Server::getInstance().getConfiguration().getValue("version") +
-			" " + Server::getInstance().getConfiguration().getValue("umodes") +
-			" " + Server::getInstance().getConfiguration().getValue("cmodes") +
-			" " + Server::getInstance().getConfiguration().getValue("cpmodes"));
+		Server::getInstance().getConfiguration().getValue("serverName") + " " +
+			Server::getInstance().getConfiguration().getValue("version") + " " +
+			Server::getInstance().getConfiguration().getValue("umodes") + " " +
+			Server::getInstance().getConfiguration().getValue("cmodes") + " " +
+			Server::getInstance().getConfiguration().getValue("cpmodes"),
+		client->getNickname());
 }
 
 static void rplISupport(Client* client) {
 	client->sendMessage(
 		RPL_ISUPPORT,
-		client->getNickname() + " USERLEN=" +
+		"USERLEN=" +
 			Server::getInstance().getConfiguration().getValue("userlen") +
 			" CHANLIMIT = " +
 			Server::getInstance().getConfiguration().getValue("chanlimit") +
-			" :are supported by this server");
+			" :are supported by this server",
+		client->getNickname());
 }
 
 void CapCommand::execute(Client* client, std::string args) {
 	try {
 		if (args == "LS") {
-			client->sendMessage("CAP * LS", ":");
+			client->sendMessage("CAP", "", "* LS");
 		} else if (args == "END") {
 			if (client->getStatus() != USER_OK) {
 				return Server::getInstance()

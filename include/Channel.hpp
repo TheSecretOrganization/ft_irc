@@ -78,5 +78,5 @@ class Channel {
 	void changeChannelSize(size_t newSize);
 	void unsetSize(void);
 
-	void sendMessage(const std::string& message);
+	void sendMessage(const std::string& type, const std::string& message, const std::string& arg = "");
 };

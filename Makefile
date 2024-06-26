@@ -40,6 +40,7 @@ SRC         :=	main.cpp \
 		NickCommand.cpp \
 		PassCommand.cpp \
 		PingCommand.cpp \
+		PrivmsgCommand.cpp \
 		QuitCommand.cpp \
 		UserCommand.cpp \
 	)
