@@ -191,3 +191,14 @@ void Channel::sendMessage(const std::string& message) {
 		}
 	}
 }
+
+void Channel::inviteUser(Client* user) { inviteList.push_back(user); }
+
+void Channel::uninviteUser(Client* user) {
+	std::vector<Client*>::iterator it =
+		std::find(inviteList.begin(), inviteList.end(), user);
+	if (it == inviteList.end()) {
+		throw Server::ClientNotFoundException();
+	}
+	inviteList.erase(it);
+}

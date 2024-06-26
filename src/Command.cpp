@@ -106,3 +106,12 @@ bool Command::noSuchServer(Client* client, const std::string& server) const {
 	}
 	return false;
 }
+
+bool Command::chanOPrivsNeeded(Client* client, Channel* channel) const {
+	if (channel->isInviteMode() && !channel->isUserOperator(client)) {
+		sendError(client, ERR_CHANOPRIVSNEEDED, _482,
+				  channel->getChannelName());
+		return true;
+	}
+	return false;
+}
