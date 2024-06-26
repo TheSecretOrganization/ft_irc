@@ -43,7 +43,7 @@ void InviteCommand::execute(Client* client, std::string args) {
 							destinationClient->getClientnickName() + " " +
 							channel->getChannelName());
 	}
-	catch(const std::exception& e)
+	catch(const ClientSocket::SendException& e)
 	{
 		std::cerr << e.what() << '\n';
 	}
@@ -57,7 +57,7 @@ void InviteCommand::execute(Client* client, std::string args) {
 								   destinationClient->getClientnickName() +
 									   " " + channel->getChannelName());
 	}
-	catch(const std::exception& e)
+	catch(const ClientSocket::SendException& e)
 	{
 		std::cerr << e.what() << '\n';
 	}
