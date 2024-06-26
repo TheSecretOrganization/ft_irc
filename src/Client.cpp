@@ -27,6 +27,18 @@ void Client::sendMessage(std::string type, std::string message) const {
 	}
 }
 
+void Client::sendError(const std::string &code, const std::string &message,
+					   const std::string &arg) const {
+	try {
+		if (!message.empty())
+			sendMessage(code, arg + " :" + message);
+		else
+			sendMessage(code, ":" + message);
+	} catch (const std::exception& e) {
+		std::cerr << e.what() << std::endl;
+	}
+}
+
 std::string Client::getNickname() const { return nickname; }
 
 void Client::setNickname(const std::string& newNickname) {
