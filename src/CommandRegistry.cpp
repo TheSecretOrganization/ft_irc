@@ -12,15 +12,15 @@
 #include "commands/MotdCommand.hpp"
 
 CommandRegistry::CommandRegistry() {
-	registerCommand("cap", new CapCommand());
-	registerCommand("nick", new NickCommand());
-	registerCommand("ping", new PingCommand());
-	registerCommand("user", new UserCommand());
-	registerCommand("pass", new PassCommand());
-	registerCommand("join", new JoinCommand());
-	registerCommand("quit", new QuitCommand());
-	registerCommand("lusers", new LusersCommand());
-	registerCommand("motd", new MotdCommand());
+	registerCommand("CAP", new CapCommand());
+	registerCommand("NICK", new NickCommand());
+	registerCommand("PING", new PingCommand());
+	registerCommand("USER", new UserCommand());
+	registerCommand("PASS", new PassCommand());
+	registerCommand("JOIN", new JoinCommand());
+	registerCommand("QUIT", new QuitCommand());
+	registerCommand("LUSERS", new LusersCommand());
+	registerCommand("MOTD", new MotdCommand());
 }
 
 CommandRegistry::~CommandRegistry() {
@@ -29,24 +29,24 @@ CommandRegistry::~CommandRegistry() {
 		delete it->second;
 }
 
-static std::string strtolower(const std::string& str) {
+static std::string strtoupper(const std::string& str) {
 	std::string lstr = str;
 	for (size_t i = 0; i < lstr.size(); i++)
-		lstr[i] = tolower(lstr[i]);
+		lstr[i] = toupper(lstr[i]);
 	return lstr;
 }
 
 void CommandRegistry::registerCommand(const std::string& name,
 									  Command* command) {
-	std::string lowerName = strtolower(name);
-	if (commands.find(lowerName) != commands.end())
+	std::string upperName = strtoupper(name);
+	if (commands.find(upperName) != commands.end())
 		throw DuplicateException();
-	commands.insert(std::pair<std::string, Command*>(lowerName, command));
+	commands.insert(std::pair<std::string, Command*>(upperName, command));
 }
 
 Command* CommandRegistry::getCommand(const std::string& name) const {
 	std::map<std::string, Command*>::const_iterator cmd =
-		commands.find(strtolower(name));
+		commands.find(strtoupper(name));
 	if (cmd == commands.end())
 		throw NotFoundException();
 	return cmd->second;
