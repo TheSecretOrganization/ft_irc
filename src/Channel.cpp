@@ -72,9 +72,9 @@ bool Channel::isUserOnChannel(Client* client) {
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); ++it) {
 		if ((*it)->getSocket().getFd() == clientFd)
-			return 1;
+			return true;
 	}
-	return 0;
+	return false;
 }
 
 bool Channel::isUserOperator(Client* client) {
@@ -86,9 +86,9 @@ bool Channel::isUserOperator(Client* client) {
 	for (std::vector<Client*>::iterator it = operators.begin();
 		 it != operators.end(); ++it) {
 		if ((*it)->getSocket().getFd() == clientFd)
-			return 1;
+			return true;
 	}
-	return 0;
+	return false;
 }
 
 bool Channel::isUserInvited(Client* client) {
@@ -97,9 +97,9 @@ bool Channel::isUserInvited(Client* client) {
 	for (std::vector<Client*>::iterator it = inviteList.begin();
 		 it != inviteList.end(); ++it) {
 		if ((*it)->getSocket().getFd() == clientFd)
-			return 1;
+			return true;
 	}
-	return 0;
+	return false;
 }
 
 void Channel::setInviteMode(void) { inviteOnly = 1; }
@@ -133,6 +133,9 @@ void Channel::addUser(Client* user) { usersOnChannel.push_back(user); }
 void Channel::removeUser(Client* user) {
 	std::vector<Client*>::iterator it =
 		std::find(usersOnChannel.begin(), usersOnChannel.end(), user);
+	if (it == usersOnChannel.end()) {
+		throw Server::ClientNotFoundException();
+	}
 	usersOnChannel.erase(it);
 }
 
