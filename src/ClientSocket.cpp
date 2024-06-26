@@ -66,11 +66,11 @@ void ClientSocket::onPoll() {
 	} while (cs != std::string::npos);
 }
 
-void ClientSocket::sendPacket(std::string packet) const {
-	packet = ":" +
+void ClientSocket::sendPacket(const std::string& packet) const {
+	std::string content = ":" +
 			 Server::getInstance().getConfiguration().getValue("hostname") +
 			 " " + packet + "\r\n";
-	if (send(fd, packet.c_str(), packet.size(), 0) == -1)
+	if (send(fd, content.c_str(), content.size(), 0) == -1)
 		throw SendException();
 }
 
