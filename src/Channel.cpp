@@ -119,7 +119,6 @@ void Channel::unlockTopic(void) { this->topicLocked = 0; }
 void Channel::setChannelPassword(std::string newPassword) {
 	if (channelPassword.size() == 0) {
 		throw std::logic_error("Bad password length");
-		return;
 	}
 	channelPassword = newPassword;
 }
@@ -140,7 +139,6 @@ void Channel::addOperator(Client* newOp) {
 	if (std::find(operators.begin(), operators.end(), newOp) !=
 		operators.end()) {
 		throw std::logic_error("User is already an operator");
-		return;
 	}
 	operators.push_back(newOp);
 }
@@ -149,7 +147,6 @@ void Channel::removeOperator(Client* oldOp) {
 	if (std::find(operators.begin(), operators.end(), oldOp) ==
 		operators.end()) {
 		throw std::logic_error("User is not an operator");
-		return;
 	}
 	operators.erase(std::find(operators.begin(), operators.end(), oldOp));
 }
@@ -159,7 +156,6 @@ size_t Channel::getChannelSize(void) { return channelSize; }
 void Channel::changeChannelSize(size_t newSize) {
 	if (newSize == 0) {
 		throw std::logic_error("Bad channel size");
-		return;
 	}
 	channelSize = newSize;
 };
