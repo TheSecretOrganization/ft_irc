@@ -18,7 +18,8 @@ ClientSocket& Client::getSocket() { return socket; }
 
 const std::string& Client::getClientnickName(void) { return nickname; }
 
-void Client::sendMessage(const std::string& type, const std::string& message) const {
+void Client::sendMessage(const std::string& type,
+						 const std::string& message) const {
 	std::string packet = type + " " + message;
 	try {
 		socket.sendPacket(packet);
