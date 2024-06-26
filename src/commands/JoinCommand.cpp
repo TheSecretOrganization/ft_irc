@@ -1,8 +1,10 @@
 #include "commands/JoinCommand.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
+
 #include <cstddef>
 #include <cstdlib>
+#include <iostream>
 
 JoinCommand::JoinCommand() : Command("JOIN", 0, 1) {}
 
@@ -130,7 +132,22 @@ void JoinCommand::execute(Client* client, std::string args) {
 		if (channels[i] == NULL)
 			Channel::createChannel(client, jt->first, jt->second);
 		else {
-			channels[i]->addUser(client);
+			if (client->getJoinedChannels() < std::atoi(Server::getInstance().getConfiguration().getValue("chanlimit").c_str())) {
+				channels[i]->addUser(client);
+				client->incrementJoinedChannels();
+			}
+			else
+			{
+				try
+				{
+					client->sendMessage(ERR_TOOMANYCHANNELS, _405);
+					// TODO: send ERR_TOOMANYCHANNELS
+				}
+				catch(const ClientSocket::SendException& e)
+				{
+					std::cerr << e.what() << '\n';
+				}
+			}
 		}
 		jt++;
 	}
