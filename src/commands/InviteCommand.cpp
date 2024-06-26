@@ -20,6 +20,10 @@ void InviteCommand::execute(Client* client, std::string args) {
 		return;
 	}
 
+	if (chanOPrivsNeeded(client, channel)) {
+		return;
+	}
+
 	if (userOnChannel(client, channel, vecArgs[1])) {
 		return;
 	}
