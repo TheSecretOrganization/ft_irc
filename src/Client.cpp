@@ -7,7 +7,7 @@
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
-	  servername(""), status(UNKNOWN) {
+	  servername(""), status(UNKNOWN), joinedChannels(0) {
 	std::cout << "new client " << fd << std::endl;
 	nickname = "";
 }
@@ -60,3 +60,11 @@ void Client::setServername(const std::string& newServername) {
 int Client::getStatus() const { return status; }
 
 void Client::setStatus(int newStatus) { status = newStatus; }
+
+size_t Client::getJoinedChannels() { return joinedChannels; }
+
+void Client::resetJoinedChannels() { joinedChannels = 0; }
+
+void Client::incrementJoinedChannels() { joinedChannels++; }
+
+void Client::decrementJoinedChannels() { joinedChannels--; }

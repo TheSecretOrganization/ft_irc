@@ -16,6 +16,7 @@ class Client {
 	std::string hostname;
 	std::string servername;
 	int status;
+	size_t joinedChannels;
 
   public:
 	Client(int fd);
@@ -37,4 +38,8 @@ class Client {
 	void setServername(const std::string& newServername);
 	int getStatus() const;
 	void setStatus(int newStatus);
+	size_t getJoinedChannels();
+	void resetJoinedChannels();
+	void incrementJoinedChannels();
+	void decrementJoinedChannels();
 };
