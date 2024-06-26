@@ -36,29 +36,23 @@ void InviteCommand::execute(Client* client, std::string args) {
 		return;
 	}
 
-	try
-	{
+	try {
 		client->sendMessage(RPL_INVITING,
-						client->getClientnickName() + " " +
-							destinationClient->getClientnickName() + " " +
-							channel->getChannelName());
-	}
-	catch(const ClientSocket::SendException& e)
-	{
+							client->getClientnickName() + " " +
+								destinationClient->getClientnickName() + " " +
+								channel->getChannelName());
+	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << '\n';
 	}
 
 	channel->inviteUser(destinationClient);
 
-	try
-	{
+	try {
 		destinationClient->sendMessage(":" + client->getClientnickName() +
-									   " INVITE",
-								   destinationClient->getClientnickName() +
-									   " " + channel->getChannelName());
-	}
-	catch(const ClientSocket::SendException& e)
-	{
+										   " INVITE",
+									   destinationClient->getClientnickName() +
+										   " " + channel->getChannelName());
+	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << '\n';
 	}
 }
