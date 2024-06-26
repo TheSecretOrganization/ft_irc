@@ -192,7 +192,7 @@ void Channel::sendMessage(const std::string& message) {
 	}
 }
 
-void Channel::inviteUser(Client* user) {inviteList.push_back(user); }
+void Channel::inviteUser(Client* user) { inviteList.push_back(user); }
 
 void Channel::uninviteUser(Client* user) {
 	std::vector<Client*>::iterator it =

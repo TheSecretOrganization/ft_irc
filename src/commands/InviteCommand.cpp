@@ -1,6 +1,6 @@
 #include "commands/InviteCommand.hpp"
-#include "Server.hpp"
 #include "IrcReplies.hpp"
+#include "Server.hpp"
 #include <iostream>
 
 InviteCommand::InviteCommand() : Command("INVITE", 2, 2) {}
@@ -16,7 +16,7 @@ void InviteCommand::execute(Client* client, std::string args) {
 	Client* destinationClient = Server::getInstance().getClient(vecArgs[1]);
 	if (!destinationClient) {
 		sendError(client, ERR_NOSUCHNICK, _401, vecArgs[1]);
-		return ;
+		return;
 	}
 
 	Channel* channel = Server::getInstance().getChannel(vecArgs[1]);
@@ -38,7 +38,10 @@ void InviteCommand::execute(Client* client, std::string args) {
 
 	try
 	{
-		client->sendMessage(RPL_INVITING, client->getClientnickName() + " " + destinationClient->getClientnickName() + " " + channel->getChannelName());
+		client->sendMessage(RPL_INVITING,
+						client->getClientnickName() + " " +
+							destinationClient->getClientnickName() + " " +
+							channel->getChannelName());
 	}
 	catch(const std::exception& e)
 	{
@@ -49,7 +52,10 @@ void InviteCommand::execute(Client* client, std::string args) {
 
 	try
 	{
-		destinationClient->sendMessage(":" + client->getClientnickName() + " INVITE", destinationClient->getClientnickName() + " " + channel->getChannelName());
+		destinationClient->sendMessage(":" + client->getClientnickName() +
+									   " INVITE",
+								   destinationClient->getClientnickName() +
+									   " " + channel->getChannelName());
 	}
 	catch(const std::exception& e)
 	{
