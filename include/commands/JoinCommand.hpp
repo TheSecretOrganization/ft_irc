@@ -9,7 +9,7 @@ class JoinCommand : public Command {
 	std::vector<Channel*>
 	getTrueChannels(Client* client,
 					std::map<std::string, std::string>& map) const;
-	bool badChannelKey(Client* client, Channel* channel,
+	bool badChannelKey(Client* client, Channel const* channel,
 					   const std::string& password) const;
 	bool isChannelFull(Client* client, Channel* channel) const;
 	bool inviteOnlyChan(Client* client, Channel* channel) const;

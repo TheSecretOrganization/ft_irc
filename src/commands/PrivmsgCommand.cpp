@@ -6,7 +6,6 @@
 #include "Server.hpp"
 
 #include <cstddef>
-#include <exception>
 #include <iostream>
 #include <string>
 
@@ -41,7 +40,7 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 	}
 
 	std::string target = args.substr(0, i);
-	args = (i != args.npos) ? args.substr(i + 1, args.size() - (i + 1)) : "";
+	args = (i != std::string::npos) ? args.substr(i + 1, args.size() - (i + 1)) : "";
 
 	if (args.empty()) {
 		client->sendError(ERR_NOTEXTTOSEND, client->getClientnickName(), _412);
@@ -67,7 +66,7 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 		chan->broadcast(client->getPrefix(), args);
 	} else {
 		std::cout << "test" << std::endl;
-		Client* targetClient = Server::getInstance().getClient(target);
+		Client const* targetClient = Server::getInstance().getClient(target);
 
 		if (!targetClient) {
 			client->sendError(ERR_NOSUCHNICK,
@@ -75,11 +74,6 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 			return;
 		}
 
-		try {
-			targetClient->sendMessage(client->getPrefix(), "PRIVMSG", target,
-									  args);
-		} catch (const std::exception& e) {
-			std::cerr << e.what() << std::endl;
-		}
+		targetClient->sendMessage(client->getPrefix(), "PRIVMSG", target, args);
 	}
 }

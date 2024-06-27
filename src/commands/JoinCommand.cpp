@@ -6,7 +6,6 @@
 #include <cstddef>
 #include <cstdlib>
 #include <exception>
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -49,7 +48,7 @@ JoinCommand::getTrueChannels(Client* client,
 	return channels;
 }
 
-bool JoinCommand::badChannelKey(Client* client, Channel* channel,
+bool JoinCommand::badChannelKey(Client* client, Channel const* channel,
 								const std::string& password) const {
 	if (channel && channel->getChannelPassword() != password) {
 		client->sendError(ERR_BADCHANNELKEY,
@@ -188,15 +187,7 @@ void JoinCommand::execute(Client* client, std::string args) {
 		} else {
 			channels[i]->addUser(client);
 		}
-
-		try {
-			sendReplies(client, channels[i]);
-		} catch (const std::exception& e) {
-			std::cerr << e.what() << std::endl;
-		}
-
+		sendReplies(client, channels[i]);
 		jt++;
 	}
-
-	// TODO: replies
 }
