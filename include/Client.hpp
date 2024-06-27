@@ -22,18 +22,20 @@ class Client {
 	~Client();
 
 	void sendMessage(const std::string& type, const std::string& message, const std::string& arg = "") const;
+	void sendError(const std::string& code, const std::string& message,
+				   const std::string& arg = "") const;
 
 	ClientSocket& getSocket();
-	std::string getClientnickName(void);
-	std::string getNickname() const;
+	const std::string& getClientnickName(void);
+	const std::string& getNickname() const;
 	void setNickname(const std::string& newNickname);
-	std::string getUsername() const;
+	const std::string& getUsername() const;
 	void setUsername(const std::string& newUsername);
-	std::string getRealname() const;
+	const std::string& getRealname() const;
 	void setRealname(const std::string& newRealname);
-	std::string getHostname() const;
+	const std::string& getHostname() const;
 	void setHostname(const std::string& newHostname);
-	std::string getServername() const;
+	const std::string& getServername() const;
 	void setServername(const std::string& newServername);
 	int getStatus() const;
 	void setStatus(int newStatus);

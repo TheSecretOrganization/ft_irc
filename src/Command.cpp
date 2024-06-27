@@ -13,13 +13,10 @@ Command::Command(const std::string& name, size_t expectedSize, size_t minSize)
 
 Command::~Command() {}
 
-void Command::sendError(Client* client, std::string code, std::string message,
-						std::string arg) const {
-	try {
-		client->sendMessage(code, message, arg);
-	} catch (const std::exception& e) {
-		std::cerr << e.what() << std::endl;
-	}
+void Command::sendError(Client* client, const std::string& code,
+						const std::string& message,
+						const std::string& arg) const {
+	client->sendError(code, message, arg);
 }
 
 bool Command::needMoreParams(Client* client,
@@ -99,6 +96,15 @@ bool Command::noSuchServer(Client* client, const std::string& server) const {
 		server !=
 			Server::getInstance().getConfiguration().getValue("hostname")) {
 		sendError(client, ERR_NOSUCHSERVER, _402, server);
+		return true;
+	}
+	return false;
+}
+
+bool Command::chanOPrivsNeeded(Client* client, Channel* channel) const {
+	if (channel->isInviteMode() && !channel->isUserOperator(client)) {
+		sendError(client, ERR_CHANOPRIVSNEEDED, _482,
+				  channel->getChannelName());
 		return true;
 	}
 	return false;

@@ -21,19 +21,16 @@ OBJS_DIR    := objs
 SRC         :=	main.cpp \
 	Channel.cpp \
 	Client.cpp \
-	ClientCommands.cpp \
 	ClientSocket.cpp \
 	Command.cpp \
 	CommandRegistry.cpp \
 	Configuration.cpp \
 	Server.cpp \
-	ServerCommands.cpp \
 	ServerSocket.cpp \
 	Socket.cpp \
 	SocketObserver.cpp \
 	$(addprefix $(CMDS_DIR)/, \
 		CapCommand.cpp \
-		ErrorCommand.cpp \
 		JoinCommand.cpp \
 		LusersCommand.cpp \
 		MotdCommand.cpp \

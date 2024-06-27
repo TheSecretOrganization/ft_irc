@@ -23,6 +23,6 @@ void QuitCommand::execute(Client* client, std::string args) {
 		(*it)->sendMessage("PRIVMSG", message);
 	}
 
-	Server::getInstance().getServerCommands().getCommand("ERROR")->execute(
+	Server::getInstance().getCommandRegistry().getCommand("ERROR")->execute(
 		client, "Quit: Bye for now!");
 }

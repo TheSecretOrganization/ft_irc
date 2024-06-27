@@ -10,11 +10,9 @@ class CommandRegistry {
   private:
 	std::map<std::string, Command*> commands;
 
-  protected:
-	CommandRegistry();
-
   public:
-	virtual ~CommandRegistry();
+	CommandRegistry();
+	~CommandRegistry();
 
 	void registerCommand(const std::string& name, Command* command);
 	Command* getCommand(const std::string& name) const;

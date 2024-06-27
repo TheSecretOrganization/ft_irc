@@ -23,14 +23,15 @@ class Channel {
 	size_t channelSize;
 
   public:
-	Channel(Client* creator, std::string name);
-	Channel(Client* creator, std::string name, std::string password);
+	Channel(Client* creator, const std::string& name);
+	Channel(Client* creator, const std::string& name,
+			const std::string& password);
 	~Channel();
 
-	static void createChannel(Client* client, std::string name,
-							  std::string password);
+	static void createChannel(Client* client, const std::string& name,
+							  const std::string& password);
 
-	static void checkChannelSyntax(std::string channelName);
+	static void checkChannelSyntax(const std::string& channelName);
 
 	class InvalidChannelPrefixException : public std::exception {
 	  public:
@@ -59,12 +60,12 @@ class Channel {
 	void unsetInviteMode(void);
 	bool isInviteMode(void);
 
-	void changeTopic(std::string newTopic);
+	void changeTopic(const std::string& newTopic);
 	void unsetTopic(void);
 	void lockTopic(void);
 	void unlockTopic(void);
 
-	void setChannelPassword(std::string newPassword);
+	void setChannelPassword(const std::string& newPassword);
 	void unsetChannelPassword(void);
 	const std::string& getChannelPassword(void);
 
@@ -79,4 +80,7 @@ class Channel {
 	void unsetSize(void);
 
 	void sendMessage(const std::string& type, const std::string& message, const std::string& arg = "");
+
+	void inviteUser(Client* user);
+	void uninviteUser(Client* user);
 };

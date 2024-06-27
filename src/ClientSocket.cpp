@@ -57,7 +57,7 @@ void ClientSocket::onPoll() {
 		try {
 			std::cout << "Command: " << name << " " << command << std::endl;
 			Command* cmd =
-				Server::getInstance().getClientCommands().getCommand(name);
+				Server::getInstance().getCommandRegistry().getCommand(name);
 			cmd->execute(Server::getInstance().getClient(fd), command);
 		} catch (CommandRegistry::NotFoundException& e) {
 			std::cerr << name << ": " << e.what() << std::endl;
@@ -67,9 +67,9 @@ void ClientSocket::onPoll() {
 	} while (cs != std::string::npos);
 }
 
-void ClientSocket::sendPacket(std::string packet) const {
-	packet = ":" + packet + "\r\n";
-	if (send(fd, packet.c_str(), packet.size(), 0) == -1)
+void ClientSocket::sendPacket(const std::string& packet) const {
+	std::string formatPacket = ":" + packet + "\r\n";
+	if (send(fd, formatPacket.c_str(), formatPacket.size(), 0) == -1)
 		throw SendException();
 }
 
