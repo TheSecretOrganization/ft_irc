@@ -3,8 +3,6 @@
 #include "IrcReplies.hpp"
 #include "Server.hpp"
 
-#include <exception>
-#include <iostream>
 #include <string>
 #include <vector>
 

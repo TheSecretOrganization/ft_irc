@@ -1,7 +1,6 @@
 #include "Client.hpp"
 #include "ClientSocket.hpp"
 
-#include <exception>
 #include <iostream>
 #include <string>
 
