@@ -183,10 +183,12 @@ const char* Channel::ForbiddenChannelNameException::what() const throw() {
 		return "Forbidden character used in channel name";
 }
 
-void Channel::sendMessage(const std::string& prefix,
-						  const std::string& trailing) {
+void Channel::broadcast(const std::string& prefix,
+						const std::string& trailing) {
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); it++) {
+		if (prefix == (*it)->getPrefix())
+			continue;
 		try {
 			(*it)->sendMessage(prefix, "PRIVMSG", name, trailing);
 		} catch (const std::exception& e) {

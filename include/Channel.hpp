@@ -80,8 +80,7 @@ class Channel {
 	void changeChannelSize(size_t newSize);
 	void unsetSize(void);
 
-	void sendMessage(const std::string& prefix,
-					 const std::string& trailing = "");
+	void broadcast(const std::string& prefix, const std::string& trailing = "");
 
 	void inviteUser(Client* user);
 	void uninviteUser(Client* user);

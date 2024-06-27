@@ -64,7 +64,7 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 			return;
 		}
 
-		chan->sendMessage(client->getPrefix(), args);
+		chan->broadcast(client->getPrefix(), args);
 	} else {
 		std::cout << "test" << std::endl;
 		Client* targetClient = Server::getInstance().getClient(target);
