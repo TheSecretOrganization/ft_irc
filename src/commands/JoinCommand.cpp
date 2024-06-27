@@ -1,8 +1,14 @@
 #include "commands/JoinCommand.hpp"
+#include "Channel.hpp"
+#include "Client.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
 #include <cstddef>
 #include <cstdlib>
+#include <exception>
+#include <iostream>
+#include <string>
+#include <vector>
 
 JoinCommand::JoinCommand() : Command("JOIN", 0, 1) {}
 
@@ -23,7 +29,7 @@ channelMap(std::vector<std::string> vecChannels, std::string pass) {
 
 std::vector<Channel*>
 JoinCommand::getTrueChannels(Client* client,
-							 std::map<std::string, std::string>& map) {
+							 std::map<std::string, std::string>& map) const {
 	std::vector<Channel*> channels;
 	for (std::map<std::string, std::string>::iterator it = map.begin();
 		 it != map.end(); it++) {
@@ -42,7 +48,7 @@ JoinCommand::getTrueChannels(Client* client,
 }
 
 bool JoinCommand::badChannelKey(Client* client, Channel* channel,
-								const std::string& password) {
+								const std::string& password) const {
 	if (channel && channel->getChannelPassword() != password) {
 		sendError(client, ERR_BADCHANNELKEY, _475, channel->getChannelName());
 		return true;
@@ -50,7 +56,7 @@ bool JoinCommand::badChannelKey(Client* client, Channel* channel,
 	return false;
 }
 
-bool JoinCommand::isChannelFull(Client* client, Channel* channel) {
+bool JoinCommand::isChannelFull(Client* client, Channel* channel) const {
 	if (channel->getUsers().size() >= channel->getChannelSize()) {
 		sendError(client, ERR_CHANNELISFULL, _471, channel->getChannelName());
 		return true;
@@ -58,12 +64,44 @@ bool JoinCommand::isChannelFull(Client* client, Channel* channel) {
 	return false;
 }
 
-bool JoinCommand::inviteOnlyChan(Client* client, Channel* channel) {
+bool JoinCommand::inviteOnlyChan(Client* client, Channel* channel) const {
 	if (channel->isInviteMode() && !channel->isUserInvited(client)) {
 		sendError(client, ERR_INVITEONLYCHAN, _473, channel->getChannelName());
 		return true;
 	}
 	return false;
+}
+
+std::string JoinCommand::getUsersString(std::vector<Client*>& users) const {
+	std::string stringUsers;
+
+	for (std::vector<Client*>::iterator it = users.begin(); it != users.end();
+		 ++it) {
+		stringUsers = stringUsers + " " + (*it)->getNickname();
+	}
+
+	return stringUsers;
+}
+
+void JoinCommand::sendReplies(Client* client, Channel* channel) const {
+	client->sendMessage("JOIN", "", channel->getChannelName());
+	if (!channel->getTopic().empty())
+		client->sendMessage(RPL_TOPIC, channel->getTopic(),
+							client->getNickname() + " " +
+								channel->getChannelName());
+	client->sendMessage(RPL_NAMREPLY, getUsersString(channel->getUsers()),
+						client->getNickname() + " = " +
+							channel->getChannelName());
+	client->sendMessage(RPL_ENDOFNAMES, _366,
+						client->getNickname() + " " +
+							channel->getChannelName());
+	for (std::vector<Client*>::iterator it = channel->getUsers().begin();
+		 it != channel->getUsers().end(); ++it) {
+		if ((*it) == client)
+			continue;
+		(*it)->sendMessage(client->getFormatUser(), "",
+						   "JOIN " + channel->getChannelName());
+	}
 }
 
 void JoinCommand::execute(Client* client, std::string args) {
@@ -127,11 +165,19 @@ void JoinCommand::execute(Client* client, std::string args) {
 
 	std::map<std::string, std::string>::iterator jt = map.begin();
 	for (size_t i = 0; i < channels.size(); i++) {
-		if (channels[i] == NULL)
+		if (channels[i] == NULL) {
 			Channel::createChannel(client, jt->first, jt->second);
-		else {
+			channels[i] = Server::getInstance().getChannel(jt->first);
+		} else {
 			channels[i]->addUser(client);
 		}
+
+		try {
+			sendReplies(client, channels[i]);
+		} catch (const std::exception& e) {
+			std::cerr << e.what() << std::endl;
+		}
+
 		jt++;
 	}
 
