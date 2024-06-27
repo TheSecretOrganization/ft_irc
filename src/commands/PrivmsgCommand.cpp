@@ -40,7 +40,8 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 	}
 
 	std::string target = args.substr(0, i);
-	args = (i != std::string::npos) ? args.substr(i + 1, args.size() - (i + 1)) : "";
+	args = (i != std::string::npos) ? args.substr(i + 1, args.size() - (i + 1))
+									: "";
 
 	if (args.empty()) {
 		client->sendError(ERR_NOTEXTTOSEND, client->getClientnickName(), _412);
