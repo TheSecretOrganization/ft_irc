@@ -36,7 +36,7 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 	size_t i = args.find(":");
 
 	if (args.empty() || i == 0) {
-		sendError(client, ERR_NORECIPIENT, _411);
+		client->sendError(ERR_NORECIPIENT, client->getClientnickName(), _411);
 		return;
 	}
 
@@ -44,7 +44,7 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 	args = (i != args.npos) ? args.substr(i + 1, args.size() - (i + 1)) : "";
 
 	if (args.empty()) {
-		sendError(client, ERR_NOTEXTTOSEND, _412);
+		client->sendError(ERR_NOTEXTTOSEND, client->getClientnickName(), _412);
 		return;
 	}
 
@@ -53,27 +53,31 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 		Channel* chan = Server::getInstance().getChannel(target);
 
 		if (!chan) {
-			sendError(client, ERR_NOSUCHNICK, _401, target);
+			client->sendError(ERR_NOSUCHNICK,
+							  client->getClientnickName() + " " + target, _401);
 			return;
 		}
 
 		if (chan->isInviteMode() && !chan->isUserOnChannel(client)) {
-			sendError(client, ERR_CANNOTSENDTOCHAN, _404, target);
+			client->sendError(ERR_CANNOTSENDTOCHAN,
+							  client->getClientnickName() + " " + target, _404);
 			return;
 		}
 
-		chan->sendMessage(client->getNickname() + " PRIVMSG", args, target);
+		chan->sendMessage(client->getPrefix(), args);
 	} else {
+		std::cout << "test" << std::endl;
 		Client* targetClient = Server::getInstance().getClient(target);
 
 		if (!targetClient) {
-			sendError(client, ERR_NOSUCHNICK, _401, target);
+			client->sendError(ERR_NOSUCHNICK,
+							  client->getClientnickName() + " " + target, _401);
 			return;
 		}
 
 		try {
-			targetClient->sendMessage(client->getNickname() + " PRIVMSG", args,
-									  target);
+			targetClient->sendMessage(client->getPrefix(), "PRIVMSG", target,
+									  args);
 		} catch (const std::exception& e) {
 			std::cerr << e.what() << std::endl;
 		}
