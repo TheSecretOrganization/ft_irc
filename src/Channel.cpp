@@ -66,7 +66,7 @@ std::vector<Client*>& Channel::getOperators(void) { return operators; }
 
 std::vector<Client*>& Channel::getInviteList(void) { return inviteList; }
 
-const std::string& Channel::getChannelName(void) { return name; }
+const std::string& Channel::getChannelName(void) const { return name; }
 
 bool Channel::isUserOnChannel(Client* client) {
 	int clientFd = client->getSocket().getFd();
@@ -110,6 +110,8 @@ void Channel::unsetInviteMode(void) { inviteOnly = 0; }
 
 bool Channel::isInviteMode(void) { return inviteOnly; }
 
+const std::string& Channel::getTopic(void) const { return topic; }
+
 void Channel::changeTopic(const std::string& newTopic) { topic = newTopic; }
 
 void Channel::unsetTopic(void) { topic = ""; }
@@ -127,7 +129,9 @@ void Channel::setChannelPassword(const std::string& newPassword) {
 
 void Channel::unsetChannelPassword(void) { channelPassword = ""; }
 
-const std::string& Channel::getChannelPassword(void) { return channelPassword; }
+const std::string& Channel::getChannelPassword(void) const {
+	return channelPassword;
+}
 
 void Channel::addUser(Client* user) { usersOnChannel.push_back(user); }
 
@@ -179,7 +183,8 @@ const char* Channel::ForbiddenChannelNameException::what() const throw() {
 		return "Forbidden character used in channel name";
 }
 
-void Channel::sendMessage(const std::string& type, const std::string& message, const std::string& arg) {
+void Channel::sendMessage(const std::string& type, const std::string& message,
+						  const std::string& arg) {
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); it++) {
 		try {
