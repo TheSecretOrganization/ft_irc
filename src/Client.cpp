@@ -34,7 +34,7 @@ void Client::sendMessage(const std::string& type, const std::string& message,
 void Client::sendError(const std::string& code, const std::string& message,
 					   const std::string& arg) const {
 	try {
-		if (!message.empty())
+		if (!arg.empty())
 			sendMessage(code, arg + " :" + message);
 		else
 			sendMessage(code, ":" + message);
