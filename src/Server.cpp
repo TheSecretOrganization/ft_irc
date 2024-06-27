@@ -45,7 +45,7 @@ void Server::start(int port, const std::string& password) {
 
 void Server::shut() {
 	run = false;
-	std::cout << "Bye!" << std::endl;
+	std::cout << "\nBye!" << std::endl;
 }
 
 void Server::addClient(Client* client) {
