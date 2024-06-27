@@ -51,7 +51,7 @@ class Channel {
 	std::vector<Client*>& getOperators(void);
 	std::vector<Client*>& getInviteList(void);
 
-	const std::string& getChannelName(void);
+	const std::string& getChannelName(void) const;
 	bool isUserOnChannel(Client* client);
 	bool isUserOperator(Client* client);
 	bool isUserInvited(Client* client);
@@ -60,6 +60,7 @@ class Channel {
 	void unsetInviteMode(void);
 	bool isInviteMode(void);
 
+	const std::string& getTopic() const;
 	void changeTopic(const std::string& newTopic);
 	void unsetTopic(void);
 	void lockTopic(void);
@@ -67,7 +68,7 @@ class Channel {
 
 	void setChannelPassword(const std::string& newPassword);
 	void unsetChannelPassword(void);
-	const std::string& getChannelPassword(void);
+	const std::string& getChannelPassword(void) const;
 
 	void addUser(Client* user);
 	void removeUser(Client* user);
@@ -79,8 +80,7 @@ class Channel {
 	void changeChannelSize(size_t newSize);
 	void unsetSize(void);
 
-	void sendMessage(const std::string& prefix,
-					 const std::string& trailing = "");
+	void broadcast(const std::string& prefix, const std::string& trailing = "");
 
 	void inviteUser(Client* user);
 	void uninviteUser(Client* user);

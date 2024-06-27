@@ -7,6 +7,7 @@
 #include "commands/NickCommand.hpp"
 #include "commands/PassCommand.hpp"
 #include "commands/PingCommand.hpp"
+#include "commands/PrivmsgCommand.hpp"
 #include "commands/QuitCommand.hpp"
 #include "commands/UserCommand.hpp"
 
@@ -20,6 +21,7 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("QUIT", new QuitCommand());
 	registerCommand("LUSERS", new LusersCommand());
 	registerCommand("MOTD", new MotdCommand());
+	registerCommand("PRIVMSG", new PrivmsgCommand());
 }
 
 CommandRegistry::~CommandRegistry() {
