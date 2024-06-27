@@ -13,7 +13,7 @@ class JoinCommand : public Command {
 					   const std::string& password) const;
 	bool isChannelFull(Client* client, Channel* channel) const;
 	bool inviteOnlyChan(Client* client, Channel* channel) const;
-	std::string getUsersString(std::vector<Client*>& users) const;
+	std::string getNames(std::vector<Client*>& users) const;
 	void sendReplies(Client* client, Channel* channel) const;
 
   public:
