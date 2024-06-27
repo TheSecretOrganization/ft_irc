@@ -38,7 +38,9 @@ JoinCommand::getTrueChannels(Client* client,
 			try {
 				Channel::checkChannelSyntax((*it).first);
 			} catch (const std::exception& e) {
-				sendError(client, ERR_NOSUCHCHANNEL, _403, (*it).first);
+				client->sendError(
+					ERR_NOSUCHCHANNEL,
+					client->getClientnickName() + " " + (*it).first, _403);
 				map.erase(it);
 				channels.pop_back();
 			}
@@ -50,7 +52,10 @@ JoinCommand::getTrueChannels(Client* client,
 bool JoinCommand::badChannelKey(Client* client, Channel* channel,
 								const std::string& password) const {
 	if (channel && channel->getChannelPassword() != password) {
-		sendError(client, ERR_BADCHANNELKEY, _475, channel->getChannelName());
+		client->sendError(ERR_BADCHANNELKEY,
+						  client->getClientnickName() + " " +
+							  channel->getChannelName(),
+						  _475);
 		return true;
 	}
 	return false;
@@ -58,7 +63,10 @@ bool JoinCommand::badChannelKey(Client* client, Channel* channel,
 
 bool JoinCommand::isChannelFull(Client* client, Channel* channel) const {
 	if (channel->getUsers().size() >= channel->getChannelSize()) {
-		sendError(client, ERR_CHANNELISFULL, _471, channel->getChannelName());
+		client->sendError(ERR_CHANNELISFULL,
+						  client->getClientnickName() + " " +
+							  channel->getChannelName(),
+						  _471);
 		return true;
 	}
 	return false;
@@ -66,7 +74,10 @@ bool JoinCommand::isChannelFull(Client* client, Channel* channel) const {
 
 bool JoinCommand::inviteOnlyChan(Client* client, Channel* channel) const {
 	if (channel->isInviteMode() && !channel->isUserInvited(client)) {
-		sendError(client, ERR_INVITEONLYCHAN, _473, channel->getChannelName());
+		client->sendError(ERR_INVITEONLYCHAN,
+						  client->getClientnickName() + " " +
+							  channel->getChannelName(),
+						  _473);
 		return true;
 	}
 	return false;
@@ -122,7 +133,8 @@ void JoinCommand::execute(Client* client, std::string args) {
 										   .getConfiguration()
 										   .getValue("chanlimit")
 										   .c_str())) {
-		sendError(client, ERR_TOOMANYCHANNELS, _405);
+		client->sendError(ERR_TOOMANYCHANNELS, client->getClientnickName(),
+						  _405);
 	}
 
 	std::vector<Channel*> channels = getTrueChannels(client, map);

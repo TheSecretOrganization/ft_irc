@@ -21,10 +21,13 @@ class Client {
 	Client(int fd);
 	~Client();
 
-	void sendMessage(const std::string& type, const std::string& message, const std::string& arg = "") const;
-	void sendError(const std::string& code, const std::string& message,
-				   const std::string& arg = "") const;
-	std::string getFormatUser() const;
+	void sendMessage(const std::string& prefix, const std::string& command,
+					 const std::string& parameters = "",
+					 const std::string& trailing = "") const;
+	void sendError(const std::string& command,
+				   const std::string& parameters = "",
+				   const std::string& trailing = "") const;
+	std::string getPrefix() const;
 
 	ClientSocket& getSocket();
 	const std::string& getClientnickName(void);

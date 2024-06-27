@@ -11,19 +11,12 @@ Command::Command(const std::string& name, size_t expectedSize, size_t minSize)
 
 Command::~Command() {}
 
-void Command::sendError(Client* client, const std::string& code,
-						const std::string& message,
-						const std::string& arg) const {
-	client->sendError(code, message, arg);
-}
-
 bool Command::needMoreParams(Client* client,
 							 const std::vector<std::string>& vecArgs) const {
-	if (expectedSize != 0 && vecArgs.size() != expectedSize) {
-		sendError(client, ERR_NEEDMOREPARAMS, _461, name);
-		return true;
-	} else if (vecArgs.size() < minSize) {
-		sendError(client, ERR_NEEDMOREPARAMS, _461, name);
+	if ((expectedSize != 0 && vecArgs.size() != expectedSize) ||
+		(vecArgs.size() < minSize)) {
+		client->sendError(ERR_NEEDMOREPARAMS,
+						  client->getClientnickName() + " " + name, _461);
 		return true;
 	}
 	return false;
@@ -32,7 +25,9 @@ bool Command::needMoreParams(Client* client,
 bool Command::noSuchChannel(Client* client, Channel* channel,
 							std::string channelName) const {
 	if (channel == NULL) {
-		sendError(client, ERR_NOSUCHCHANNEL, _403, channelName);
+		client->sendError(ERR_NOSUCHCHANNEL,
+						  client->getClientnickName() + " " + channelName,
+						  _403);
 		return true;
 	}
 	return false;
@@ -40,7 +35,10 @@ bool Command::noSuchChannel(Client* client, Channel* channel,
 
 bool Command::notOnChannel(Client* client, Channel* channel) const {
 	if (!channel->isUserOnChannel(client)) {
-		sendError(client, ERR_NOTONCHANNEL, _442, channel->getChannelName());
+		client->sendError(ERR_NOTONCHANNEL,
+						  client->getClientnickName() + " " +
+							  channel->getChannelName(),
+						  _442);
 		return true;
 	}
 	return false;
@@ -49,7 +47,10 @@ bool Command::notOnChannel(Client* client, Channel* channel) const {
 bool Command::userOnChannel(Client* client, Channel* channel,
 							std::string nick) const {
 	if (channel->isUserOnChannel(Server::getInstance().getClient(nick))) {
-		sendError(client, ERR_USERONCHANNEL, _443, nick);
+		client->sendError(ERR_USERONCHANNEL,
+						  client->getClientnickName() + " " + nick + " " +
+							  channel->getChannelName(),
+						  _443);
 		return true;
 	}
 	return false;
@@ -74,7 +75,8 @@ std::vector<std::string> Command::split(const std::string& str, char del) {
 
 bool Command::alreadyRegistred(Client* client) const {
 	if (client->getStatus() == REGISTRED) {
-		sendError(client, ERR_ALREADYREGISTRED, _462);
+		client->sendError(ERR_ALREADYREGISTRED, client->getClientnickName(),
+						  _462);
 		return true;
 	}
 	return false;
@@ -83,7 +85,7 @@ bool Command::alreadyRegistred(Client* client) const {
 bool Command::passwdMismatch(Client* client, const std::string& passWd) const {
 	if (passWd !=
 		Server::getInstance().getConfiguration().getValue("password")) {
-		sendError(client, ERR_PASSWDMISMATCH, _464);
+		client->sendError(ERR_PASSWDMISMATCH, _464);
 		return true;
 	}
 	return false;
@@ -92,8 +94,8 @@ bool Command::passwdMismatch(Client* client, const std::string& passWd) const {
 bool Command::noSuchServer(Client* client, const std::string& server) const {
 	if (!server.empty() &&
 		server !=
-			Server::getInstance().getConfiguration().getValue("hostname")) {
-		sendError(client, ERR_NOSUCHSERVER, _402, server);
+			Server::getInstance().getConfiguration().getValue("servername")) {
+		client->sendError(ERR_NOSUCHSERVER, server, _402);
 		return true;
 	}
 	return false;
@@ -101,8 +103,8 @@ bool Command::noSuchServer(Client* client, const std::string& server) const {
 
 bool Command::chanOPrivsNeeded(Client* client, Channel* channel) const {
 	if (channel->isInviteMode() && !channel->isUserOperator(client)) {
-		sendError(client, ERR_CHANOPRIVSNEEDED, _482,
-				  channel->getChannelName());
+		client->sendError(ERR_CHANOPRIVSNEEDED, channel->getChannelName(),
+						  _482);
 		return true;
 	}
 	return false;

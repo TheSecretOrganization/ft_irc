@@ -1,5 +1,6 @@
 #include "Client.hpp"
 #include "ClientSocket.hpp"
+#include "Server.hpp"
 
 #include <iostream>
 #include <string>
@@ -17,12 +18,17 @@ ClientSocket& Client::getSocket() { return socket; }
 
 const std::string& Client::getClientnickName(void) { return nickname; }
 
-void Client::sendMessage(const std::string& type, const std::string& message,
-						 const std::string& arg) const {
-	std::string packet =
-		(!arg.empty())
-			? getFormatUser() + " " + type + " " + arg + " :" + message
-			: getFormatUser() + " " + type + " :" + message;
+void Client::sendMessage(const std::string& prefix, const std::string& command,
+						 const std::string& parameters,
+						 const std::string& trailing) const {
+	std::string packet = prefix + " " + command;
+
+	if (!parameters.empty())
+		packet += " " + parameters;
+
+	if (!trailing.empty())
+		packet += " :" + trailing;
+
 	try {
 		socket.sendPacket(packet);
 	} catch (const ClientSocket::SendException& e) {
@@ -30,19 +36,18 @@ void Client::sendMessage(const std::string& type, const std::string& message,
 	}
 }
 
-void Client::sendError(const std::string& code, const std::string& message,
-					   const std::string& arg) const {
+void Client::sendError(const std::string& command,
+					   const std::string& parameters,
+					   const std::string& trailing) const {
 	try {
-		if (!arg.empty())
-			sendMessage(code, arg + " :" + message);
-		else
-			sendMessage(code, ":" + message);
+		sendMessage(Server::getInstance().getPrefix(), command, parameters,
+					trailing);
 	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << std::endl;
 	}
 }
 
-std::string Client::getFormatUser() const {
+std::string Client::getPrefix() const {
 	return nickname + "!" + username + "@" + hostname;
 }
 

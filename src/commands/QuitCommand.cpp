@@ -20,8 +20,8 @@ void QuitCommand::execute(Client* client, std::string args) {
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end(); it++) {
 		(*it)->removeUser(client);
-		(*it)->sendMessage("PRIVMSG", message);
+		(*it)->sendMessage(Server::getInstance().getPrefix(), message);
 	}
 
-	client->sendError("ERROR", "Quit: Bye for now!");
+	client->sendError("ERROR", "", "Quit: Bye for now!");
 }

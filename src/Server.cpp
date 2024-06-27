@@ -83,6 +83,10 @@ void Server::deleteChannel(Channel* channel) {
 	delete channel;
 }
 
+std::string Server::getPrefix() const {
+	return getConfiguration().getValue("serverName");
+}
+
 const std::vector<Client*>& Server::getClients() const { return clients; }
 
 const Configuration& Server::getConfiguration() const { return configuration; }

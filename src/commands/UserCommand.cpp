@@ -34,7 +34,8 @@ void UserCommand::execute(Client* client, std::string args) {
 	}
 
 	if (splitArgs[3][0] != ':') {
-		sendError(client, ERR_NEEDMOREPARAMS, _461, name);
+		client->sendError(ERR_NEEDMOREPARAMS,
+						  client->getClientnickName() + " " + name, _461);
 		return;
 	}
 
