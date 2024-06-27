@@ -1,7 +1,6 @@
 #include "Client.hpp"
 #include "ClientSocket.hpp"
 
-#include <exception>
 #include <iostream>
 #include <string>
 
@@ -31,7 +30,7 @@ void Client::sendMessage(const std::string& type,
 void Client::sendError(const std::string& code, const std::string& message,
 					   const std::string& arg) const {
 	try {
-		if (!message.empty())
+		if (!arg.empty())
 			sendMessage(code, arg + " :" + message);
 		else
 			sendMessage(code, ":" + message);
