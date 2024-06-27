@@ -37,10 +37,11 @@ void Client::sendMessage(const std::string& prefix, const std::string& command,
 }
 
 void Client::sendError(const std::string& command,
-				   const std::string& parameters,
-				   const std::string& trailing) const {
+					   const std::string& parameters,
+					   const std::string& trailing) const {
 	try {
-		sendMessage(Server::getInstance().getPrefix(), command, parameters, trailing);
+		sendMessage(Server::getInstance().getPrefix(), command, parameters,
+					trailing);
 	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << std::endl;
 	}
