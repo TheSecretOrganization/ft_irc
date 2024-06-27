@@ -19,11 +19,10 @@ const std::string& Client::getClientnickName(void) { return nickname; }
 
 void Client::sendMessage(const std::string& type, const std::string& message,
 						 const std::string& arg) const {
-	std::string packet = (!arg.empty())
-							 ? nickname + "!" + username + "@" + hostname +
-								   " " + type + " " + arg + " :" + message
-							 : nickname + "!" + username + "@" + hostname +
-								   " " + type + " :" + message;
+	std::string packet =
+		(!arg.empty())
+			? getFormatUser() + " " + type + " " + arg + " :" + message
+			: getFormatUser() + " " + type + " :" + message;
 	try {
 		socket.sendPacket(packet);
 	} catch (const ClientSocket::SendException& e) {
@@ -41,6 +40,10 @@ void Client::sendError(const std::string& code, const std::string& message,
 	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << std::endl;
 	}
+}
+
+std::string Client::getFormatUser() const {
+	return nickname + "!" + username + "@" + hostname;
 }
 
 const std::string& Client::getNickname() const { return nickname; }
