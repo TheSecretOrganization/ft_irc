@@ -209,7 +209,7 @@
 #define _352 "Who reply"
 #define _315 "End of who"
 #define _353 "Name reply"
-#define _366 "End of names"
+#define _366 "End of /NAMES list"
 #define _364 "Links"
 #define _365 "End of links"
 #define _367 "Ban list"
