@@ -1,8 +1,11 @@
 #include "commands/CapCommand.hpp"
+
 #include "Client.hpp"
 #include "Configuration.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
+#include "commands/LusersCommand.hpp"
+#include "commands/MotdCommand.hpp"
 
 #include <exception>
 #include <iostream>
@@ -67,7 +70,7 @@ void CapCommand::execute(Client* client, std::string args) {
 		} else if (args == "END") {
 			if (client->getStatus() != USER_OK) {
 				return Server::getInstance()
-					.getServerCommands()
+					.getCommandRegistry()
 					.getCommand("error")
 					->execute(client, ERR_REGISTRATION);
 			} else {
@@ -80,14 +83,8 @@ void CapCommand::execute(Client* client, std::string args) {
 			rplMyInfo(client);
 			rplYourHost(client);
 			rplISupport(client);
-			Server::getInstance()
-				.getClientCommands()
-				.getCommand("lusers")
-				->execute(client, "");
-			Server::getInstance()
-				.getClientCommands()
-				.getCommand("motd")
-				->execute(client, "");
+			LusersCommand().execute(client, "");
+			MotdCommand().execute(client, "");
 		}
 	} catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;

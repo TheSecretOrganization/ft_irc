@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-void Channel::checkChannelSyntax(std::string channelName) {
+void Channel::checkChannelSyntax(const std::string& channelName) {
 	if (channelName[0] != '#') {
 		throw Channel::InvalidChannelPrefixException();
 	}
@@ -23,7 +23,7 @@ void Channel::checkChannelSyntax(std::string channelName) {
 	}
 }
 
-Channel::Channel(Client* creator, std::string name) : name(name) {
+Channel::Channel(Client* creator, const std::string& name) : name(name) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
@@ -32,7 +32,8 @@ Channel::Channel(Client* creator, std::string name) : name(name) {
 	channelSize = DEF_CHAN_SIZE;
 }
 
-Channel::Channel(Client* creator, std::string name, std::string password)
+Channel::Channel(Client* creator, const std::string& name,
+				 const std::string& password)
 	: name(name), channelPassword(password) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
@@ -44,8 +45,8 @@ Channel::Channel(Client* creator, std::string name, std::string password)
 
 Channel::~Channel() {}
 
-void Channel::createChannel(Client* client, std::string name,
-							std::string password) {
+void Channel::createChannel(Client* client, const std::string& name,
+							const std::string& password) {
 	Channel* newChannel = new Channel(client, name, password);
 	Server::getInstance().addChannel(newChannel);
 
@@ -108,7 +109,7 @@ void Channel::unsetInviteMode(void) { inviteOnly = 0; }
 
 bool Channel::isInviteMode(void) { return inviteOnly; }
 
-void Channel::changeTopic(std::string newTopic) { topic = newTopic; }
+void Channel::changeTopic(const std::string& newTopic) { topic = newTopic; }
 
 void Channel::unsetTopic(void) { topic = ""; }
 
@@ -116,10 +117,9 @@ void Channel::lockTopic(void) { this->topicLocked = 1; }
 
 void Channel::unlockTopic(void) { this->topicLocked = 0; }
 
-void Channel::setChannelPassword(std::string newPassword) {
+void Channel::setChannelPassword(const std::string& newPassword) {
 	if (channelPassword.size() == 0) {
 		throw std::logic_error("Bad password length");
-		return;
 	}
 	channelPassword = newPassword;
 }
@@ -140,7 +140,6 @@ void Channel::addOperator(Client* newOp) {
 	if (std::find(operators.begin(), operators.end(), newOp) !=
 		operators.end()) {
 		throw std::logic_error("User is already an operator");
-		return;
 	}
 	operators.push_back(newOp);
 }
@@ -149,7 +148,6 @@ void Channel::removeOperator(Client* oldOp) {
 	if (std::find(operators.begin(), operators.end(), oldOp) ==
 		operators.end()) {
 		throw std::logic_error("User is not an operator");
-		return;
 	}
 	operators.erase(std::find(operators.begin(), operators.end(), oldOp));
 }
@@ -159,7 +157,6 @@ size_t Channel::getChannelSize(void) { return channelSize; }
 void Channel::changeChannelSize(size_t newSize) {
 	if (newSize == 0) {
 		throw std::logic_error("Bad channel size");
-		return;
 	}
 	channelSize = newSize;
 };

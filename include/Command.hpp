@@ -21,8 +21,9 @@ class Command {
 	virtual ~Command();
 
 	virtual void execute(Client* client, std::string args) = 0;
-	void sendError(Client* client, std::string code, std::string message,
-				   std::string arg = "") const;
+	void sendError(Client* client, const std::string& code,
+				   const std::string& message,
+				   const std::string& arg = "") const;
 	static std::vector<std::string> split(const std::string& str, char del);
 
 	virtual bool alreadyRegistred(Client* client) const;
