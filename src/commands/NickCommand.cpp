@@ -36,11 +36,15 @@ static bool checkAlreadyInUse(const std::string& nickname) {
 
 void NickCommand::execute(Client* client, std::string args) {
 	if (args.empty())
-		return sendError(client, ERR_NONICKNAMEGIVEN, _431);
+		return client->sendError(ERR_NONICKNAMEGIVEN,
+								 client->getClientnickName(), _431);
 	if (checkNicknameValid(args) == false)
-		return sendError(client, ERR_ERRONEUSNICKNAME, _432, args);
+		return client->sendError(ERR_ERRONEUSNICKNAME,
+								 client->getClientnickName() + " " + args,
+								 _432);
 	if (checkAlreadyInUse(args) == false)
-		return sendError(client, ERR_NICKNAMEINUSE, _433, args);
+		return client->sendError(
+			ERR_NICKNAMEINUSE, client->getClientnickName() + " " + args, _433);
 	client->setNickname(args);
 	if (client->getStatus() == PASSWD_OK)
 		client->setStatus(NICK_OK);

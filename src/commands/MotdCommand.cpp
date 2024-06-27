@@ -12,14 +12,12 @@ void MotdCommand::execute(Client* client, std::string args) {
 	if (noSuchServer(client, args))
 		return;
 	client->sendMessage(
-		RPL_MOTDSTART,
-		client->getNickname() + " :- " +
-			Server::getInstance().getConfiguration().getValue("hostname") +
+		Server::getInstance().getPrefix(), RPL_MOTDSTART, client->getNickname(),
+		"- " + Server::getInstance().getConfiguration().getValue("servername") +
 			" Message of the day -");
 	client->sendMessage(
-		RPL_MOTD,
-		client->getNickname() + " :" +
-			Server::getInstance().getConfiguration().getValue("motd"));
-	client->sendMessage(RPL_ENDOFMOTD,
-						client->getNickname() + " :End of /MOTD command.");
+		Server::getInstance().getPrefix(), RPL_MOTD, client->getNickname(),
+		Server::getInstance().getConfiguration().getValue("motd"));
+	client->sendMessage(Server::getInstance().getPrefix(), RPL_ENDOFMOTD,
+						client->getNickname(), "End of /MOTD command.");
 }
