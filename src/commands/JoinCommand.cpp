@@ -173,8 +173,7 @@ void JoinCommand::execute(Client* client, std::string args) {
 			continue;
 		if (inviteOnlyChan(client, channels[i])) {
 			map.erase(channels[i]->getChannelName());
-			channels.erase(channels.begin()
-			 + i);
+			channels.erase(channels.begin() + i);
 			i--;
 			continue;
 		}
