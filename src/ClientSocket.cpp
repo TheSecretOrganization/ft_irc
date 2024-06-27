@@ -67,10 +67,8 @@ void ClientSocket::onPoll() {
 }
 
 void ClientSocket::sendPacket(const std::string& packet) const {
-	std::string content =
-		":" + Server::getInstance().getConfiguration().getValue("hostname") +
-		" " + packet + "\r\n";
-	if (send(fd, content.c_str(), content.size(), 0) == -1)
+	std::string formatPacket = ":" + packet + "\r\n";
+	if (send(fd, formatPacket.c_str(), formatPacket.size(), 0) == -1)
 		throw SendException();
 }
 

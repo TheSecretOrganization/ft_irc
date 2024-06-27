@@ -32,6 +32,7 @@ class Server {
 	void deleteClient(Client* client);
 	void addChannel(Channel* channel);
 	void deleteChannel(Channel* channel);
+	std::string getPrefix() const;
 
 	static Server& getInstance();
 	CommandRegistry& getCommandRegistry();

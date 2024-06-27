@@ -178,11 +178,12 @@ const char* Channel::ForbiddenChannelNameException::what() const throw() {
 		return "Forbidden character used in channel name";
 }
 
-void Channel::sendMessage(const std::string& message) {
+void Channel::sendMessage(const std::string& prefix,
+						  const std::string& trailing) {
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); it++) {
 		try {
-			(*it)->sendMessage("PRIVMSG", message);
+			(*it)->sendMessage(prefix, "PRIVMSG", name, trailing);
 		} catch (const std::exception& e) {
 			std::cerr << e.what() << std::endl;
 		}

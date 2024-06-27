@@ -21,16 +21,18 @@ static std::string size_tToString(size_t value) {
 void LusersCommand::rplLuserClient(Client* client) const {
 	std::string nbClients =
 		size_tToString(Server::getInstance().getClients().size());
-	client->sendMessage(RPL_LUSERCLIENT,
-						client->getNickname() + " There are " + nbClients +
+	client->sendMessage(Server::getInstance().getPrefix(), RPL_LUSERCLIENT,
+						client->getNickname(),
+						"There are " + nbClients +
 							" users and 0 invisible on 1 servers");
 }
 
 void LusersCommand::rplLuserMe(Client* client) const {
 	std::string nbClients =
 		size_tToString(Server::getInstance().getClients().size());
-	client->sendMessage(RPL_LUSERME, client->getNickname() + " I have " +
-										 nbClients + " users and 1 servers");
+	client->sendMessage(Server::getInstance().getPrefix(), RPL_LUSERME,
+						client->getNickname(),
+						"I have " + nbClients + " users and 1 servers");
 }
 
 void LusersCommand::execute(Client* client, std::string args) {
