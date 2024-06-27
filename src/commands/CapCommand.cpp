@@ -17,7 +17,7 @@ CapCommand::CapCommand() : Command("CAP", 1, 1) {}
 
 CapCommand::~CapCommand() {}
 
-void CapCommand::rplWelcome(Client* client) {
+void CapCommand::rplWelcome(Client* client) const {
 	client->sendMessage(
 		Server::getInstance().getPrefix(), RPL_WELCOME, client->getNickname(),
 		"Welcome to the " +
@@ -26,7 +26,7 @@ void CapCommand::rplWelcome(Client* client) {
 			"@" + client->getHostname());
 }
 
-void CapCommand::rplYourHost(Client* client) {
+void CapCommand::rplYourHost(Client* client) const {
 	client->sendMessage(
 		Server::getInstance().getPrefix(), RPL_YOURHOST, client->getNickname(),
 		"Your host is " +
@@ -35,14 +35,14 @@ void CapCommand::rplYourHost(Client* client) {
 			Server::getInstance().getConfiguration().getValue("version"));
 }
 
-void CapCommand::rplCreated(Client* client) {
+void CapCommand::rplCreated(Client* client) const {
 	client->sendMessage(
 		Server::getInstance().getPrefix(), RPL_CREATED, client->getNickname(),
 		"This server was created on " +
 			Server::getInstance().getConfiguration().getValue("creationDate"));
 }
 
-void CapCommand::rplMyInfo(Client* client) {
+void CapCommand::rplMyInfo(Client* client) const {
 	client->sendMessage(
 		Server::getInstance().getPrefix(), RPL_MYINFO,
 		client->getNickname() + " " +
@@ -53,7 +53,7 @@ void CapCommand::rplMyInfo(Client* client) {
 			" " + Server::getInstance().getConfiguration().getValue("cpmodes"));
 }
 
-void CapCommand::rplISupport(Client* client) {
+void CapCommand::rplISupport(Client* client) const {
 	client->sendMessage(
 		Server::getInstance().getPrefix(), RPL_ISUPPORT,
 		client->getNickname() + " USERLEN=" +
