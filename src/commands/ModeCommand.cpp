@@ -6,9 +6,9 @@
 
 #include <cstddef>
 #include <cstdlib>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 ModeCommand::ModeCommand() : Command("MODE", 0, 1){};
 
