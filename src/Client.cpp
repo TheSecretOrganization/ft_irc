@@ -9,7 +9,6 @@ Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
 	  servername(""), status(UNKNOWN), away(false) {
 	std::cout << "new client " << fd << std::endl;
-	nickname = "";
 }
 
 Client::~Client() {}

@@ -15,19 +15,19 @@ ModeCommand::ModeCommand() : Command("MODE", 0, 1){};
 ModeCommand::~ModeCommand() {}
 
 bool ModeCommand::checkModes(Client* client) const {
-	if (args[1][0] != '+' && args[1][0] != '-') {
+	if (splitArgs[1][0] != '+' && splitArgs[1][0] != '-') {
 		client->sendError(ERR_UMODEUNKNOWNFLAG, client->getClientnickName(),
 						  _501);
 		return false;
 	}
 
 	size_t n = 0;
-	for (size_t i = 1; i < args.size(); ++i) {
+	for (size_t i = 1; i < splitArgs.size(); ++i) {
 		if (Server::getInstance().getConfiguration().getValue("cpmodes").find(
-				args[1][i]) != std::string::npos) {
+				splitArgs[1][i]) != std::string::npos) {
 			++n;
-			std::cout << "size: " << args.size() << " " << i + n << std::endl;
-			if (i + n > args.size() - 1) {
+			std::cout << "size: " << splitArgs.size() << " " << i + n << std::endl;
+			if (i + n > splitArgs.size() - 1) {
 				client->sendError(ERR_NEEDMOREPARAMS,
 								  client->getClientnickName() + " MODE", _461);
 				return false;
@@ -38,8 +38,8 @@ bool ModeCommand::checkModes(Client* client) const {
 	return true;
 }
 
-void ModeCommand::parseModes(Client* client, Channel* channel) {
-	if (args.size() == 1)
+void ModeCommand::parseModes(Client* client, Channel* channel) const {
+	if (splitArgs.size() == 1)
 		return client->sendMessage(
 			Server::getInstance().getPrefix(), RPL_CHANNELMODEIS,
 			client->getClientnickName() + " " + channel->getName() + " " +
@@ -54,17 +54,20 @@ void ModeCommand::parseModes(Client* client, Channel* channel) {
 			client->getClientnickName() + " " + channel->getName(), _482);
 
 	size_t n = 2;
-	for (size_t i = 1; args[1][i]; ++i) {
+	for (size_t i = 1; splitArgs[1][i]; ++i) {
 		if (Server::getInstance().getConfiguration().getValue("cpmodes").find(
-				args[1][i]) != std::string::npos)
-			setMode(client, channel, args[1][0] == '+', args[1][i], args[n++]);
-		else
-			setMode(client, channel, args[1][0] == '+', args[1][i]);
+				splitArgs[1][i]) != std::string::npos) {
+
+			setMode(client, channel, splitArgs[1][0] == '+', splitArgs[1][i], splitArgs[n]);
+			++n;
+		} else {
+			setMode(client, channel, splitArgs[1][0] == '+', splitArgs[1][i]);
+		}
 	}
 }
 
-void ModeCommand::parseModes(Client* client) {
-	if (args.size() == 1)
+void ModeCommand::parseModes(Client* client) const {
+	if (splitArgs.size() == 1)
 		return client->sendMessage(
 			Server::getInstance().getPrefix(), RPL_UMODEIS,
 			client->getClientnickName() + " " + client->getModes());
@@ -72,13 +75,13 @@ void ModeCommand::parseModes(Client* client) {
 	if (!checkModes(client))
 		return;
 
-	for (size_t i = 1; args[1][i]; ++i) {
-		setMode(client, args[1][0] == '+', args[1][i]);
+	for (size_t i = 1; splitArgs[1][i]; ++i) {
+		setMode(client, splitArgs[1][0] == '+', splitArgs[1][i]);
 	}
 }
 
 void ModeCommand::setMode(Client* client, bool action, char mode,
-						  const std::string& param) {
+						  const std::string& param) const {
 	(void)param;
 	switch (mode) {
 	case 'a':
@@ -92,7 +95,7 @@ void ModeCommand::setMode(Client* client, bool action, char mode,
 }
 
 void ModeCommand::setMode(Client* client, Channel* channel, bool action,
-						  char mode, const std::string& param) {
+						  char mode, const std::string& param) const {
 	Client* target = NULL;
 	switch (mode) {
 	case 'i':
@@ -128,30 +131,30 @@ void ModeCommand::setMode(Client* client, Channel* channel, bool action,
 }
 
 void ModeCommand::execute(Client* client, std::string args) {
-	this->args = split(args, ' ');
-	if (needMoreParams(client, this->args)) {
+	splitArgs = split(args, ' ');
+	if (needMoreParams(client, splitArgs)) {
 		return;
 	}
 
-	if (this->args[0][0] == '#') {
-		Channel* channel = Server::getInstance().getChannel(this->args[0]);
+	if (splitArgs[0][0] == '#') {
+		Channel* channel = Server::getInstance().getChannel(splitArgs[0]);
 		if (!channel)
 			return client->sendError(
 				ERR_NOSUCHCHANNEL,
-				client->getClientnickName() + " " + this->args[0], _403);
+				client->getClientnickName() + " " + splitArgs[0], _403);
 
 		parseModes(client, channel);
 	} else {
 		try {
-			Server::getInstance().getClient(this->args[0]);
+			Server::getInstance().getClient(splitArgs[0]);
 		} catch (const Server::ClientNotFoundException& e) {
 			(void)e;
 			return client->sendError(
 				ERR_NOSUCHNICK,
-				client->getClientnickName() + " " + this->args[0], _401);
+				client->getClientnickName() + " " + splitArgs[0], _401);
 		}
 
-		if (client->getNickname() != this->args[0])
+		if (client->getNickname() != splitArgs[0])
 			return client->sendError(ERR_USERSDONTMATCH,
 									 client->getClientnickName(), _502);
 

@@ -27,26 +27,20 @@ void Channel::checkChannelSyntax(const std::string& channelName) {
 }
 
 Channel::Channel(Client* creator, const std::string& name)
-	: name(name), password("") {
+	: name(name), password(""), topic(""), inviteOnly(false),
+	  topicLocked(false), userLimit(0) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
-	topic = "";
-	topicLocked = false;
-	inviteOnly = 0;
-	userLimit = 0;
 }
 
 Channel::Channel(Client* creator, const std::string& name,
 				 const std::string& password)
-	: name(name), password(password) {
+	: name(name), password(password), topic(""), inviteOnly(false),
+	  topicLocked(false), userLimit(0) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
-	topic = "";
-	topicLocked = false;
-	inviteOnly = 0;
-	userLimit = 0;
 }
 
 Channel::~Channel() {}
