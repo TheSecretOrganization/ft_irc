@@ -151,7 +151,7 @@ void Channel::removeOperator(Client* oldOp) {
 	operators.erase(std::find(operators.begin(), operators.end(), oldOp));
 }
 
-size_t Channel::getUserLimit(void) { return userLimit; }
+size_t Channel::getUserLimit(void) const { return userLimit; }
 
 void Channel::setUserLimit(size_t newUserLimit) { userLimit = newUserLimit; };
 

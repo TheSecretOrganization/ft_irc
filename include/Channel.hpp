@@ -74,7 +74,7 @@ class Channel {
 	void addOperator(Client* newOp);
 	void removeOperator(Client* oldOp);
 
-	size_t getUserLimit(void);
+	size_t getUserLimit(void) const;
 	void setUserLimit(size_t newUserLimit);
 
 	void broadcast(const std::string& prefix, const std::string& trailing = "");
