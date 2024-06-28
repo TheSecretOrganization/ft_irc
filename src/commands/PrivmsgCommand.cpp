@@ -6,7 +6,6 @@
 #include "Server.hpp"
 
 #include <cstddef>
-#include <iostream>
 #include <string>
 
 PrivmsgCommand::PrivmsgCommand() : Command("PRIVMSG", 0, 2) {}
@@ -66,7 +65,6 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 
 		chan->broadcast(client->getPrefix(), args);
 	} else {
-		std::cout << "test" << std::endl;
 		Client const* targetClient = Server::getInstance().getClient(target);
 
 		if (!targetClient) {
