@@ -26,7 +26,8 @@ bool ModeCommand::checkModes(Client* client) const {
 		if (Server::getInstance().getConfiguration().getValue("cpmodes").find(
 				splitArgs[1][i]) != std::string::npos) {
 			++n;
-			std::cout << "size: " << splitArgs.size() << " " << i + n << std::endl;
+			std::cout << "size: " << splitArgs.size() << " " << i + n
+					  << std::endl;
 			if (i + n > splitArgs.size() - 1) {
 				client->sendError(ERR_NEEDMOREPARAMS,
 								  client->getClientnickName() + " MODE", _461);
@@ -58,7 +59,8 @@ void ModeCommand::parseModes(Client* client, Channel* channel) const {
 		if (Server::getInstance().getConfiguration().getValue("cpmodes").find(
 				splitArgs[1][i]) != std::string::npos) {
 
-			setMode(client, channel, splitArgs[1][0] == '+', splitArgs[1][i], splitArgs[n]);
+			setMode(client, channel, splitArgs[1][0] == '+', splitArgs[1][i],
+					splitArgs[n]);
 			++n;
 		} else {
 			setMode(client, channel, splitArgs[1][0] == '+', splitArgs[1][i]);
