@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <exception>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -31,6 +32,7 @@ Channel::Channel(Client* creator, const std::string& name)
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
 	topic = "";
+	topicLocked = false;
 	inviteOnly = 0;
 	userLimit = 0;
 }
@@ -42,6 +44,7 @@ Channel::Channel(Client* creator, const std::string& name,
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
 	topic = "";
+	topicLocked = false;
 	inviteOnly = 0;
 	userLimit = 0;
 }
@@ -206,6 +209,12 @@ void Channel::uninviteUser(Client* user) {
 	inviteList.erase(it);
 }
 
+static std::string size_tToString(size_t value) {
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
+}
+
 std::string Channel::getModes(Client* client) {
 	std::string modes = "";
 	std::string keys = "";
@@ -223,7 +232,7 @@ std::string Channel::getModes(Client* client) {
 
 	if (userLimit != 0) {
 		modes += 'l';
-		keys += ' ' + userLimit;
+		keys += ' ' + size_tToString(userLimit);
 	}
 
 	return modes + (client && isUserOperator(client) ? keys : "");

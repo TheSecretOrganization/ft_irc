@@ -14,7 +14,7 @@ ModeCommand::ModeCommand() : Command("MODE", 0, 1){};
 ModeCommand::~ModeCommand() {}
 
 bool ModeCommand::checkModes(Client* client) const {
-	if (args[1][0] != '+' || args[1][0] != '-') {
+	if (args[1][0] != '+' && args[1][0] != '-') {
 		client->sendError(ERR_UMODEUNKNOWNFLAG, client->getClientnickName(),
 						  _501);
 		return false;
@@ -43,7 +43,7 @@ void ModeCommand::parseModes(Client* client, Channel* channel) {
 			client->getClientnickName() + " " + channel->getName() + " " +
 				channel->getModes());
 
-	if (checkModes(client))
+	if (!checkModes(client))
 		return;
 
 	if (!channel->isUserOperator(client))
@@ -62,7 +62,7 @@ void ModeCommand::parseModes(Client* client) {
 			Server::getInstance().getPrefix(), RPL_UMODEIS,
 			client->getClientnickName() + " " + client->getModes());
 
-	if (checkModes(client))
+	if (!checkModes(client))
 		return;
 
 	for (size_t i = 1; args[1][i]; ++i) {
@@ -135,10 +135,14 @@ void ModeCommand::execute(Client* client, std::string args) {
 
 		parseModes(client, channel);
 	} else {
-		if (!Server::getInstance().getClient(args[0]))
+		try {
+			Server::getInstance().getClient(this->args[0]);
+		} catch (const Server::ClientNotFoundException& e) {
+			(void)e;
 			return client->sendError(
-				ERR_NOSUCHNICK, client->getClientnickName() + " " + args[0],
+				ERR_NOSUCHNICK, client->getClientnickName() + " " + this->args[0],
 				_401);
+		}
 
 		if (client->getNickname() != this->args[0])
 			return client->sendError(ERR_USERSDONTMATCH,

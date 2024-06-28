@@ -57,6 +57,7 @@ void ClientSocket::onPoll() {
 		try {
 			Command* cmd =
 				Server::getInstance().getCommandRegistry().getCommand(name);
+			std::cout << "Command: " << name << " " << command << std::endl;
 			cmd->execute(Server::getInstance().getClient(fd), command);
 		} catch (CommandRegistry::NotFoundException& e) {
 			std::cerr << name << ": " << e.what() << std::endl;
