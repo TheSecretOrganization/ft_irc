@@ -3,24 +3,23 @@
 #include "Client.hpp"
 #include "Command.hpp"
 
+#include <cstddef>
 #include <string>
 #include <vector>
-
-#define DEF_CHAN_SIZE 3
 
 class Command;
 
 class Channel {
   private:
 	std::string name;
-	std::string channelPassword;
+	std::string password;
 	std::vector<Client*> operators;
 	std::vector<Client*> usersOnChannel;
 	std::vector<Client*> inviteList;
 	std::string topic;
 	bool inviteOnly;
 	bool topicLocked;
-	size_t channelSize;
+	size_t userLimit;
 
   public:
 	Channel(Client* creator, const std::string& name);
@@ -51,24 +50,23 @@ class Channel {
 	std::vector<Client*>& getOperators(void);
 	std::vector<Client*>& getInviteList(void);
 
-	const std::string& getChannelName(void) const;
+	const std::string& getName(void) const;
 	bool isUserOnChannel(Client* client);
 	bool isUserOperator(Client* client);
 	bool isUserInvited(Client* client);
 
-	void setInviteMode(void);
-	void unsetInviteMode(void);
-	bool isInviteMode(void);
+	void setInviteMode(bool newInviteMode);
+	bool isInviteMode(void) const;
 
 	const std::string& getTopic() const;
 	void changeTopic(const std::string& newTopic);
 	void unsetTopic(void);
-	void lockTopic(void);
-	void unlockTopic(void);
+	void setTopicLocked(bool newTopicLocked);
+	bool isTopicLocked() const;
 
-	void setChannelPassword(const std::string& newPassword);
-	void unsetChannelPassword(void);
-	const std::string& getChannelPassword(void) const;
+	void setPassword(const std::string& newPassword);
+	void unsetPassword(void);
+	const std::string& getPassword(void) const;
 
 	void addUser(Client* user);
 	void removeUser(Client* user);
@@ -76,12 +74,13 @@ class Channel {
 	void addOperator(Client* newOp);
 	void removeOperator(Client* oldOp);
 
-	size_t getChannelSize(void);
-	void changeChannelSize(size_t newSize);
-	void unsetSize(void);
+	size_t getUserLimit(void);
+	void setUserLimit(size_t newUserLimit);
 
 	void broadcast(const std::string& prefix, const std::string& trailing = "");
 
 	void inviteUser(Client* user);
 	void uninviteUser(Client* user);
+
+	std::string getModes(Client* user = NULL);
 };

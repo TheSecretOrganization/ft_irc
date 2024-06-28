@@ -3,6 +3,7 @@
 #include "commands/CapCommand.hpp"
 #include "commands/JoinCommand.hpp"
 #include "commands/LusersCommand.hpp"
+#include "commands/ModeCommand.hpp"
 #include "commands/MotdCommand.hpp"
 #include "commands/NickCommand.hpp"
 #include "commands/PassCommand.hpp"
@@ -22,6 +23,7 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("LUSERS", new LusersCommand());
 	registerCommand("MOTD", new MotdCommand());
 	registerCommand("PRIVMSG", new PrivmsgCommand());
+	registerCommand("MODE", new ModeCommand());
 }
 
 CommandRegistry::~CommandRegistry() {
