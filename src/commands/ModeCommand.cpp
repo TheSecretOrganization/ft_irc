@@ -85,32 +85,23 @@ void ModeCommand::parseModes(Client* client) const {
 void ModeCommand::setMode(Client* client, bool action, char mode,
 						  const std::string& param) const {
 	(void)param;
-	switch (mode) {
-	case 'a':
+	if (mode == 'a')
 		client->setAway(action);
-		break;
-	default:
+	else
 		client->sendError(ERR_UMODEUNKNOWNFLAG,
 						  client->getClientnickName() + " " + mode, _501);
-		break;
-	}
 }
 
 void ModeCommand::setMode(Client* client, Channel* channel, bool action,
 						  char mode, const std::string& param) const {
-	Client* target = NULL;
-	switch (mode) {
-	case 'i':
+	if (mode == 'i')
 		channel->setInviteMode(action);
-		break;
-	case 't':
+	else if (mode == 't')
 		channel->setTopicLocked(action);
-		break;
-	case 'k':
+	else if (mode == 'k')
 		channel->setPassword(action ? param : "");
-		break;
-	case 'o':
-		target = Server::getInstance().getClient(param);
+	else if (mode == 'o') {
+		Client* target = Server::getInstance().getClient(param);
 		if (!target)
 			return client->sendError(ERR_NOSUCHNICK,
 									 client->getClientnickName() + " " + param,
@@ -121,15 +112,11 @@ void ModeCommand::setMode(Client* client, Channel* channel, bool action,
 										 " " + channel->getName(),
 									 _441);
 		channel->addOperator(target);
-		break;
-	case 'l':
+	} else if (mode == 'l')
 		channel->setUserLimit(action ? std::atoi(param.c_str()) : 0);
-		break;
-	default:
+	else
 		client->sendError(ERR_UMODEUNKNOWNFLAG,
 						  client->getClientnickName() + " " + mode, _501);
-		break;
-	}
 }
 
 void ModeCommand::execute(Client* client, std::string args) {
