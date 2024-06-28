@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <iostream>
 
 ModeCommand::ModeCommand() : Command("MODE", 0, 1){};
 
@@ -25,7 +26,8 @@ bool ModeCommand::checkModes(Client* client) const {
 		if (Server::getInstance().getConfiguration().getValue("cpmodes").find(
 				args[1][i]) != std::string::npos) {
 			++n;
-			if (i + n > args.size()) {
+			std::cout << "size: " << args.size() << " " << i + n << std::endl;
+			if (i + n > args.size() - 1) {
 				client->sendError(ERR_NEEDMOREPARAMS,
 								  client->getClientnickName() + " MODE", _461);
 				return false;
@@ -51,8 +53,13 @@ void ModeCommand::parseModes(Client* client, Channel* channel) {
 			ERR_CHANOPRIVSNEEDED,
 			client->getClientnickName() + " " + channel->getName(), _482);
 
+	size_t n = 2;
 	for (size_t i = 1; args[1][i]; ++i) {
-		setMode(client, channel, args[1][0] == '+', args[1][i]);
+		if (Server::getInstance().getConfiguration().getValue("cpmodes").find(
+				args[1][i]) != std::string::npos)
+			setMode(client, channel, args[1][0] == '+', args[1][i], args[n++]);
+		else
+			setMode(client, channel, args[1][0] == '+', args[1][i]);
 	}
 }
 
@@ -140,8 +147,8 @@ void ModeCommand::execute(Client* client, std::string args) {
 		} catch (const Server::ClientNotFoundException& e) {
 			(void)e;
 			return client->sendError(
-				ERR_NOSUCHNICK, client->getClientnickName() + " " + this->args[0],
-				_401);
+				ERR_NOSUCHNICK,
+				client->getClientnickName() + " " + this->args[0], _401);
 		}
 
 		if (client->getNickname() != this->args[0])

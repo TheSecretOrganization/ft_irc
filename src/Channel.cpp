@@ -126,9 +126,6 @@ void Channel::setTopicLocked(bool newTopicLocked) {
 bool Channel::isTopicLocked() const { return topicLocked; }
 
 void Channel::setPassword(const std::string& newPassword) {
-	if (password.size() == 0) {
-		throw std::logic_error("Bad password length");
-	}
 	password = newPassword;
 }
 
@@ -162,12 +159,7 @@ void Channel::removeOperator(Client* oldOp) {
 
 size_t Channel::getUserLimit(void) { return userLimit; }
 
-void Channel::setUserLimit(size_t newUserLimit) {
-	if (newUserLimit == 0) {
-		throw std::logic_error("Bad channel size");
-	}
-	userLimit = newUserLimit;
-};
+void Channel::setUserLimit(size_t newUserLimit) { userLimit = newUserLimit; };
 
 const char* Channel::InvalidChannelPrefixException::what() const throw() {
 	return "Invalid channel prefix, you may only use  #";

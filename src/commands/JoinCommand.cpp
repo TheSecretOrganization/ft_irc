@@ -51,21 +51,20 @@ JoinCommand::getTrueChannels(Client* client,
 bool JoinCommand::badChannelKey(Client* client, Channel const* channel,
 								const std::string& password) const {
 	if (channel && channel->getPassword() != password) {
-		client->sendError(ERR_BADCHANNELKEY,
-						  client->getClientnickName() + " " +
-							  channel->getName(),
-						  _475);
+		client->sendError(
+			ERR_BADCHANNELKEY,
+			client->getClientnickName() + " " + channel->getName(), _475);
 		return true;
 	}
 	return false;
 }
 
 bool JoinCommand::isChannelFull(Client* client, Channel* channel) const {
-	if (channel->getUsers().size() >= channel->getUserLimit()) {
-		client->sendError(ERR_CHANNELISFULL,
-						  client->getClientnickName() + " " +
-							  channel->getName(),
-						  _471);
+	if (channel->getUserLimit() != 0 &&
+		channel->getUsers().size() >= channel->getUserLimit()) {
+		client->sendError(
+			ERR_CHANNELISFULL,
+			client->getClientnickName() + " " + channel->getName(), _471);
 		return true;
 	}
 	return false;
@@ -73,10 +72,9 @@ bool JoinCommand::isChannelFull(Client* client, Channel* channel) const {
 
 bool JoinCommand::inviteOnlyChan(Client* client, Channel* channel) const {
 	if (channel->isInviteMode() && !channel->isUserInvited(client)) {
-		client->sendError(ERR_INVITEONLYCHAN,
-						  client->getClientnickName() + " " +
-							  channel->getName(),
-						  _473);
+		client->sendError(
+			ERR_INVITEONLYCHAN,
+			client->getClientnickName() + " " + channel->getName(), _473);
 		return true;
 	}
 	return false;
@@ -98,8 +96,7 @@ void JoinCommand::sendReplies(Client* client, Channel* channel) const {
 
 	if (!channel->getTopic().empty())
 		client->sendMessage(Server::getInstance().getPrefix(), RPL_TOPIC,
-							client->getNickname() + " " +
-								channel->getName(),
+							client->getNickname() + " " + channel->getName(),
 							channel->getTopic());
 
 	client->sendMessage(Server::getInstance().getPrefix(), RPL_NAMREPLY,
@@ -107,15 +104,13 @@ void JoinCommand::sendReplies(Client* client, Channel* channel) const {
 							getNames(channel->getUsers()));
 
 	client->sendMessage(Server::getInstance().getPrefix(), RPL_ENDOFNAMES,
-						client->getNickname() + " " + channel->getName(),
-						_366);
+						client->getNickname() + " " + channel->getName(), _366);
 
 	for (std::vector<Client*>::iterator it = channel->getUsers().begin();
 		 it != channel->getUsers().end(); ++it) {
 		if ((*it) == client)
 			continue;
-		(*it)->sendMessage(client->getPrefix(), "JOIN",
-						   channel->getName());
+		(*it)->sendMessage(client->getPrefix(), "JOIN", channel->getName());
 	}
 }
 
