@@ -276,4 +276,4 @@
 #define _485 "Unique operator privileges needed"
 #define _491 "No O-lines for your host"
 #define _501 "Unknown MODE flag"
-#define _502 "Users don't match"
+#define _502 "Cant change mode for other users"
