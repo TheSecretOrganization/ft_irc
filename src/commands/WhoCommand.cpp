@@ -29,5 +29,7 @@ void WhoCommand::execute(Client* client, std::string args) {
 							user->getRealname());
 	}
 
-    client->sendMessage(Server::getInstance().getPrefix(), RPL_ENDOFWHO, client->getClientnickName() + " " + channel->getName(), _315);
+	client->sendMessage(Server::getInstance().getPrefix(), RPL_ENDOFWHO,
+						client->getClientnickName() + " " + channel->getName(),
+						_315);
 }
