@@ -177,7 +177,7 @@ void Channel::broadcast(const std::string& prefix, const std::string& command,
 						const std::string& trailing) {
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); it++) {
-		if (prefix == (*it)->getPrefix())
+		if (command == "PRIVMSG" && prefix == (*it)->getPrefix())
 			continue;
 		try {
 			(*it)->sendMessage(prefix, command, name, trailing);
