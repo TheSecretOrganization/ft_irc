@@ -60,6 +60,7 @@
 #define RPL_UNIQOPIS "325"
 #define RPL_NOTOPIC "331"
 #define RPL_TOPIC "332"
+#define RPL_TOPICWHOTIME "333"
 #define RPL_INVITING "341"
 #define RPL_SUMMONING "342"
 #define RPL_INVITELIST "346"

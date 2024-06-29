@@ -12,24 +12,6 @@ PrivmsgCommand::PrivmsgCommand() : Command("PRIVMSG", 0, 2) {}
 
 PrivmsgCommand::~PrivmsgCommand() {}
 
-static std::string trim(const std::string& str) {
-	std::string::size_type start = 0;
-	std::string::size_type end = str.size();
-
-	while (start < end && std::isspace(str[start])) {
-		++start;
-	}
-
-	if (start < end) {
-		do {
-			--end;
-		} while (end > start && std::isspace(str[end]));
-		++end;
-	}
-
-	return str.substr(start, end - start);
-}
-
 void PrivmsgCommand::execute(Client* client, std::string args) {
 	size_t i = args.find(":");
 
@@ -61,7 +43,7 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 									 client->getClientnickName() + " " + target,
 									 _404);
 
-		chan->broadcast(client->getPrefix(), args);
+		chan->broadcast(client->getPrefix(), "PRIVMSG", args);
 	} else {
 		Client const* targetClient = Server::getInstance().getClient(target);
 
