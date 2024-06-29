@@ -114,7 +114,7 @@ void JoinCommand::sendReplies(Client* client, Channel* channel) const {
 	}
 }
 
-void JoinCommand::execute(Client* client, std::string args) {
+void JoinCommand::execute(Client* client, const std::string& args) {
 	if (args == "0") {
 		// TODO: QUIT ALL CHANNELS;
 		return;

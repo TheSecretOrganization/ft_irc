@@ -12,7 +12,7 @@ PrivmsgCommand::PrivmsgCommand() : Command("PRIVMSG", 0, 2) {}
 
 PrivmsgCommand::~PrivmsgCommand() {}
 
-void PrivmsgCommand::execute(Client* client, std::string args) {
+void PrivmsgCommand::execute(Client* client, const std::string& args) {
 	size_t i = args.find(":");
 
 	if (args.empty() || i == 0) {
@@ -21,10 +21,10 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 	}
 
 	std::string target = args.substr(0, i);
-	args = (i != std::string::npos) ? args.substr(i + 1, args.size() - (i + 1))
+	std::string message = (i != std::string::npos) ? args.substr(i + 1, args.size() - (i + 1))
 									: "";
 
-	if (args.empty()) {
+	if (message.empty()) {
 		client->sendError(ERR_NOTEXTTOSEND, client->getClientnickName(), _412);
 		return;
 	}
@@ -43,7 +43,7 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 									 client->getClientnickName() + " " + target,
 									 _404);
 
-		chan->broadcast(client->getPrefix(), "PRIVMSG", args);
+		chan->broadcast(client->getPrefix(), "PRIVMSG", message);
 	} else {
 		Client const* targetClient = Server::getInstance().getClient(target);
 
@@ -58,6 +58,6 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 				client->getClientnickName() + " " + targetClient->getNickname(),
 				_301);
 
-		targetClient->sendMessage(client->getPrefix(), "PRIVMSG", target, args);
+		targetClient->sendMessage(client->getPrefix(), "PRIVMSG", target, message);
 	}
 }

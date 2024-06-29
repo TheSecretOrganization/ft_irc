@@ -10,7 +10,7 @@ WhoCommand::WhoCommand() : Command("WHO", 1, 0) {}
 
 WhoCommand::~WhoCommand() {}
 
-void WhoCommand::execute(Client* client, std::string args) {
+void WhoCommand::execute(Client* client, const std::string& args) {
 	if (needMoreParams(client, split(args, ' ')))
 		return;
 

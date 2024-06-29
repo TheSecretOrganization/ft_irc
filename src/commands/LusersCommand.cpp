@@ -27,7 +27,7 @@ void LusersCommand::rplLuserMe(Client* client) const {
 						"I have " + nbClients + " users and 1 servers");
 }
 
-void LusersCommand::execute(Client* client, std::string args) {
+void LusersCommand::execute(Client* client, const std::string& args) {
 	(void)args;
 	rplLuserClient(client);
 	rplLuserMe(client);

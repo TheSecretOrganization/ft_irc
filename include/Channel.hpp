@@ -93,7 +93,7 @@ class Channel {
 
 	std::string getModes(Client* user = NULL);
 
-	void rplTopic(Client* client);
-	void rplNoTopic(Client* client);
-	void rplTopicWhoTime(Client* client);
+	void rplTopic(Client* client) const;
+	void rplNoTopic(Client* client) const;
+	void rplTopicWhoTime(Client* client) const;
 };

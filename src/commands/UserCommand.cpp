@@ -13,7 +13,7 @@ UserCommand::UserCommand() : Command("USER", 0, 4) {}
 
 UserCommand::~UserCommand() {}
 
-void UserCommand::execute(Client* client, std::string args) {
+void UserCommand::execute(Client* client, const std::string& args) {
 	if (alreadyRegistred(client)) {
 		return;
 	}

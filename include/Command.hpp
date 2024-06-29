@@ -20,7 +20,7 @@ class Command {
   public:
 	virtual ~Command();
 
-	virtual void execute(Client* client, std::string args) = 0;
+	virtual void execute(Client* client, const std::string& args) = 0;
 
 	virtual bool alreadyRegistred(Client* client) const;
 	virtual bool passwdMismatch(Client* client,

@@ -12,7 +12,7 @@ TopicCommand::TopicCommand() : Command("TOPIC", 0, 1) {}
 
 TopicCommand::~TopicCommand() {}
 
-void TopicCommand::execute(Client* client, std::string args) {
+void TopicCommand::execute(Client* client, const std::string& args) {
 	std::vector<std::string> splitArgs = split(args, ':');
 
 	if (needMoreParams(client, splitArgs))

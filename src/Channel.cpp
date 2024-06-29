@@ -29,7 +29,7 @@ void Channel::checkChannelSyntax(const std::string& channelName) {
 }
 
 Channel::Channel(Client* creator, const std::string& name)
-	: name(name), password(""), inviteOnly(false), userLimit(0), topic() {
+	: name(name), password(""), inviteOnly(false), userLimit(0) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
@@ -37,7 +37,7 @@ Channel::Channel(Client* creator, const std::string& name)
 
 Channel::Channel(Client* creator, const std::string& name,
 				 const std::string& password)
-	: name(name), password(password), inviteOnly(false), userLimit(0), topic() {
+	: name(name), password(password), inviteOnly(false), userLimit(0) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
@@ -221,18 +221,18 @@ std::string Channel::getModes(Client* client) {
 	return modes + (client && isUserOperator(client) ? keys : "");
 }
 
-void Channel::rplTopic(Client* client) {
+void Channel::rplTopic(Client* client) const {
 	client->sendMessage(Server::getInstance().getPrefix(), RPL_TOPIC,
 						client->getClientnickName() + " " + name,
 						topic.content);
 }
 
-void Channel::rplNoTopic(Client* client) {
+void Channel::rplNoTopic(Client* client) const {
 	client->sendMessage(Server::getInstance().getPrefix(), RPL_NOTOPIC,
 						client->getClientnickName() + " " + name, _331);
 }
 
-void Channel::rplTopicWhoTime(Client* client) {
+void Channel::rplTopicWhoTime(Client* client) const {
 	client->sendMessage(Server::getInstance().getPrefix(), RPL_TOPICWHOTIME,
 						client->getClientnickName() + " " + name + " " +
 							topic.setBy + " " +

@@ -10,5 +10,5 @@ class UserCommand : public Command {
 	UserCommand();
 	~UserCommand();
 
-	void execute(Client* client, std::string args);
+	void execute(Client* client, const std::string& args);
 };

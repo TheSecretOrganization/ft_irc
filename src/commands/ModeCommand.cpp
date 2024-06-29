@@ -116,7 +116,7 @@ void ModeCommand::setMode(Client* client, Channel* channel, bool action,
 						  client->getClientnickName() + " " + mode, _501);
 }
 
-void ModeCommand::execute(Client* client, std::string args) {
+void ModeCommand::execute(Client* client, const std::string& args) {
 	splitArgs = split(args, ' ');
 	if (needMoreParams(client, splitArgs)) {
 		return;

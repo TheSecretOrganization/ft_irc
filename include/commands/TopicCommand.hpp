@@ -10,5 +10,5 @@ class TopicCommand : public Command {
 	TopicCommand();
 	~TopicCommand();
 
-	void execute(Client* client, std::string args);
+	void execute(Client* client, const std::string& args);
 };

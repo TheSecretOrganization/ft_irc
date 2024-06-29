@@ -34,7 +34,7 @@ static bool checkAlreadyInUse(const std::string& nickname) {
 	return true;
 }
 
-void NickCommand::execute(Client* client, std::string args) {
+void NickCommand::execute(Client* client, const std::string& args) {
 	if (args.empty())
 		return client->sendError(ERR_NONICKNAMEGIVEN,
 								 client->getClientnickName(), _431);
