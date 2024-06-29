@@ -21,8 +21,9 @@ void PrivmsgCommand::execute(Client* client, const std::string& args) {
 	}
 
 	std::string target = args.substr(0, i);
-	std::string message = (i != std::string::npos) ? args.substr(i + 1, args.size() - (i + 1))
-									: "";
+	std::string message = (i != std::string::npos)
+							  ? args.substr(i + 1, args.size() - (i + 1))
+							  : "";
 
 	if (message.empty()) {
 		client->sendError(ERR_NOTEXTTOSEND, client->getClientnickName(), _412);
@@ -58,6 +59,7 @@ void PrivmsgCommand::execute(Client* client, const std::string& args) {
 				client->getClientnickName() + " " + targetClient->getNickname(),
 				_301);
 
-		targetClient->sendMessage(client->getPrefix(), "PRIVMSG", target, message);
+		targetClient->sendMessage(client->getPrefix(), "PRIVMSG", target,
+								  message);
 	}
 }

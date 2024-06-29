@@ -16,7 +16,9 @@ void QuitCommand::execute(Client* client, const std::string& args) {
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end(); it++) {
 		(*it)->removeUser(client);
-		(*it)->broadcast(client->getPrefix(), "QUIT", args.empty() ? "has been absorbed by the Black Hole" : args);
+		(*it)->broadcast(client->getPrefix(), "QUIT",
+						 args.empty() ? "has been absorbed by the Black Hole"
+									  : args);
 	}
 
 	client->sendError("ERROR", "", "Bye for now!");
