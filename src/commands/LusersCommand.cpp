@@ -4,19 +4,11 @@
 #include "IrcReplies.hpp"
 #include "Server.hpp"
 
-#include <cstddef>
-#include <sstream>
 #include <string>
 
 LusersCommand::LusersCommand() : Command("LUSERS", 0, 0) {}
 
 LusersCommand::~LusersCommand() {}
-
-static std::string size_tToString(size_t value) {
-	std::ostringstream oss;
-	oss << value;
-	return oss.str();
-}
 
 void LusersCommand::rplLuserClient(Client* client) const {
 	std::string nbClients =
@@ -35,7 +27,7 @@ void LusersCommand::rplLuserMe(Client* client) const {
 						"I have " + nbClients + " users and 1 servers");
 }
 
-void LusersCommand::execute(Client* client, std::string args) {
+void LusersCommand::execute(Client* client, const std::string& args) {
 	(void)args;
 	rplLuserClient(client);
 	rplLuserMe(client);

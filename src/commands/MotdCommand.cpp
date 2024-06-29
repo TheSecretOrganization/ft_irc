@@ -8,7 +8,7 @@ MotdCommand::MotdCommand() : Command("MOTD", 0, 0) {}
 
 MotdCommand::~MotdCommand() {}
 
-void MotdCommand::execute(Client* client, std::string args) {
+void MotdCommand::execute(Client* client, const std::string& args) {
 	if (noSuchServer(client, args))
 		return;
 	client->sendMessage(

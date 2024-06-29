@@ -4,10 +4,20 @@
 #include "Command.hpp"
 
 #include <cstddef>
+#include <ctime>
 #include <string>
 #include <vector>
 
 class Command;
+
+typedef struct sTopic {
+	std::string content;
+	bool locked;
+	std::time_t setAt;
+	std::string setBy;
+
+	sTopic() : content(""), locked(false), setAt(0), setBy("") {}
+} topic_t;
 
 class Channel {
   private:
@@ -16,10 +26,9 @@ class Channel {
 	std::vector<Client*> operators;
 	std::vector<Client*> usersOnChannel;
 	std::vector<Client*> inviteList;
-	std::string topic;
 	bool inviteOnly;
-	bool topicLocked;
 	size_t userLimit;
+	topic_t topic;
 
   public:
 	Channel(Client* creator, const std::string& name);
@@ -59,8 +68,7 @@ class Channel {
 	bool isInviteMode(void) const;
 
 	const std::string& getTopic() const;
-	void changeTopic(const std::string& newTopic);
-	void unsetTopic(void);
+	void setTopic(Client* client, const std::string& newTopic);
 	void setTopicLocked(bool newTopicLocked);
 	bool isTopicLocked() const;
 
@@ -77,10 +85,15 @@ class Channel {
 	size_t getUserLimit(void) const;
 	void setUserLimit(size_t newUserLimit);
 
-	void broadcast(const std::string& prefix, const std::string& trailing = "");
+	void broadcast(const std::string& prefix, const std::string& command,
+				   const std::string& trailing = "");
 
 	void inviteUser(Client* user);
 	void uninviteUser(Client* user);
 
 	std::string getModes(Client* user = NULL);
+
+	void rplTopic(Client* client) const;
+	void rplNoTopic(Client* client) const;
+	void rplTopicWhoTime(Client* client) const;
 };

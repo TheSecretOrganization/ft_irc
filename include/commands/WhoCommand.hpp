@@ -2,14 +2,13 @@
 
 #include "Client.hpp"
 #include "Command.hpp"
-
 #include <string>
 
-class MotdCommand : public Command {
+class WhoCommand : public Command {
 
   public:
-	MotdCommand();
-	~MotdCommand();
+	WhoCommand();
+	~WhoCommand();
 
 	void execute(Client* client, const std::string& args);
 };

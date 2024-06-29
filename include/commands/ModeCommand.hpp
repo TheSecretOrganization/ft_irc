@@ -22,5 +22,5 @@ class ModeCommand : public Command {
 	ModeCommand();
 	~ModeCommand();
 
-	void execute(Client* client, std::string args);
+	void execute(Client* client, const std::string& args);
 };

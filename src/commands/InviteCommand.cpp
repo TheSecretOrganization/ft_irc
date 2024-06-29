@@ -7,7 +7,7 @@ InviteCommand::InviteCommand() : Command("INVITE", 2, 2) {}
 
 InviteCommand::~InviteCommand() {}
 
-void InviteCommand::execute(Client* client, std::string args) {
+void InviteCommand::execute(Client* client, const std::string& args) {
 	std::vector<std::string> vecArgs = Command::split(args, ' ');
 	if (needMoreParams(client, vecArgs)) {
 		return;

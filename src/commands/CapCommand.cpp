@@ -63,7 +63,7 @@ void CapCommand::rplISupport(Client* client) const {
 			" :are supported by this server");
 }
 
-void CapCommand::execute(Client* client, std::string args) {
+void CapCommand::execute(Client* client, const std::string& args) {
 	try {
 		if (args == "LS") {
 			client->sendMessage(Server::getInstance().getPrefix(), "CAP",

@@ -3,6 +3,7 @@
 #include "IrcReplies.hpp"
 #include "Server.hpp"
 
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -55,23 +56,6 @@ bool Command::userOnChannel(Client* client, Channel* channel,
 	return false;
 }
 
-std::vector<std::string> Command::split(const std::string& str, char del) {
-	std::vector<std::string> result;
-	std::string tmp;
-	for (std::string::const_iterator it = str.begin(); it != str.end(); ++it) {
-		if (*it != del) {
-			tmp += *it;
-		} else if (!tmp.empty()) {
-			result.push_back(tmp);
-			tmp.clear();
-		}
-	}
-	if (!tmp.empty()) {
-		result.push_back(tmp);
-	}
-	return result;
-}
-
 bool Command::alreadyRegistred(Client* client) const {
 	if (client->getStatus() == REGISTRED) {
 		client->sendError(ERR_ALREADYREGISTRED, client->getClientnickName(),
@@ -106,4 +90,45 @@ bool Command::chanOPrivsNeeded(Client* client, Channel* channel) const {
 		return true;
 	}
 	return false;
+}
+
+std::vector<std::string> Command::split(const std::string& str, char del) {
+	std::vector<std::string> result;
+	std::string tmp;
+	for (std::string::const_iterator it = str.begin(); it != str.end(); ++it) {
+		if (*it != del) {
+			tmp += *it;
+		} else if (!tmp.empty()) {
+			result.push_back(tmp);
+			tmp.clear();
+		}
+	}
+	if (!tmp.empty()) {
+		result.push_back(tmp);
+	}
+	return result;
+}
+
+std::string Command::trim(const std::string& str) {
+	std::string::size_type start = 0;
+	std::string::size_type end = str.size();
+
+	while (start < end && std::isspace(str[start])) {
+		++start;
+	}
+
+	if (start < end) {
+		do {
+			--end;
+		} while (end > start && std::isspace(str[end]));
+		++end;
+	}
+
+	return str.substr(start, end - start);
+}
+
+std::string Command::size_tToString(size_t value) {
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
 }

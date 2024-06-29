@@ -1,11 +1,13 @@
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "IrcReplies.hpp"
 #include "Server.hpp"
 
 #include <algorithm>
+#include <cstddef>
+#include <ctime>
 #include <exception>
 #include <iostream>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -27,8 +29,7 @@ void Channel::checkChannelSyntax(const std::string& channelName) {
 }
 
 Channel::Channel(Client* creator, const std::string& name)
-	: name(name), password(""), topic(""), inviteOnly(false),
-	  topicLocked(false), userLimit(0) {
+	: name(name), password(""), inviteOnly(false), userLimit(0) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
@@ -36,8 +37,7 @@ Channel::Channel(Client* creator, const std::string& name)
 
 Channel::Channel(Client* creator, const std::string& name,
 				 const std::string& password)
-	: name(name), password(password), topic(""), inviteOnly(false),
-	  topicLocked(false), userLimit(0) {
+	: name(name), password(password), inviteOnly(false), userLimit(0) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
@@ -107,17 +107,20 @@ void Channel::setInviteMode(bool newInviteMode) { inviteOnly = newInviteMode; }
 
 bool Channel::isInviteMode(void) const { return inviteOnly; }
 
-const std::string& Channel::getTopic(void) const { return topic; }
+const std::string& Channel::getTopic(void) const { return topic.content; }
 
-void Channel::changeTopic(const std::string& newTopic) { topic = newTopic; }
-
-void Channel::unsetTopic(void) { topic = ""; }
-
-void Channel::setTopicLocked(bool newTopicLocked) {
-	topicLocked = newTopicLocked;
+void Channel::setTopic(Client* client, const std::string& newTopic) {
+	topic.content = newTopic;
+	topic.setAt = std::time(NULL);
+	topic.setBy = client->getClientnickName();
+	broadcast(client->getPrefix(), "TOPIC", topic.content);
 }
 
-bool Channel::isTopicLocked() const { return topicLocked; }
+void Channel::setTopicLocked(bool newTopicLocked) {
+	topic.locked = newTopicLocked;
+}
+
+bool Channel::isTopicLocked() const { return topic.locked; }
 
 void Channel::setPassword(const std::string& newPassword) {
 	password = newPassword;
@@ -170,14 +173,14 @@ const char* Channel::ForbiddenChannelNameException::what() const throw() {
 		return "Forbidden character used in channel name";
 }
 
-void Channel::broadcast(const std::string& prefix,
+void Channel::broadcast(const std::string& prefix, const std::string& command,
 						const std::string& trailing) {
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); it++) {
-		if (prefix == (*it)->getPrefix())
+		if (command == "PRIVMSG" && prefix == (*it)->getPrefix())
 			continue;
 		try {
-			(*it)->sendMessage(prefix, "PRIVMSG", name, trailing);
+			(*it)->sendMessage(prefix, command, name, trailing);
 		} catch (const std::exception& e) {
 			std::cerr << e.what() << std::endl;
 		}
@@ -195,12 +198,6 @@ void Channel::uninviteUser(Client* user) {
 	inviteList.erase(it);
 }
 
-static std::string size_tToString(size_t value) {
-	std::ostringstream oss;
-	oss << value;
-	return oss.str();
-}
-
 std::string Channel::getModes(Client* client) {
 	std::string modes = "";
 	std::string keys = "";
@@ -208,7 +205,7 @@ std::string Channel::getModes(Client* client) {
 	if (inviteOnly)
 		modes += 'i';
 
-	if (topicLocked)
+	if (topic.locked)
 		modes += 't';
 
 	if (!password.empty()) {
@@ -218,8 +215,26 @@ std::string Channel::getModes(Client* client) {
 
 	if (userLimit != 0) {
 		modes += 'l';
-		keys += ' ' + size_tToString(userLimit);
+		keys += ' ' + Command::size_tToString(userLimit);
 	}
 
 	return modes + (client && isUserOperator(client) ? keys : "");
+}
+
+void Channel::rplTopic(Client* client) const {
+	client->sendMessage(Server::getInstance().getPrefix(), RPL_TOPIC,
+						client->getClientnickName() + " " + name,
+						topic.content);
+}
+
+void Channel::rplNoTopic(Client* client) const {
+	client->sendMessage(Server::getInstance().getPrefix(), RPL_NOTOPIC,
+						client->getClientnickName() + " " + name, _331);
+}
+
+void Channel::rplTopicWhoTime(Client* client) const {
+	client->sendMessage(Server::getInstance().getPrefix(), RPL_TOPICWHOTIME,
+						client->getClientnickName() + " " + name + " " +
+							topic.setBy + " " +
+							Command::size_tToString(topic.setAt));
 }

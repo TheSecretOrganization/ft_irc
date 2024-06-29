@@ -8,5 +8,5 @@ class InviteCommand : public Command {
 	InviteCommand();
 	~InviteCommand();
 
-	void execute(Client* client, std::string args);
+	void execute(Client* client, const std::string& args);
 };

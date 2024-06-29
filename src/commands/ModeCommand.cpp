@@ -6,7 +6,6 @@
 
 #include <cstddef>
 #include <cstdlib>
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -26,8 +25,6 @@ bool ModeCommand::checkModes(Client* client) const {
 		if (Server::getInstance().getConfiguration().getValue("cpmodes").find(
 				splitArgs[1][i]) != std::string::npos) {
 			++n;
-			std::cout << "size: " << splitArgs.size() << " " << i + n
-					  << std::endl;
 			if (i + n > splitArgs.size() - 1) {
 				client->sendError(ERR_NEEDMOREPARAMS,
 								  client->getClientnickName() + " MODE", _461);
@@ -119,7 +116,7 @@ void ModeCommand::setMode(Client* client, Channel* channel, bool action,
 						  client->getClientnickName() + " " + mode, _501);
 }
 
-void ModeCommand::execute(Client* client, std::string args) {
+void ModeCommand::execute(Client* client, const std::string& args) {
 	splitArgs = split(args, ' ');
 	if (needMoreParams(client, splitArgs)) {
 		return;
