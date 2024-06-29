@@ -1,9 +1,11 @@
 #include "Channel.hpp"
+#include "Client.hpp"
 #include "Server.hpp"
 
 #include <algorithm>
 #include <exception>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -24,24 +26,21 @@ void Channel::checkChannelSyntax(const std::string& channelName) {
 	}
 }
 
-Channel::Channel(Client* creator, const std::string& name) : name(name) {
+Channel::Channel(Client* creator, const std::string& name)
+	: name(name), password(""), topic(""), inviteOnly(false),
+	  topicLocked(false), userLimit(0) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
-	topic = "";
-	inviteOnly = 0;
-	channelSize = DEF_CHAN_SIZE;
 }
 
 Channel::Channel(Client* creator, const std::string& name,
 				 const std::string& password)
-	: name(name), channelPassword(password) {
+	: name(name), password(password), topic(""), inviteOnly(false),
+	  topicLocked(false), userLimit(0) {
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
-	topic = "";
-	inviteOnly = 0;
-	channelSize = DEF_CHAN_SIZE;
 }
 
 Channel::~Channel() {}
@@ -66,7 +65,7 @@ std::vector<Client*>& Channel::getOperators(void) { return operators; }
 
 std::vector<Client*>& Channel::getInviteList(void) { return inviteList; }
 
-const std::string& Channel::getChannelName(void) const { return name; }
+const std::string& Channel::getName(void) const { return name; }
 
 bool Channel::isUserOnChannel(Client* client) {
 	int clientFd = client->getSocket().getFd();
@@ -104,11 +103,9 @@ bool Channel::isUserInvited(Client* client) {
 	return 0;
 }
 
-void Channel::setInviteMode(void) { inviteOnly = 1; }
+void Channel::setInviteMode(bool newInviteMode) { inviteOnly = newInviteMode; }
 
-void Channel::unsetInviteMode(void) { inviteOnly = 0; }
-
-bool Channel::isInviteMode(void) { return inviteOnly; }
+bool Channel::isInviteMode(void) const { return inviteOnly; }
 
 const std::string& Channel::getTopic(void) const { return topic; }
 
@@ -116,22 +113,19 @@ void Channel::changeTopic(const std::string& newTopic) { topic = newTopic; }
 
 void Channel::unsetTopic(void) { topic = ""; }
 
-void Channel::lockTopic(void) { this->topicLocked = 1; }
-
-void Channel::unlockTopic(void) { this->topicLocked = 0; }
-
-void Channel::setChannelPassword(const std::string& newPassword) {
-	if (channelPassword.size() == 0) {
-		throw std::logic_error("Bad password length");
-	}
-	channelPassword = newPassword;
+void Channel::setTopicLocked(bool newTopicLocked) {
+	topicLocked = newTopicLocked;
 }
 
-void Channel::unsetChannelPassword(void) { channelPassword = ""; }
+bool Channel::isTopicLocked() const { return topicLocked; }
 
-const std::string& Channel::getChannelPassword(void) const {
-	return channelPassword;
+void Channel::setPassword(const std::string& newPassword) {
+	password = newPassword;
 }
+
+void Channel::unsetPassword(void) { password = ""; }
+
+const std::string& Channel::getPassword(void) const { return password; }
 
 void Channel::addUser(Client* user) { usersOnChannel.push_back(user); }
 
@@ -157,16 +151,9 @@ void Channel::removeOperator(Client* oldOp) {
 	operators.erase(std::find(operators.begin(), operators.end(), oldOp));
 }
 
-size_t Channel::getChannelSize(void) { return channelSize; }
+size_t Channel::getUserLimit(void) const { return userLimit; }
 
-void Channel::changeChannelSize(size_t newSize) {
-	if (newSize == 0) {
-		throw std::logic_error("Bad channel size");
-	}
-	channelSize = newSize;
-};
-
-void Channel::unsetSize(void) { channelSize = 0; };
+void Channel::setUserLimit(size_t newUserLimit) { userLimit = newUserLimit; };
 
 const char* Channel::InvalidChannelPrefixException::what() const throw() {
 	return "Invalid channel prefix, you may only use  #";
@@ -206,4 +193,33 @@ void Channel::uninviteUser(Client* user) {
 		throw Server::ClientNotFoundException();
 	}
 	inviteList.erase(it);
+}
+
+static std::string size_tToString(size_t value) {
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
+}
+
+std::string Channel::getModes(Client* client) {
+	std::string modes = "";
+	std::string keys = "";
+
+	if (inviteOnly)
+		modes += 'i';
+
+	if (topicLocked)
+		modes += 't';
+
+	if (!password.empty()) {
+		modes += 'k';
+		keys += ' ' + password;
+	}
+
+	if (userLimit != 0) {
+		modes += 'l';
+		keys += ' ' + size_tToString(userLimit);
+	}
+
+	return modes + (client && isUserOperator(client) ? keys : "");
 }

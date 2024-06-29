@@ -35,10 +35,9 @@ bool Command::noSuchChannel(Client* client, Channel* channel,
 
 bool Command::notOnChannel(Client* client, Channel* channel) const {
 	if (!channel->isUserOnChannel(client)) {
-		client->sendError(ERR_NOTONCHANNEL,
-						  client->getClientnickName() + " " +
-							  channel->getChannelName(),
-						  _442);
+		client->sendError(
+			ERR_NOTONCHANNEL,
+			client->getClientnickName() + " " + channel->getName(), _442);
 		return true;
 	}
 	return false;
@@ -49,7 +48,7 @@ bool Command::userOnChannel(Client* client, Channel* channel,
 	if (channel->isUserOnChannel(Server::getInstance().getClient(nick))) {
 		client->sendError(ERR_USERONCHANNEL,
 						  client->getClientnickName() + " " + nick + " " +
-							  channel->getChannelName(),
+							  channel->getName(),
 						  _443);
 		return true;
 	}
@@ -103,8 +102,7 @@ bool Command::noSuchServer(Client* client, const std::string& server) const {
 
 bool Command::chanOPrivsNeeded(Client* client, Channel* channel) const {
 	if (channel->isInviteMode() && !channel->isUserOperator(client)) {
-		client->sendError(ERR_CHANOPRIVSNEEDED, channel->getChannelName(),
-						  _482);
+		client->sendError(ERR_CHANOPRIVSNEEDED, channel->getName(), _482);
 		return true;
 	}
 	return false;

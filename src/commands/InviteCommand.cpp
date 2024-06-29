@@ -15,7 +15,9 @@ void InviteCommand::execute(Client* client, std::string args) {
 
 	Client* destinationClient = Server::getInstance().getClient(vecArgs[1]);
 	if (!destinationClient) {
-		return client->sendError(ERR_NOSUCHNICK, vecArgs[1], _401);
+		return client->sendError(ERR_NOSUCHNICK,
+								 client->getClientnickName() + " " + vecArgs[1],
+								 _401);
 	}
 
 	Channel* channel = Server::getInstance().getChannel(vecArgs[1]);
@@ -39,7 +41,7 @@ void InviteCommand::execute(Client* client, std::string args) {
 		client->sendMessage(Server::getInstance().getPrefix(), RPL_INVITING,
 							client->getClientnickName() + " " +
 								destinationClient->getClientnickName() + " " +
-								channel->getChannelName());
+								channel->getName());
 	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << '\n';
 	}
@@ -50,7 +52,7 @@ void InviteCommand::execute(Client* client, std::string args) {
 	try {
 		destinationClient->sendMessage(client->getPrefix(), "INVITE",
 									   destinationClient->getClientnickName(),
-									   channel->getChannelName());
+									   channel->getName());
 	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << '\n';
 	}

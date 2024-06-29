@@ -7,9 +7,8 @@
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
-	  servername(""), status(UNKNOWN) {
+	  servername(""), status(UNKNOWN), away(false) {
 	std::cout << "new client " << fd << std::endl;
-	nickname = "";
 }
 
 Client::~Client() {}
@@ -51,6 +50,15 @@ std::string Client::getPrefix() const {
 	return nickname + "!" + username + "@" + hostname;
 }
 
+std::string Client::getModes() const {
+	std::string modes = "";
+
+	if (away)
+		modes += "a";
+
+	return modes.empty() ? "" : "+" + modes;
+}
+
 const std::string& Client::getNickname() const { return nickname; }
 
 void Client::setNickname(const std::string& newNickname) {
@@ -84,3 +92,7 @@ void Client::setServername(const std::string& newServername) {
 int Client::getStatus() const { return status; }
 
 void Client::setStatus(int newStatus) { status = newStatus; }
+
+bool Client::isAway() const { return away; }
+
+void Client::setAway(bool newAway) { away = newAway; }

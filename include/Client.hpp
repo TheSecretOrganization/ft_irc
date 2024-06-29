@@ -16,6 +16,7 @@ class Client {
 	std::string hostname;
 	std::string servername;
 	int status;
+	bool away;
 
   public:
 	Client(int fd);
@@ -28,6 +29,7 @@ class Client {
 				   const std::string& parameters = "",
 				   const std::string& trailing = "") const;
 	std::string getPrefix() const;
+	std::string getModes() const;
 
 	ClientSocket& getSocket();
 	const std::string& getClientnickName(void);
@@ -43,4 +45,6 @@ class Client {
 	void setServername(const std::string& newServername);
 	int getStatus() const;
 	void setStatus(int newStatus);
+	bool isAway() const;
+	void setAway(bool newAway);
 };

@@ -6,7 +6,6 @@
 #include "Server.hpp"
 
 #include <cstddef>
-#include <iostream>
 #include <string>
 
 PrivmsgCommand::PrivmsgCommand() : Command("PRIVMSG", 0, 2) {}
@@ -52,28 +51,30 @@ void PrivmsgCommand::execute(Client* client, std::string args) {
 	if (target[0] == '#') {
 		Channel* chan = Server::getInstance().getChannel(target);
 
-		if (!chan) {
-			client->sendError(ERR_NOSUCHNICK,
-							  client->getClientnickName() + " " + target, _401);
-			return;
-		}
+		if (!chan)
+			return client->sendError(ERR_NOSUCHNICK,
+									 client->getClientnickName() + " " + target,
+									 _401);
 
-		if (chan->isInviteMode() && !chan->isUserOnChannel(client)) {
-			client->sendError(ERR_CANNOTSENDTOCHAN,
-							  client->getClientnickName() + " " + target, _404);
-			return;
-		}
+		if (chan->isInviteMode() && !chan->isUserOnChannel(client))
+			return client->sendError(ERR_CANNOTSENDTOCHAN,
+									 client->getClientnickName() + " " + target,
+									 _404);
 
 		chan->broadcast(client->getPrefix(), args);
 	} else {
-		std::cout << "test" << std::endl;
 		Client const* targetClient = Server::getInstance().getClient(target);
 
-		if (!targetClient) {
-			client->sendError(ERR_NOSUCHNICK,
-							  client->getClientnickName() + " " + target, _401);
-			return;
-		}
+		if (!targetClient)
+			return client->sendError(ERR_NOSUCHNICK,
+									 client->getClientnickName() + " " + target,
+									 _401);
+
+		if (targetClient->isAway())
+			return client->sendMessage(
+				Server::getInstance().getPrefix(), RPL_AWAY,
+				client->getClientnickName() + " " + targetClient->getNickname(),
+				_301);
 
 		targetClient->sendMessage(client->getPrefix(), "PRIVMSG", target, args);
 	}
