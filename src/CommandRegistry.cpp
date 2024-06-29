@@ -10,6 +10,7 @@
 #include "commands/PingCommand.hpp"
 #include "commands/PrivmsgCommand.hpp"
 #include "commands/QuitCommand.hpp"
+#include "commands/TopicCommand.hpp"
 #include "commands/UserCommand.hpp"
 
 CommandRegistry::CommandRegistry() {
@@ -24,6 +25,7 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("MOTD", new MotdCommand());
 	registerCommand("PRIVMSG", new PrivmsgCommand());
 	registerCommand("MODE", new ModeCommand());
+	registerCommand("TOPIC", new TopicCommand());
 }
 
 CommandRegistry::~CommandRegistry() {

@@ -40,6 +40,7 @@ SRC         :=	main.cpp \
 		PingCommand.cpp \
 		PrivmsgCommand.cpp \
 		QuitCommand.cpp \
+		TopicCommand.cpp \
 		UserCommand.cpp \
 	)
 INCLUDES    :=  $(INCLD_DIR)
