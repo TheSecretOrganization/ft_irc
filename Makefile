@@ -42,6 +42,7 @@ SRC         :=	main.cpp \
 		QuitCommand.cpp \
 		TopicCommand.cpp \
 		UserCommand.cpp \
+		WhoCommand.cpp \
 	)
 INCLUDES    :=  $(INCLD_DIR)
 INCLD_FLAG  :=  $(addprefix -I , $(INCLUDES))

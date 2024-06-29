@@ -208,7 +208,7 @@
 #define _349 "End of exception list"
 #define _351 "Version"
 #define _352 "Who reply"
-#define _315 "End of who"
+#define _315 "End of /WHO list"
 #define _353 "Name reply"
 #define _366 "End of /NAMES list"
 #define _364 "Links"
