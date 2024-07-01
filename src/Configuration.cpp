@@ -22,6 +22,10 @@ Configuration::Configuration() {
 
 Configuration::~Configuration() {}
 
+std::vector<std::string> Configuration::getForbiddenWords() const {
+	return forbiddenWords;
+}
+
 std::string Configuration::getValue(const std::string& key) const {
 	if (config.find(key) != config.end()) {
 		return config.at(key);
