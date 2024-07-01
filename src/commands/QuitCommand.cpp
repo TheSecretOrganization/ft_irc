@@ -3,6 +3,7 @@
 #include "Command.hpp"
 #include "Server.hpp"
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -15,10 +16,14 @@ void QuitCommand::execute(Client* client, const std::string& args) {
 
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end(); it++) {
-		(*it)->removeUser(client);
-		(*it)->broadcast(client->getPrefix(), "QUIT", "",
-						 args.empty() ? "has been absorbed by the Black Hole"
-									  : args);
+		try {
+			(*it)->removeUser(client);
+			(*it)->broadcast(client->getPrefix(), "QUIT", "",
+							args.empty() ? "has been absorbed by the Black Hole"
+										: args);
+		} catch (const Server::ClientNotFoundException& e) {
+			std::cerr << e.what() << std::endl;
+		}
 	}
 
 	client->sendError("ERROR", "", "Bye for now!");
