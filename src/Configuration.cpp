@@ -1,5 +1,7 @@
 #include "Configuration.hpp"
+#include "Command.hpp"
 
+#include <iostream>
 #include <string>
 
 Configuration::Configuration() {
@@ -15,6 +17,7 @@ Configuration::Configuration() {
 	config["cpmodes"] = CPMODES;
 	config["chanlimit"] = CHANLIMIT;
 	config["motd"] = MOTD;
+	forbiddenWords = Command::split(FORBIDDEN_WORDS, ',');
 }
 
 Configuration::~Configuration() {}
