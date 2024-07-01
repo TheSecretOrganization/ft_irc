@@ -33,6 +33,8 @@ Channel::Channel(Client* creator, const std::string& name)
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
+	operators.push_back(Server::getInstance().getGuardian());
+	usersOnChannel.push_back(Server::getInstance().getGuardian());
 }
 
 Channel::Channel(Client* creator, const std::string& name,
@@ -41,6 +43,8 @@ Channel::Channel(Client* creator, const std::string& name,
 	checkChannelSyntax(name);
 	operators.push_back(creator);
 	usersOnChannel.push_back(creator);
+	operators.push_back(Server::getInstance().getGuardian());
+	usersOnChannel.push_back(Server::getInstance().getGuardian());
 }
 
 Channel::~Channel() {}
@@ -176,6 +180,9 @@ const char* Channel::ForbiddenChannelNameException::what() const throw() {
 void Channel::broadcast(const std::string& prefix, const std::string& command,
 						const std::string& parameter,
 						const std::string& trailing) {
+	if (command == "PRIVMSG") {
+		Server::getInstance().getGuardian()->scanMessage(prefix, name, trailing);
+	}
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); it++) {
 		if (command == "PRIVMSG" && prefix == (*it)->getPrefix())
