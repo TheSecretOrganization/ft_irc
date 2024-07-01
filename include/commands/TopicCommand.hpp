@@ -5,11 +5,10 @@
 
 #include <string>
 
-class MotdCommand : public Command {
-
+class TopicCommand : public Command {
   public:
-	MotdCommand();
-	~MotdCommand();
+	TopicCommand();
+	~TopicCommand();
 
 	void execute(Client* client, const std::string& args);
 };

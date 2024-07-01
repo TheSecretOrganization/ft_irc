@@ -10,19 +10,16 @@ QuitCommand::QuitCommand() : Command("QUIT", 0, 0) {}
 
 QuitCommand::~QuitCommand() {}
 
-void QuitCommand::execute(Client* client, std::string args) {
-	if (args.empty())
-		args = "left the server";
-
-	std::string message = "Quit: " + client->getNickname() + " " + args;
+void QuitCommand::execute(Client* client, const std::string& args) {
 	std::vector<Channel*> channels = Server::getInstance().getChannels(client);
 
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end(); it++) {
 		(*it)->removeUser(client);
-		(*it)->sendMessage(message);
+		(*it)->broadcast(client->getPrefix(), "QUIT", "",
+						 args.empty() ? "has been absorbed by the Black Hole"
+									  : args);
 	}
 
-	Server::getInstance().getServerCommands().getCommand("ERROR")->execute(
-		client, "Quit: Bye for now!");
+	client->sendError("ERROR", "", "Bye for now!");
 }

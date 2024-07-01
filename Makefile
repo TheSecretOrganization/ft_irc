@@ -21,27 +21,29 @@ OBJS_DIR    := objs
 SRC         :=	main.cpp \
 	Channel.cpp \
 	Client.cpp \
-	ClientCommands.cpp \
 	ClientSocket.cpp \
 	Command.cpp \
 	CommandRegistry.cpp \
 	Configuration.cpp \
 	Server.cpp \
-	ServerCommands.cpp \
 	ServerSocket.cpp \
 	Socket.cpp \
 	SocketObserver.cpp \
 	$(addprefix $(CMDS_DIR)/, \
 		CapCommand.cpp \
-		ErrorCommand.cpp \
 		JoinCommand.cpp \
+		KickCommand.cpp \
 		LusersCommand.cpp \
+		ModeCommand.cpp \
 		MotdCommand.cpp \
 		NickCommand.cpp \
 		PassCommand.cpp \
 		PingCommand.cpp \
+		PrivmsgCommand.cpp \
 		QuitCommand.cpp \
+		TopicCommand.cpp \
 		UserCommand.cpp \
+		WhoCommand.cpp \
 	)
 INCLUDES    :=  $(INCLD_DIR)
 INCLD_FLAG  :=  $(addprefix -I , $(INCLUDES))

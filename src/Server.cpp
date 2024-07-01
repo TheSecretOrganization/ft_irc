@@ -31,9 +31,7 @@ Server& Server::getInstance() {
 	return instance;
 }
 
-CommandRegistry& Server::getClientCommands() { return clientCommands; }
-
-CommandRegistry& Server::getServerCommands() { return serverCommands; }
+CommandRegistry& Server::getCommandRegistry() { return commandRegistry; }
 
 void Server::start(int port, const std::string& password) {
 	configuration.setPassword(password);
@@ -47,7 +45,7 @@ void Server::start(int port, const std::string& password) {
 
 void Server::shut() {
 	run = false;
-	std::cout << "Bye!" << std::endl;
+	std::cout << "\nBye!" << std::endl;
 }
 
 void Server::addClient(Client* client) {
@@ -85,6 +83,10 @@ void Server::deleteChannel(Channel* channel) {
 	delete channel;
 }
 
+std::string Server::getPrefix() const {
+	return getConfiguration().getValue("serverName");
+}
+
 const std::vector<Client*>& Server::getClients() const { return clients; }
 
 const Configuration& Server::getConfiguration() const { return configuration; }
@@ -99,7 +101,7 @@ const char* Server::ChannelNotFoundException::what() const throw() {
 	return "channel not found";
 }
 
-Client* Server::getClient(std::string nickname) {
+Client* Server::getClient(const std::string& nickname) {
 	for (std::vector<Client*>::iterator it = clients.begin();
 		 it != clients.end(); it++) {
 		if ((*it)->getClientnickName() == nickname)
@@ -108,10 +110,10 @@ Client* Server::getClient(std::string nickname) {
 	return NULL;
 }
 
-Channel* Server::getChannel(std::string name) {
+Channel* Server::getChannel(const std::string& name) {
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end(); it++) {
-		if ((*it)->getChannelName() == name)
+		if ((*it)->getName() == name)
 			return (*it);
 	}
 	return NULL;
