@@ -23,7 +23,7 @@ void PartCommand::execute(Client* client, const std::string& args) {
 
 	for (size_t i = 0; i < channels.size(); ++i) {
 		channel = Server::getInstance().getChannel(channels[i]);
-		if (!noSuchChannel(client, channel, channels[i]))
+		if (noSuchChannel(client, channel, channels[i]))
 			return;
 
 		if (notOnChannel(client, channel))

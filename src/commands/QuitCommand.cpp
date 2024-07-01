@@ -3,6 +3,7 @@
 #include "Command.hpp"
 #include "Server.hpp"
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -15,10 +16,23 @@ void QuitCommand::execute(Client* client, const std::string& args) {
 
 	for (std::vector<Channel*>::iterator it = channels.begin();
 		 it != channels.end(); it++) {
-		(*it)->removeUser(client);
+		try {
+			(*it)->removeUser(client);
+		} catch (const Server::ChannelNotFoundException& e) {
+			std::cerr << e.what() << std::endl;
+		}
+
 		(*it)->broadcast(client->getPrefix(), "QUIT", "",
 						 args.empty() ? "has been absorbed by the Black Hole"
 									  : args);
+
+		if ((*it)->getUsers().size() == 0) {
+			try {
+				Server::getInstance().deleteChannel(*it);
+			} catch (const Server::ChannelNotFoundException& e) {
+				std::cerr << e.what() << std::endl;
+			}
+		}
 	}
 
 	client->sendError("ERROR", "", "Bye for now!");
