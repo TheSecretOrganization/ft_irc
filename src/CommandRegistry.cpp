@@ -6,6 +6,7 @@
 #include "commands/LusersCommand.hpp"
 #include "commands/ModeCommand.hpp"
 #include "commands/MotdCommand.hpp"
+#include "commands/NamesCommand.hpp"
 #include "commands/NickCommand.hpp"
 #include "commands/PartCommand.hpp"
 #include "commands/PassCommand.hpp"
@@ -32,6 +33,7 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("WHO", new WhoCommand());
 	registerCommand("KICK", new KickCommand());
 	registerCommand("PART", new PartCommand());
+	registerCommand("NAMES", new NamesCommand());
 }
 
 CommandRegistry::~CommandRegistry() {

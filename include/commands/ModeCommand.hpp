@@ -17,6 +17,9 @@ class ModeCommand : public Command {
 				 const std::string& param = "") const;
 	void setMode(Client* client, Channel* channel, bool action, char mode,
 				 const std::string& param = "") const;
+	void setBan(Client* client, Channel* channel, bool action,
+				const std::string& ban) const;
+	void sendBanList(Client* client, Channel* channel) const;
 
   public:
 	ModeCommand();

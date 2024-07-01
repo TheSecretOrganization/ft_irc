@@ -1,14 +1,14 @@
 #include "commands/JoinCommand.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
-#include "CommandRegistry.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
+#include "commands/NamesCommand.hpp"
+#include "commands/PartCommand.hpp"
 
 #include <cstddef>
 #include <cstdlib>
 #include <exception>
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -83,17 +83,6 @@ bool JoinCommand::inviteOnlyChan(Client* client, Channel* channel) const {
 	return false;
 }
 
-std::string JoinCommand::getNames(std::vector<Client*>& users) const {
-	std::string stringUsers;
-
-	for (std::vector<Client*>::iterator it = users.begin(); it != users.end();
-		 ++it) {
-		stringUsers = stringUsers + " " + (*it)->getNickname();
-	}
-
-	return stringUsers;
-}
-
 void JoinCommand::sendReplies(Client* client, Channel* channel) const {
 	client->sendMessage(client->getPrefix(), "JOIN", channel->getName());
 
@@ -102,12 +91,7 @@ void JoinCommand::sendReplies(Client* client, Channel* channel) const {
 							client->getNickname() + " " + channel->getName(),
 							channel->getTopic());
 
-	client->sendMessage(Server::getInstance().getPrefix(), RPL_NAMREPLY,
-						client->getClientnickName() + " = " +
-							getNames(channel->getUsers()));
-
-	client->sendMessage(Server::getInstance().getPrefix(), RPL_ENDOFNAMES,
-						client->getNickname() + " " + channel->getName(), _366);
+	NamesCommand().execute(client, channel->getName());
 
 	for (std::vector<Client*>::iterator it = channel->getUsers().begin();
 		 it != channel->getUsers().end(); ++it) {
@@ -121,14 +105,7 @@ void JoinCommand::joinZero(Client* client) const {
 	std::vector<Channel*> channels = client->getJoinedChannels();
 	for (size_t i = 0; i < channels.size(); ++i) {
 		if (channels[i]->isUserOnChannel(client)) {
-			try {
-				Server::getInstance()
-					.getCommandRegistry()
-					.getCommand("PART")
-					->execute(client, channels[i]->getName());
-			} catch (const CommandRegistry::NotFoundException& e) {
-				std::cerr << e.what() << std::endl;
-			}
+			PartCommand().execute(client, channels[i]->getName());
 		}
 	}
 }
@@ -186,6 +163,12 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 								  client->getClientnickName() + " " +
 									  channels[i]->getName(),
 								  _443);
+				continue;
+			} else if (channels[i]->isUserBanned(client)) {
+				client->sendError(ERR_BANNEDFROMCHAN,
+								  client->getClientnickName() + " " +
+									  channels[i]->getName(),
+								  _474);
 				continue;
 			}
 			channels[i]->addUser(client);
