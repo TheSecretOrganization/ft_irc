@@ -18,9 +18,9 @@ void QuitCommand::execute(Client* client, const std::string& args) {
 		 it != channels.end(); it++) {
 		try {
 			(*it)->removeUser(client);
-			(*it)->broadcast(client->getPrefix(), "QUIT", "",
-							args.empty() ? "has been absorbed by the Black Hole"
-										: args);
+			(*it)->broadcast(
+				client->getPrefix(), "QUIT", "",
+				args.empty() ? "has been absorbed by the Black Hole" : args);
 		} catch (const Server::ClientNotFoundException& e) {
 			std::cerr << e.what() << std::endl;
 		}
