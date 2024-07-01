@@ -184,6 +184,13 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 			Channel::createChannel(client, jt->first, jt->second);
 			channels[i] = Server::getInstance().getChannel(jt->first);
 		} else {
+			if (channels[i]->isUserOnChannel(client)) {
+				client->sendError(ERR_USERONCHANNEL,
+								  client->getClientnickName() + " " +
+									  channels[i]->getName(),
+								  _443);
+				continue;
+			}
 			channels[i]->addUser(client);
 		}
 		sendReplies(client, channels[i]);
