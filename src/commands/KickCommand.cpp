@@ -22,15 +22,11 @@ void KickCommand::execute(Client* client, const std::string& args) {
 	if (noSuchChannel(client, channel, splitArgs[0]))
 		return;
 
-	if (channel->isUserOnChannel(client) == false)
-		return client->sendError(
-			ERR_NOTONCHANNEL,
-			client->getClientnickName() + " " + channel->getName(), _442);
+	if (notOnChannel(client, channel))
+		return;
 
-	if (channel->isUserOperator(client) == false)
-		return client->sendError(
-			ERR_CHANOPRIVSNEEDED,
-			client->getClientnickName() + " " + channel->getName(), _482);
+	if (chanOPrivsNeeded(client, channel))
+		return;
 
 	std::vector<std::string> usersNick = split(splitArgs[1], ',');
 	Client* user = NULL;

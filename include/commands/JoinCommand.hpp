@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Client.hpp"
 #include "Command.hpp"
 
 #include <map>
@@ -15,6 +16,7 @@ class JoinCommand : public Command {
 	bool inviteOnlyChan(Client* client, Channel* channel) const;
 	std::string getNames(std::vector<Client*>& users) const;
 	void sendReplies(Client* client, Channel* channel) const;
+	void joinZero(Client* client) const;
 
   public:
 	JoinCommand();

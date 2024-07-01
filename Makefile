@@ -37,6 +37,7 @@ SRC         :=	main.cpp \
 		ModeCommand.cpp \
 		MotdCommand.cpp \
 		NickCommand.cpp \
+		PartCommand.cpp \
 		PassCommand.cpp \
 		PingCommand.cpp \
 		PrivmsgCommand.cpp \
