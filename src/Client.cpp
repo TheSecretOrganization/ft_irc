@@ -10,7 +10,7 @@
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
-	  servername(""), status(UNKNOWN), away(false) {
+	  servername(""), status(UNKNOWN), away(false), invisible(false) {
 	std::cout << "new client " << fd << std::endl;
 }
 
@@ -111,3 +111,7 @@ void Client::setStatus(int newStatus) { status = newStatus; }
 bool Client::isAway() const { return away; }
 
 void Client::setAway(bool newAway) { away = newAway; }
+
+bool Client::isInvisible() const { return invisible; }
+
+void Client::setInvisible(bool newInvisible) { invisible = newInvisible; }
