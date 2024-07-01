@@ -3,6 +3,9 @@
 #include "ClientSocket.hpp"
 
 #include <string>
+#include <vector>
+
+class Channel;
 
 enum { UNKNOWN = 0, PASSWD_OK, NICK_OK, USER_OK, REGISTRED };
 
@@ -30,6 +33,7 @@ class Client {
 				   const std::string& trailing = "") const;
 	std::string getPrefix() const;
 	std::string getModes() const;
+	std::vector<Channel*> getJoinedChannels() const;
 
 	ClientSocket& getSocket();
 	const std::string& getClientnickName(void);

@@ -1,9 +1,12 @@
 #include "Client.hpp"
+#include "Channel.hpp"
 #include "ClientSocket.hpp"
 #include "Server.hpp"
 
+#include <cstddef>
 #include <iostream>
 #include <string>
+#include <vector>
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
@@ -26,7 +29,7 @@ void Client::sendMessage(const std::string& prefix, const std::string& command,
 		packet += " " + parameters;
 
 	if (!trailing.empty())
-		packet += " :" + trailing;
+		packet += (trailing[0] == ':' ? " " : " :") + trailing;
 
 	try {
 		socket.sendPacket(packet);
@@ -57,6 +60,18 @@ std::string Client::getModes() const {
 		modes += "a";
 
 	return modes.empty() ? "" : "+" + modes;
+}
+
+std::vector<Channel*> Client::getJoinedChannels() const {
+	const std::vector<Channel*>& channels = Server::getInstance().getChannels();
+	std::vector<Channel*> userChan;
+
+	for (size_t i = 0; i < channels.size(); ++i) {
+		if (channels[i]->isUserOnChannel(const_cast<Client*>(this)))
+			userChan.push_back(channels[i]);
+	}
+
+	return userChan;
 }
 
 const std::string& Client::getNickname() const { return nickname; }

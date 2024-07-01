@@ -1,11 +1,14 @@
 #include "commands/JoinCommand.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "CommandRegistry.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
+
 #include <cstddef>
 #include <cstdlib>
 #include <exception>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -114,11 +117,26 @@ void JoinCommand::sendReplies(Client* client, Channel* channel) const {
 	}
 }
 
-void JoinCommand::execute(Client* client, const std::string& args) {
-	if (args == "0") {
-		// TODO: QUIT ALL CHANNELS;
-		return;
+void JoinCommand::joinZero(Client* client) const {
+	std::vector<Channel*> channels = client->getJoinedChannels();
+	for (size_t i = 0; i < channels.size(); ++i) {
+		if (channels[i]->isUserOnChannel(client)) {
+			try {
+				Server::getInstance()
+					.getCommandRegistry()
+					.getCommand("PART")
+					->execute(client, channels[i]->getName());
+			} catch (const CommandRegistry::NotFoundException& e) {
+				std::cerr << e.what() << std::endl;
+			}
+		}
 	}
+}
+
+void JoinCommand::execute(Client* client, const std::string& args) {
+	if (args == "0")
+		return joinZero(client);
+
 	std::vector<std::string> vecArgs = Command::split(args, ' ');
 	if (needMoreParams(client, vecArgs)) {
 		return;
@@ -128,14 +146,6 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 		vecArgs.size() > 1 ? channelMap(split(vecArgs[0], ','), vecArgs[1])
 						   : channelMap(split(vecArgs[0], ','), "");
 
-	if (map.size() > (size_t)std::atoi(Server::getInstance()
-										   .getConfiguration()
-										   .getValue("chanlimit")
-										   .c_str())) {
-		client->sendError(ERR_TOOMANYCHANNELS, client->getClientnickName(),
-						  _405);
-	}
-
 	std::vector<Channel*> channels = getTrueChannels(client, map);
 	if (channels.empty())
 		return;
@@ -144,29 +154,9 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 		if (channels[i] == NULL)
 			continue;
 		if (badChannelKey(client, channels[i],
-						  map.at(channels[i]->getName()))) {
-			map.erase(channels[i]->getName());
-			channels.erase(channels.begin() + i);
-			i--;
-			continue;
-		}
-	}
-
-	for (size_t i = 0; i < channels.size(); i++) {
-		if (channels[i] == NULL)
-			continue;
-		if (isChannelFull(client, channels[i])) {
-			map.erase(channels[i]->getName());
-			channels.erase(channels.begin() + i);
-			i--;
-			continue;
-		}
-	}
-
-	for (size_t i = 0; i < channels.size(); i++) {
-		if (channels[i] == NULL)
-			continue;
-		if (inviteOnlyChan(client, channels[i])) {
+						  map.at(channels[i]->getName())) ||
+			isChannelFull(client, channels[i]) ||
+			inviteOnlyChan(client, channels[i])) {
 			map.erase(channels[i]->getName());
 			channels.erase(channels.begin() + i);
 			i--;
@@ -176,10 +166,28 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 
 	std::map<std::string, std::string>::iterator jt = map.begin();
 	for (size_t i = 0; i < channels.size(); i++) {
+		if (client->getJoinedChannels().size() >=
+			(size_t)std::atoi(Server::getInstance()
+								  .getConfiguration()
+								  .getValue("chanlimit")
+								  .c_str())) {
+			client->sendError(ERR_TOOMANYCHANNELS,
+							  client->getClientnickName() + " " + jt->first,
+							  _405);
+			continue;
+		}
+
 		if (channels[i] == NULL) {
 			Channel::createChannel(client, jt->first, jt->second);
 			channels[i] = Server::getInstance().getChannel(jt->first);
 		} else {
+			if (channels[i]->isUserOnChannel(client)) {
+				client->sendError(ERR_USERONCHANNEL,
+								  client->getClientnickName() + " " +
+									  channels[i]->getName(),
+								  _443);
+				continue;
+			}
 			channels[i]->addUser(client);
 		}
 		sendReplies(client, channels[i]);

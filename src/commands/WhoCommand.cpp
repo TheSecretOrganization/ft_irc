@@ -21,12 +21,14 @@ void WhoCommand::execute(Client* client, const std::string& args) {
 	Client* user = NULL;
 	for (size_t i = 0; i < channel->getUsers().size(); ++i) {
 		user = channel->getUsers()[i];
-		client->sendMessage(Server::getInstance().getPrefix(), RPL_WHOREPLY,
-							client->getClientnickName() + " " +
-								channel->getName() + " " + user->getUsername() +
-								" " + user->getHostname() + " " +
-								user->getClientnickName(),
-							user->getRealname());
+		client->sendMessage(
+			Server::getInstance().getPrefix(), RPL_WHOREPLY,
+			client->getClientnickName() + " " + channel->getName() + " ~" +
+				user->getUsername() + " " + user->getHostname() + " " +
+				user->getServername() + " " + user->getClientnickName() +
+				(user->isAway() ? " G" : " H") +
+				(channel->isUserOperator(user) ? "@" : ""),
+			"0 " + user->getRealname());
 	}
 
 	client->sendMessage(Server::getInstance().getPrefix(), RPL_ENDOFWHO,
