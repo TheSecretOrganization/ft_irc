@@ -2,6 +2,7 @@
 
 #include "commands/CapCommand.hpp"
 #include "commands/JoinCommand.hpp"
+#include "commands/KickCommand.hpp"
 #include "commands/LusersCommand.hpp"
 #include "commands/ModeCommand.hpp"
 #include "commands/MotdCommand.hpp"
@@ -13,7 +14,6 @@
 #include "commands/TopicCommand.hpp"
 #include "commands/UserCommand.hpp"
 #include "commands/WhoCommand.hpp"
-#include "commands/KickCommand.hpp"
 
 CommandRegistry::CommandRegistry() {
 	registerCommand("CAP", new CapCommand());
