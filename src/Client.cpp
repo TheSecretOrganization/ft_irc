@@ -1,4 +1,5 @@
 #include "Client.hpp"
+#include "Channel.hpp"
 #include "ClientSocket.hpp"
 #include "Server.hpp"
 
@@ -61,16 +62,16 @@ std::string Client::getModes() const {
 	return modes.empty() ? "" : "+" + modes;
 }
 
-size_t Client::getJoinedChannelsNbr() const {
-	size_t n = 0;
+std::vector<Channel*> Client::getJoinedChannels() const {
+	const std::vector<Channel*> channels = Server::getInstance().getChannels();
+	std::vector<Channel*> userChan;
 
-	for (size_t i = 0; i < Server::getInstance().getChannels().size(); ++i) {
-		if (Server::getInstance().getChannels()[i]->isUserOnChannel(
-				const_cast<Client*>(this)))
-			++n;
+	for (size_t i = 0; i < channels.size(); ++i) {
+		if (channels[i]->isUserOnChannel(const_cast<Client*>(this)))
+			userChan.push_back(channels[i]);
 	}
 
-	return n;
+	return userChan;
 }
 
 const std::string& Client::getNickname() const { return nickname; }

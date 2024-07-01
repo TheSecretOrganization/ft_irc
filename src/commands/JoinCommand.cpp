@@ -118,15 +118,14 @@ void JoinCommand::sendReplies(Client* client, Channel* channel) const {
 }
 
 void JoinCommand::joinZero(Client* client) const {
-	for (size_t i = 0; i < Server::getInstance().getChannels().size(); ++i) {
-		if (Server::getInstance().getChannels()[i]->isUserOnChannel(client)) {
+	std::vector<Channel*> channels = client->getJoinedChannels();
+	for (size_t i = 0; i < channels.size(); ++i) {
+		if (channels[i]->isUserOnChannel(client)) {
 			try {
 				Server::getInstance()
 					.getCommandRegistry()
 					.getCommand("PART")
-					->execute(
-						client,
-						Server::getInstance().getChannels()[i]->getName());
+					->execute(client, channels[i]->getName());
 			} catch (const CommandRegistry::NotFoundException& e) {
 				std::cerr << e.what() << std::endl;
 			}
@@ -167,7 +166,7 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 
 	std::map<std::string, std::string>::iterator jt = map.begin();
 	for (size_t i = 0; i < channels.size(); i++) {
-		if (client->getJoinedChannelsNbr() >=
+		if (client->getJoinedChannels().size() >=
 			(size_t)std::atoi(Server::getInstance()
 								  .getConfiguration()
 								  .getValue("chanlimit")
