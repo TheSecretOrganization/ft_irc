@@ -8,7 +8,7 @@ PassCommand::PassCommand() : Command("PASS", 1, 1) {}
 
 PassCommand::~PassCommand() {}
 
-void PassCommand::execute(Client* client, std::string args) {
+void PassCommand::execute(Client* client, const std::string& args) {
 	if (alreadyRegistred(client) || needMoreParams(client, split(args, ' ')) ||
 		passwdMismatch(client, args)) {
 		return;

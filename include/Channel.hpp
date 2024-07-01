@@ -3,34 +3,43 @@
 #include "Client.hpp"
 #include "Command.hpp"
 
+#include <cstddef>
+#include <ctime>
 #include <string>
 #include <vector>
 
-#define DEF_CHAN_SIZE 3
-
 class Command;
+
+typedef struct sTopic {
+	std::string content;
+	bool locked;
+	std::time_t setAt;
+	std::string setBy;
+
+	sTopic() : content(""), locked(false), setAt(0), setBy("") {}
+} topic_t;
 
 class Channel {
   private:
 	std::string name;
-	std::string channelPassword;
+	std::string password;
 	std::vector<Client*> operators;
 	std::vector<Client*> usersOnChannel;
 	std::vector<Client*> inviteList;
-	std::string topic;
 	bool inviteOnly;
-	bool topicLocked;
-	size_t channelSize;
+	size_t userLimit;
+	topic_t topic;
 
   public:
-	Channel(Client* creator, std::string name);
-	Channel(Client* creator, std::string name, std::string password);
+	Channel(Client* creator, const std::string& name);
+	Channel(Client* creator, const std::string& name,
+			const std::string& password);
 	~Channel();
 
-	static void createChannel(Client* client, std::string name,
-							  std::string password);
+	static void createChannel(Client* client, const std::string& name,
+							  const std::string& password);
 
-	static void checkChannelSyntax(std::string channelName);
+	static void checkChannelSyntax(const std::string& channelName);
 
 	class InvalidChannelPrefixException : public std::exception {
 	  public:
@@ -50,23 +59,22 @@ class Channel {
 	std::vector<Client*>& getOperators(void);
 	std::vector<Client*>& getInviteList(void);
 
-	const std::string& getChannelName(void);
+	const std::string& getName(void) const;
 	bool isUserOnChannel(Client* client);
 	bool isUserOperator(Client* client);
 	bool isUserInvited(Client* client);
 
-	void setInviteMode(void);
-	void unsetInviteMode(void);
-	bool isInviteMode(void);
+	void setInviteMode(bool newInviteMode);
+	bool isInviteMode(void) const;
 
-	void changeTopic(std::string newTopic);
-	void unsetTopic(void);
-	void lockTopic(void);
-	void unlockTopic(void);
+	const std::string& getTopic() const;
+	void setTopic(Client* client, const std::string& newTopic);
+	void setTopicLocked(bool newTopicLocked);
+	bool isTopicLocked() const;
 
-	void setChannelPassword(std::string newPassword);
-	void unsetChannelPassword(void);
-	const std::string& getChannelPassword(void);
+	void setPassword(const std::string& newPassword);
+	void unsetPassword(void);
+	const std::string& getPassword(void) const;
 
 	void addUser(Client* user);
 	void removeUser(Client* user);
@@ -74,9 +82,19 @@ class Channel {
 	void addOperator(Client* newOp);
 	void removeOperator(Client* oldOp);
 
-	size_t getChannelSize(void);
-	void changeChannelSize(size_t newSize);
-	void unsetSize(void);
+	size_t getUserLimit(void) const;
+	void setUserLimit(size_t newUserLimit);
 
-	void sendMessage(const std::string& message);
+	void broadcast(const std::string& prefix, const std::string& command,
+				   const std::string& parameter = "",
+				   const std::string& trailing = "");
+
+	void inviteUser(Client* user);
+	void uninviteUser(Client* user);
+
+	std::string getModes(Client* user = NULL);
+
+	void rplTopic(Client* client) const;
+	void rplNoTopic(Client* client) const;
+	void rplTopicWhoTime(Client* client) const;
 };

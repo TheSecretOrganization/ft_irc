@@ -11,7 +11,7 @@ class LusersCommand : public Command {
 	LusersCommand();
 	~LusersCommand();
 
-	void execute(Client* client, std::string args);
+	void execute(Client* client, const std::string& args);
 	void rplLuserClient(Client* client) const;
 	void rplLuserMe(Client* client) const;
 };

@@ -1,57 +1,89 @@
 #include "Client.hpp"
 #include "ClientSocket.hpp"
+#include "Server.hpp"
 
-#include <exception>
 #include <iostream>
 #include <string>
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
-	  servername(""), status(UNKNOWN), joinedChannels(0) {
+	  servername(""), status(UNKNOWN), away(false) {
 	std::cout << "new client " << fd << std::endl;
-	nickname = "";
 }
 
 Client::~Client() {}
 
 ClientSocket& Client::getSocket() { return socket; }
 
-std::string Client::getClientnickName(void) { return nickname; }
+const std::string& Client::getClientnickName(void) { return nickname; }
 
-void Client::sendMessage(std::string type, std::string message) const {
-	std::string packet = type + " " + message;
+void Client::sendMessage(const std::string& prefix, const std::string& command,
+						 const std::string& parameters,
+						 const std::string& trailing) const {
+	std::string packet = prefix + " " + command;
+
+	if (!parameters.empty())
+		packet += " " + parameters;
+
+	if (!trailing.empty())
+		packet += " :" + trailing;
+
 	try {
 		socket.sendPacket(packet);
-	} catch (const std::exception& e) {
+	} catch (const ClientSocket::SendException& e) {
 		std::cerr << e.what() << std::endl;
 	}
 }
 
-std::string Client::getNickname() const { return nickname; }
+void Client::sendError(const std::string& command,
+					   const std::string& parameters,
+					   const std::string& trailing) const {
+	try {
+		sendMessage(Server::getInstance().getPrefix(), command, parameters,
+					trailing);
+	} catch (const ClientSocket::SendException& e) {
+		std::cerr << e.what() << std::endl;
+	}
+}
+
+std::string Client::getPrefix() const {
+	return nickname + "!" + username + "@" + hostname;
+}
+
+std::string Client::getModes() const {
+	std::string modes = "";
+
+	if (away)
+		modes += "a";
+
+	return modes.empty() ? "" : "+" + modes;
+}
+
+const std::string& Client::getNickname() const { return nickname; }
 
 void Client::setNickname(const std::string& newNickname) {
 	nickname = newNickname;
 }
 
-std::string Client::getUsername() const { return username; }
+const std::string& Client::getUsername() const { return username; }
 
 void Client::setUsername(const std::string& newUsername) {
 	username = newUsername;
 }
 
-std::string Client::getRealname() const { return realname; }
+const std::string& Client::getRealname() const { return realname; }
 
 void Client::setRealname(const std::string& newRealname) {
 	realname = newRealname;
 }
 
-std::string Client::getHostname() const { return hostname; }
+const std::string& Client::getHostname() const { return hostname; }
 
 void Client::setHostname(const std::string& newHostname) {
 	hostname = newHostname;
 }
 
-std::string Client::getServername() const { return servername; }
+const std::string& Client::getServername() const { return servername; }
 
 void Client::setServername(const std::string& newServername) {
 	servername = newServername;
@@ -61,10 +93,6 @@ int Client::getStatus() const { return status; }
 
 void Client::setStatus(int newStatus) { status = newStatus; }
 
-size_t Client::getJoinedChannels() { return joinedChannels; }
+bool Client::isAway() const { return away; }
 
-void Client::resetJoinedChannels() { joinedChannels = 0; }
-
-void Client::incrementJoinedChannels() { joinedChannels++; }
-
-void Client::decrementJoinedChannels() { joinedChannels--; }
+void Client::setAway(bool newAway) { away = newAway; }

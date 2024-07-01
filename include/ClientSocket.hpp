@@ -13,7 +13,7 @@ class ClientSocket : public Socket {
 	ClientSocket(int fd);
 	~ClientSocket();
 
-	void sendPacket(std::string packet) const;
+	void sendPacket(const std::string& packet) const;
 
 	class SendException : public std::exception {
 	  public:

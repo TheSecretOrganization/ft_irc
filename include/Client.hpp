@@ -16,30 +16,35 @@ class Client {
 	std::string hostname;
 	std::string servername;
 	int status;
-	size_t joinedChannels;
+	bool away;
 
   public:
 	Client(int fd);
 	~Client();
 
-	void sendMessage(std::string type, std::string message) const;
+	void sendMessage(const std::string& prefix, const std::string& command,
+					 const std::string& parameters = "",
+					 const std::string& trailing = "") const;
+	void sendError(const std::string& command,
+				   const std::string& parameters = "",
+				   const std::string& trailing = "") const;
+	std::string getPrefix() const;
+	std::string getModes() const;
 
 	ClientSocket& getSocket();
-	std::string getClientnickName(void);
-	std::string getNickname() const;
+	const std::string& getClientnickName(void);
+	const std::string& getNickname() const;
 	void setNickname(const std::string& newNickname);
-	std::string getUsername() const;
+	const std::string& getUsername() const;
 	void setUsername(const std::string& newUsername);
-	std::string getRealname() const;
+	const std::string& getRealname() const;
 	void setRealname(const std::string& newRealname);
-	std::string getHostname() const;
+	const std::string& getHostname() const;
 	void setHostname(const std::string& newHostname);
-	std::string getServername() const;
+	const std::string& getServername() const;
 	void setServername(const std::string& newServername);
 	int getStatus() const;
 	void setStatus(int newStatus);
-	size_t getJoinedChannels();
-	void resetJoinedChannels();
-	void incrementJoinedChannels();
-	void decrementJoinedChannels();
+	bool isAway() const;
+	void setAway(bool newAway);
 };
