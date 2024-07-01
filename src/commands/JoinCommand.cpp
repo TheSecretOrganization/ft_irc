@@ -155,29 +155,9 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 		if (channels[i] == NULL)
 			continue;
 		if (badChannelKey(client, channels[i],
-						  map.at(channels[i]->getName()))) {
-			map.erase(channels[i]->getName());
-			channels.erase(channels.begin() + i);
-			i--;
-			continue;
-		}
-	}
-
-	for (size_t i = 0; i < channels.size(); i++) {
-		if (channels[i] == NULL)
-			continue;
-		if (isChannelFull(client, channels[i])) {
-			map.erase(channels[i]->getName());
-			channels.erase(channels.begin() + i);
-			i--;
-			continue;
-		}
-	}
-
-	for (size_t i = 0; i < channels.size(); i++) {
-		if (channels[i] == NULL)
-			continue;
-		if (inviteOnlyChan(client, channels[i])) {
+						  map.at(channels[i]->getName())) ||
+			isChannelFull(client, channels[i]) ||
+			inviteOnlyChan(client, channels[i])) {
 			map.erase(channels[i]->getName());
 			channels.erase(channels.begin() + i);
 			i--;
