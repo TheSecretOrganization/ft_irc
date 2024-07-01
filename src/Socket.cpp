@@ -4,6 +4,9 @@
 
 Socket::Socket(int fd) : fd(fd) {}
 
-Socket::~Socket() { close(fd); }
+Socket::~Socket() {
+	if (fd >= 0)
+		close(fd);
+}
 
 int Socket::getFd() const { return fd; }

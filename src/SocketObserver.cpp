@@ -14,7 +14,10 @@ SocketObserver::SocketObserver() {
 		throw EpollCreateException();
 }
 
-SocketObserver::~SocketObserver() { close(fd); }
+SocketObserver::~SocketObserver() {
+	if (fd >= 0)
+		close(fd);
+}
 
 void SocketObserver::subscribe(int fd, Socket& observer) {
 	struct epoll_event ev;
