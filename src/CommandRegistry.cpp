@@ -7,6 +7,7 @@
 #include "commands/ModeCommand.hpp"
 #include "commands/MotdCommand.hpp"
 #include "commands/NickCommand.hpp"
+#include "commands/PartCommand.hpp"
 #include "commands/PassCommand.hpp"
 #include "commands/PingCommand.hpp"
 #include "commands/PrivmsgCommand.hpp"
@@ -30,6 +31,7 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("TOPIC", new TopicCommand());
 	registerCommand("WHO", new WhoCommand());
 	registerCommand("KICK", new KickCommand());
+	registerCommand("PART", new PartCommand());
 }
 
 CommandRegistry::~CommandRegistry() {

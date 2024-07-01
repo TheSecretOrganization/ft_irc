@@ -28,7 +28,7 @@ void Client::sendMessage(const std::string& prefix, const std::string& command,
 		packet += " " + parameters;
 
 	if (!trailing.empty())
-		packet += " :" + trailing;
+		packet += (trailing[0] == ':' ? " " : " :") + trailing;
 
 	try {
 		socket.sendPacket(packet);
