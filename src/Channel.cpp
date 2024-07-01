@@ -107,8 +107,11 @@ bool Channel::isUserInvited(Client* client) {
 }
 
 bool Channel::isUserBanned(Client* client) const {
-	std::string nickname = "", username = "", hostname = "";
-	size_t x = 0, y = 0;
+	std::string nickname = "";
+	std::string username = "";
+	std::string hostname = "";
+	size_t x = 0;
+	size_t y = 0;
 
 	for (size_t i = 0; i < bans.size(); ++i) {
 		x = bans[i].find('!');
