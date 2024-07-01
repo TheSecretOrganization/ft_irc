@@ -63,7 +63,7 @@ std::string Client::getModes() const {
 }
 
 std::vector<Channel*> Client::getJoinedChannels() const {
-	const std::vector<Channel*> channels = Server::getInstance().getChannels();
+	const std::vector<Channel*>& channels = Server::getInstance().getChannels();
 	std::vector<Channel*> userChan;
 
 	for (size_t i = 0; i < channels.size(); ++i) {
