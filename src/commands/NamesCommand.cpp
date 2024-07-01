@@ -14,10 +14,10 @@ NamesCommand::~NamesCommand() {}
 
 std::string NamesCommand::getNames(Channel* channel) const {
 	std::string stringUsers = "";
-    std::vector<Client*> users = channel->getUsers();
+	std::vector<Client*> users = channel->getUsers();
 
-	for (std::vector<Client*>::iterator it = users.begin();
-		 it != users.end(); ++it) {
+	for (std::vector<Client*>::iterator it = users.begin(); it != users.end();
+		 ++it) {
 		stringUsers = stringUsers + " " +
 					  (channel->isUserOperator(*it) ? "@" : "") +
 					  (*it)->getNickname();
