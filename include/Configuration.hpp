@@ -9,7 +9,7 @@
 #define NETWORK_NAME "CIRCé"
 #define VERSION "1.0"
 #define HOSTNAME "localhost"
-#define UMODES "a"
+#define UMODES "ai"
 #define CMODES "itkol"
 #define CPMODES "kol"
 #define CHANLIMIT "4"

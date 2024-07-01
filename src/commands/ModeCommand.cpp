@@ -84,6 +84,8 @@ void ModeCommand::setMode(Client* client, bool action, char mode,
 	(void)param;
 	if (mode == 'a')
 		client->setAway(action);
+	else if (mode == 'i')
+		client->setInvisible(action);
 	else {
 		client->sendError(ERR_UMODEUNKNOWNFLAG,
 						  client->getClientnickName() + " " + mode, _501);
