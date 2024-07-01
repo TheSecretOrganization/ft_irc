@@ -129,14 +129,6 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 		vecArgs.size() > 1 ? channelMap(split(vecArgs[0], ','), vecArgs[1])
 						   : channelMap(split(vecArgs[0], ','), "");
 
-	if (map.size() > (size_t)std::atoi(Server::getInstance()
-										   .getConfiguration()
-										   .getValue("chanlimit")
-										   .c_str())) {
-		client->sendError(ERR_TOOMANYCHANNELS, client->getClientnickName(),
-						  _405);
-	}
-
 	std::vector<Channel*> channels = getTrueChannels(client, map);
 	if (channels.empty())
 		return;
@@ -177,6 +169,17 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 
 	std::map<std::string, std::string>::iterator jt = map.begin();
 	for (size_t i = 0; i < channels.size(); i++) {
+		if (client->getJoinedChannelsNbr() >=
+			(size_t)std::atoi(Server::getInstance()
+								  .getConfiguration()
+								  .getValue("chanlimit")
+								  .c_str())) {
+			client->sendError(ERR_TOOMANYCHANNELS,
+							  client->getClientnickName() + " " + jt->first,
+							  _405);
+			continue;
+		}
+
 		if (channels[i] == NULL) {
 			Channel::createChannel(client, jt->first, jt->second);
 			channels[i] = Server::getInstance().getChannel(jt->first);

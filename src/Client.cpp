@@ -2,8 +2,10 @@
 #include "ClientSocket.hpp"
 #include "Server.hpp"
 
+#include <cstddef>
 #include <iostream>
 #include <string>
+#include <vector>
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
@@ -57,6 +59,18 @@ std::string Client::getModes() const {
 		modes += "a";
 
 	return modes.empty() ? "" : "+" + modes;
+}
+
+size_t Client::getJoinedChannelsNbr() const {
+	size_t n = 0;
+
+	for (size_t i = 0; i < Server::getInstance().getChannels().size(); ++i) {
+		if (Server::getInstance().getChannels()[i]->isUserOnChannel(
+				const_cast<Client*>(this)))
+			++n;
+	}
+
+	return n;
 }
 
 const std::string& Client::getNickname() const { return nickname; }
