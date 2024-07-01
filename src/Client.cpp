@@ -7,7 +7,7 @@
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
-	  servername(""), status(UNKNOWN), away(false) {
+	  servername(""), status(UNKNOWN), away(false), bot(false) {
 	std::cout << "new client " << fd << std::endl;
 }
 
@@ -21,6 +21,9 @@ void Client::sendMessage(const std::string& prefix, const std::string& command,
 						 const std::string& parameters,
 						 const std::string& trailing) const {
 	std::string packet = prefix + " " + command;
+
+	if (bot) 
+		return;
 
 	if (!parameters.empty())
 		packet += " " + parameters;
@@ -96,3 +99,5 @@ void Client::setStatus(int newStatus) { status = newStatus; }
 bool Client::isAway() const { return away; }
 
 void Client::setAway(bool newAway) { away = newAway; }
+
+bool Client::isBot() const { return bot; }

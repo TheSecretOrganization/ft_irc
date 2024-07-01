@@ -8,7 +8,7 @@ enum { UNKNOWN = 0, PASSWD_OK, NICK_OK, USER_OK, REGISTRED };
 
 class Client {
 
-  private:
+  protected:
 	ClientSocket socket;
 	std::string realname;
 	std::string username;
@@ -17,6 +17,7 @@ class Client {
 	std::string servername;
 	int status;
 	bool away;
+	bool bot;
 
   public:
 	Client(int fd);
@@ -47,4 +48,5 @@ class Client {
 	void setStatus(int newStatus);
 	bool isAway() const;
 	void setAway(bool newAway);
+	bool isBot() const;
 };
