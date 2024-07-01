@@ -32,6 +32,7 @@ SRC         :=	main.cpp \
 	$(addprefix $(CMDS_DIR)/, \
 		CapCommand.cpp \
 		JoinCommand.cpp \
+		KickCommand.cpp \
 		LusersCommand.cpp \
 		ModeCommand.cpp \
 		MotdCommand.cpp \
