@@ -1,12 +1,14 @@
 #include "commands/JoinCommand.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "CommandRegistry.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
 
 #include <cstddef>
 #include <cstdlib>
 #include <exception>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -115,11 +117,27 @@ void JoinCommand::sendReplies(Client* client, Channel* channel) const {
 	}
 }
 
-void JoinCommand::execute(Client* client, const std::string& args) {
-	if (args == "0") {
-		// TODO: QUIT ALL CHANNELS;
-		return;
+void JoinCommand::joinZero(Client* client) const {
+	for (size_t i = 0; i < Server::getInstance().getChannels().size(); ++i) {
+		if (Server::getInstance().getChannels()[i]->isUserOnChannel(client)) {
+			try {
+				Server::getInstance()
+					.getCommandRegistry()
+					.getCommand("PART")
+					->execute(
+						client,
+						Server::getInstance().getChannels()[i]->getName());
+			} catch (const CommandRegistry::NotFoundException& e) {
+				std::cerr << e.what() << std::endl;
+			}
+		}
 	}
+}
+
+void JoinCommand::execute(Client* client, const std::string& args) {
+	if (args == "0")
+		return joinZero(client);
+
 	std::vector<std::string> vecArgs = Command::split(args, ' ');
 	if (needMoreParams(client, vecArgs)) {
 		return;
