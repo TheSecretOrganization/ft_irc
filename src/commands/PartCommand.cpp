@@ -36,10 +36,18 @@ void PartCommand::execute(Client* client, const std::string& args) {
 
 		channel->broadcast(client->getPrefix(), "PART", "",
 						   splitArgs.size() >= 2 ? splitArgs[1] : "Bye!");
-        try {
-            channel->removeUser(client);
-        } catch (const Server::ChannelNotFoundException& e) {
-            std::cerr << e.what() << std::endl;
-        }
+		try {
+			channel->removeUser(client);
+		} catch (const Server::ChannelNotFoundException& e) {
+			std::cerr << e.what() << std::endl;
+		}
+
+		if (channel->getUsers().size() == 0) {
+			try {
+				Server::getInstance().deleteChannel(channel);
+			} catch (const Server::ChannelNotFoundException& e) {
+				std::cerr << e.what() << std::endl;
+			}
+		}
 	}
 }
