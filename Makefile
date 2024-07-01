@@ -19,6 +19,7 @@ OBJS_DIR    := objs
 
 ### FILES ###
 SRC         :=	main.cpp \
+	Bot.cpp \
 	Channel.cpp \
 	Client.cpp \
 	ClientSocket.cpp \
