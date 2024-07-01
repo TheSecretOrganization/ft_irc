@@ -1,7 +1,6 @@
 #include "commands/PartCommand.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
-#include "IrcReplies.hpp"
 #include "Server.hpp"
 
 #include <cstddef>
@@ -24,15 +23,11 @@ void PartCommand::execute(Client* client, const std::string& args) {
 
 	for (size_t i = 0; i < channels.size(); ++i) {
 		channel = Server::getInstance().getChannel(channels[i]);
-		if (!channel)
-			return client->sendError(
-				ERR_NOSUCHCHANNEL,
-				client->getClientnickName() + " " + channels[i], _403);
+		if (!noSuchChannel(client, channel, channels[i]))
+			return;
 
-		if (!channel->isUserOnChannel(client))
-			return client->sendError(
-				ERR_NOTONCHANNEL,
-				client->getClientnickName() + " " + channel->getName(), _442);
+		if (notOnChannel(client, channel))
+			return;
 
 		channel->broadcast(client->getPrefix(), "PART", "",
 						   splitArgs.size() >= 2 ? splitArgs[1] : "Bye!");
