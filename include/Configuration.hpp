@@ -10,8 +10,8 @@
 #define VERSION "1.0"
 #define HOSTNAME "localhost"
 #define UMODES "ai"
-#define CMODES "itkol"
-#define CPMODES "kol"
+#define CMODES "itkolb"
+#define CPMODES "kolb"
 #define CHANLIMIT "4"
 #define MOTD "Have a nice day :)"
 

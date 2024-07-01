@@ -164,6 +164,12 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 									  channels[i]->getName(),
 								  _443);
 				continue;
+			} else if (channels[i]->isUserBanned(client)) {
+				client->sendError(ERR_BANNEDFROMCHAN,
+								  client->getClientnickName() + " " +
+									  channels[i]->getName(),
+								  _474);
+				continue;
 			}
 			channels[i]->addUser(client);
 		}
