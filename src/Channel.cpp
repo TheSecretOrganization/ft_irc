@@ -174,13 +174,16 @@ const char* Channel::ForbiddenChannelNameException::what() const throw() {
 }
 
 void Channel::broadcast(const std::string& prefix, const std::string& command,
+						const std::string& parameter,
 						const std::string& trailing) {
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); it++) {
 		if (command == "PRIVMSG" && prefix == (*it)->getPrefix())
 			continue;
 		try {
-			(*it)->sendMessage(prefix, command, name, trailing);
+			(*it)->sendMessage(
+				prefix, command,
+				name + (parameter.empty() ? "" : " " + parameter), trailing);
 		} catch (const std::exception& e) {
 			std::cerr << e.what() << std::endl;
 		}

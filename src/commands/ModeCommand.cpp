@@ -84,9 +84,14 @@ void ModeCommand::setMode(Client* client, bool action, char mode,
 	(void)param;
 	if (mode == 'a')
 		client->setAway(action);
-	else
+	else {
 		client->sendError(ERR_UMODEUNKNOWNFLAG,
 						  client->getClientnickName() + " " + mode, _501);
+		return;
+	}
+	client->sendMessage(Server::getInstance().getPrefix(), name,
+						client->getClientnickName() + " " +
+							(action ? "+" : "-") + std::string(1, mode));
 }
 
 void ModeCommand::setMode(Client* client, Channel* channel, bool action,
@@ -111,9 +116,14 @@ void ModeCommand::setMode(Client* client, Channel* channel, bool action,
 		channel->addOperator(target);
 	} else if (mode == 'l')
 		channel->setUserLimit(action ? std::atoi(param.c_str()) : 0);
-	else
+	else {
 		client->sendError(ERR_UMODEUNKNOWNFLAG,
 						  client->getClientnickName() + " " + mode, _501);
+		return;
+	}
+
+	channel->broadcast(client->getPrefix(), name,
+					   (action ? "+" : "-") + std::string(1, mode));
 }
 
 void ModeCommand::execute(Client* client, const std::string& args) {

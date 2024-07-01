@@ -33,7 +33,7 @@ JoinCommand::getTrueChannels(Client* client,
 	for (std::map<std::string, std::string>::iterator it = map.begin();
 		 it != map.end(); it++) {
 		channels.push_back(Server::getInstance().getChannel((*it).first));
-		if (noSuchChannel(client, channels.back(), (*it).first)) {
+		if (!channels.back()) {
 			try {
 				Channel::checkChannelSyntax((*it).first);
 			} catch (const std::exception& e) {

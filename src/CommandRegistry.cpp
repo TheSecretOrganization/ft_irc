@@ -2,6 +2,7 @@
 
 #include "commands/CapCommand.hpp"
 #include "commands/JoinCommand.hpp"
+#include "commands/KickCommand.hpp"
 #include "commands/LusersCommand.hpp"
 #include "commands/ModeCommand.hpp"
 #include "commands/MotdCommand.hpp"
@@ -28,6 +29,7 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("MODE", new ModeCommand());
 	registerCommand("TOPIC", new TopicCommand());
 	registerCommand("WHO", new WhoCommand());
+	registerCommand("KICK", new KickCommand());
 }
 
 CommandRegistry::~CommandRegistry() {
