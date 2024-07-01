@@ -86,6 +86,7 @@ class Channel {
 	void setUserLimit(size_t newUserLimit);
 
 	void broadcast(const std::string& prefix, const std::string& command,
+				   const std::string& parameter = "",
 				   const std::string& trailing = "");
 
 	void inviteUser(Client* user);

@@ -44,7 +44,7 @@ void PrivmsgCommand::execute(Client* client, const std::string& args) {
 									 client->getClientnickName() + " " + target,
 									 _404);
 
-		chan->broadcast(client->getPrefix(), "PRIVMSG", message);
+		chan->broadcast(client->getPrefix(), "PRIVMSG", "", message);
 	} else {
 		Client const* targetClient = Server::getInstance().getClient(target);
 
