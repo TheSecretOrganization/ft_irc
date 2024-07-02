@@ -1,6 +1,7 @@
 #include "CommandRegistry.hpp"
 
 #include "commands/CapCommand.hpp"
+#include "commands/InviteCommand.hpp"
 #include "commands/JoinCommand.hpp"
 #include "commands/KickCommand.hpp"
 #include "commands/LusersCommand.hpp"
@@ -18,6 +19,7 @@
 
 CommandRegistry::CommandRegistry() {
 	registerCommand("CAP", new CapCommand());
+	registerCommand("INVITE", new InviteCommand());
 	registerCommand("NICK", new NickCommand());
 	registerCommand("PING", new PingCommand());
 	registerCommand("USER", new UserCommand());
