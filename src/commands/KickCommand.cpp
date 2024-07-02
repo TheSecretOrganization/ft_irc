@@ -5,6 +5,7 @@
 #include "Server.hpp"
 
 #include <cstddef>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -42,6 +43,14 @@ void KickCommand::execute(Client* client, const std::string& args) {
 			continue;
 		}
 
+		if (user->isBot()) {
+			client->sendError(ERR_CHANOPRIVSNEEDED,
+							  client->getClientnickName() + " " +
+								  channel->getName(),
+							  "You cannot kick the Guardian");
+			continue;
+		}
+
 		if (user == client) {
 			client->sendError(ERR_CHANOPRIVSNEEDED,
 							  client->getClientnickName() + " " +
@@ -50,14 +59,30 @@ void KickCommand::execute(Client* client, const std::string& args) {
 			continue;
 		}
 
-		std::string message =
-			(splitArgs.size() >= 3 && splitArgs[2].empty() == false &&
-			 splitArgs[2] != ":")
-				? splitArgs[2]
-				: "By 42's will";
+		std::string message = "";
+
+		for (size_t j = 2; j < splitArgs.size(); ++j) {
+			message += splitArgs[j];
+			if (j + 1 != splitArgs.size())
+				message += " ";
+		}
+
+		if (message[0] == ':')
+			message.erase(0, 1);
+
+		if (message.empty())
+			message = "By 42's will";
 
 		channel->broadcast(client->getPrefix(), "KICK",
 						   user->getClientnickName(), message);
 		channel->removeUser(user);
+	}
+
+	if (channel->getUsers().size() - 1 == 0) {
+		try {
+			Server::getInstance().deleteChannel(channel);
+		} catch (const Server::ChannelNotFoundException& e) {
+			std::cerr << e.what() << std::endl;
+		}
 	}
 }

@@ -1,4 +1,5 @@
 #include "Configuration.hpp"
+#include "Command.hpp"
 
 #include <string>
 
@@ -15,9 +16,14 @@ Configuration::Configuration() {
 	config["cpmodes"] = CPMODES;
 	config["chanlimit"] = CHANLIMIT;
 	config["motd"] = MOTD;
+	forbiddenWords = Command::split(FORBIDDEN_WORDS, ',');
 }
 
 Configuration::~Configuration() {}
+
+const std::vector<std::string>& Configuration::getForbiddenWords() const {
+	return forbiddenWords;
+}
 
 std::string Configuration::getValue(const std::string& key) const {
 	if (config.find(key) != config.end()) {

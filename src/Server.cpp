@@ -13,9 +13,13 @@ Server::Server() { run = true; }
 Server::~Server() {
 	for (std::vector<Client*>::iterator it = clients.begin();
 		 it != clients.end(); ++it) {
+		if ((*it)->isBot())
+			continue;
 		observer.unsubscribe((*it)->getSocket().getFd());
 		delete *it;
 	}
+
+	delete guardian;
 
 	try {
 		observer.unsubscribe(socket.getFd());
@@ -42,6 +46,9 @@ void Server::start(int port, const std::string& password) {
 	configuration.setPassword(password);
 	socket.init(port);
 	observer.subscribe(socket.getFd(), socket);
+
+	guardian = new Bot();
+	clients.push_back(guardian);
 
 	while (run) {
 		observer.poll();
@@ -136,3 +143,5 @@ std::vector<Channel*> Server::getChannels(Client* client) const {
 
 	return clientChannels;
 }
+
+Bot* Server::getGuardian() { return guardian; }

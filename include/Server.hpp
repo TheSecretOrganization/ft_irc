@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "Bot.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "CommandRegistry.hpp"
@@ -20,6 +21,7 @@ class Server {
 	CommandRegistry commandRegistry;
 	Configuration configuration;
 	bool run;
+	Bot* guardian;
 
 	Server();
 
@@ -44,6 +46,8 @@ class Server {
 	Channel* getChannel(const std::string& name);
 	const std::vector<Channel*>& getChannels() const;
 	std::vector<Channel*> getChannels(Client* client) const;
+
+	Bot* getGuardian();
 
 	class ClientNotFoundException : public std::exception {
 	  public:

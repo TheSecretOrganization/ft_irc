@@ -10,7 +10,8 @@
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
-	  servername(""), status(UNKNOWN), away(false), invisible(false) {
+	  servername(""), status(UNKNOWN), away(false), invisible(false),
+	  bot(false) {
 	std::cout << "new client " << fd << std::endl;
 }
 
@@ -24,6 +25,9 @@ void Client::sendMessage(const std::string& prefix, const std::string& command,
 						 const std::string& parameters,
 						 const std::string& trailing) const {
 	std::string packet = prefix + " " + command;
+
+	if (bot)
+		return;
 
 	if (!parameters.empty())
 		packet += " " + parameters;
@@ -115,3 +119,5 @@ void Client::setAway(bool newAway) { away = newAway; }
 bool Client::isInvisible() const { return invisible; }
 
 void Client::setInvisible(bool newInvisible) { invisible = newInvisible; }
+
+bool Client::isBot() const { return bot; }
