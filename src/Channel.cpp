@@ -313,7 +313,7 @@ bool Channel::checkBanSyntax(const std::string& ban) const {
 	return true;
 }
 
-void Channel::kick(Client* client, Client* user, const std::string& message) {
+void Channel::kick(Client* client, Client* user, const std::string& message) const {
 	KickCommand().execute(client, name + " " + user->getClientnickName() + " " +
 									  message);
 }

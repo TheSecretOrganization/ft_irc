@@ -105,5 +105,5 @@ class Channel {
 	void deleteBan(const std::string& ban);
 	bool checkBanSyntax(const std::string& ban) const;
 
-	void kick(Client* client, Client* user, const std::string& message);
+	void kick(Client* client, Client* user, const std::string& message) const;
 };
