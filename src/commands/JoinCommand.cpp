@@ -9,47 +9,13 @@
 #include <cstddef>
 #include <cstdlib>
 #include <exception>
+#include <iostream>
 #include <string>
 #include <vector>
 
 JoinCommand::JoinCommand() : Command("JOIN", 0, 1) {}
 
 JoinCommand::~JoinCommand() {}
-
-static std::map<std::string, std::string>
-channelMap(std::vector<std::string> vecChannels, std::string pass) {
-	std::map<std::string, std::string> map;
-	std::vector<std::string> vecPass = Command::split(pass, ',');
-
-	if (vecChannels.size() < vecPass.size())
-		return map;
-	for (size_t i = 0; i < vecChannels.size(); i++) {
-		map[vecChannels[i]] = (i < vecPass.size()) ? vecPass[i] : "";
-	}
-	return map;
-}
-
-std::vector<Channel*>
-JoinCommand::getTrueChannels(Client* client,
-							 std::map<std::string, std::string>& map) const {
-	std::vector<Channel*> channels;
-	for (std::map<std::string, std::string>::iterator it = map.begin();
-		 it != map.end(); it++) {
-		channels.push_back(Server::getInstance().getChannel((*it).first));
-		if (!channels.back()) {
-			try {
-				Channel::checkChannelSyntax((*it).first);
-			} catch (const std::exception& e) {
-				client->sendError(
-					ERR_NOSUCHCHANNEL,
-					client->getClientnickName() + " " + (*it).first, _403);
-				map.erase(it);
-				channels.pop_back();
-			}
-		}
-	}
-	return channels;
-}
 
 bool JoinCommand::badChannelKey(Client* client, Channel const* channel,
 								const std::string& password) const {
@@ -83,97 +49,118 @@ bool JoinCommand::inviteOnlyChan(Client* client, Channel* channel) const {
 	return false;
 }
 
-void JoinCommand::sendReplies(Client* client, Channel* channel) const {
-	client->sendMessage(client->getPrefix(), "JOIN", channel->getName());
+void JoinCommand::sendReplies(Client* client, size_t i) const {
+	client->sendMessage(client->getPrefix(), "JOIN",
+						channels[i].ptr->getName());
 
-	if (!channel->getTopic().empty())
+	if (!channels[i].ptr->getTopic().empty())
 		client->sendMessage(Server::getInstance().getPrefix(), RPL_TOPIC,
-							client->getNickname() + " " + channel->getName(),
-							channel->getTopic());
+							client->getNickname() + " " +
+								channels[i].ptr->getName(),
+							channels[i].ptr->getTopic());
 
-	NamesCommand().execute(client, channel->getName());
+	NamesCommand().execute(client, channels[i].ptr->getName());
 
-	for (std::vector<Client*>::iterator it = channel->getUsers().begin();
-		 it != channel->getUsers().end(); ++it) {
+	for (std::vector<Client*>::iterator it =
+			 channels[i].ptr->getUsers().begin();
+		 it != channels[i].ptr->getUsers().end(); ++it) {
 		if ((*it) == client)
 			continue;
-		(*it)->sendMessage(client->getPrefix(), "JOIN", channel->getName());
+		(*it)->sendMessage(client->getPrefix(), "JOIN",
+						   channels[i].ptr->getName());
 	}
 }
 
 void JoinCommand::joinZero(Client* client) const {
-	std::vector<Channel*> channels = client->getJoinedChannels();
-	for (size_t i = 0; i < channels.size(); ++i) {
-		if (channels[i]->isUserOnChannel(client)) {
-			PartCommand().execute(client, channels[i]->getName());
+	std::vector<Channel*> chans = client->getJoinedChannels();
+	for (size_t i = 0; i < chans.size(); ++i) {
+		if (chans[i]->isUserOnChannel(client)) {
+			PartCommand().execute(client, chans[i]->getName());
 		}
 	}
+}
+
+bool JoinCommand::splitArgs(Client* client, const std::string& args) {
+	std::vector<std::string> names = Command::split(args, ' ');
+
+	if (needMoreParams(client, names))
+		return false;
+
+	std::vector<std::string> keys;
+	if (names.size() > 1)
+		keys = split(names[1], ',');
+
+	names = split(names[0], ',');
+
+	for (size_t i = 0; i < names.size(); ++i) {
+		std::cout << names[i] << std::endl;
+	}
+
+	for (size_t i = 0; i < names.size(); ++i) {
+		channels.push_back(
+			s_channel(Server::getInstance().getChannel(channels[i].name),
+					  names[i], keys.size() ? keys[i] : ""));
+
+		if (channels[i].ptr == NULL) {
+			try {
+				Channel::checkChannelSyntax(channels[i].name);
+			} catch (const std::exception& e) {
+				client->sendError(
+					ERR_NOSUCHCHANNEL,
+					client->getClientnickName() + " " + channels[i].name, _403);
+				channels[i].name = "";
+			}
+		} else {
+			if (badChannelKey(client, channels[i].ptr, channels[i].key) ||
+				isChannelFull(client, channels[i].ptr) ||
+				inviteOnlyChan(client, channels[i].ptr))
+				channels[i].name = "";
+		}
+	}
+
+	return true;
 }
 
 void JoinCommand::execute(Client* client, const std::string& args) {
 	if (args == "0")
 		return joinZero(client);
 
-	std::vector<std::string> vecArgs = Command::split(args, ' ');
-	if (needMoreParams(client, vecArgs)) {
-		return;
-	}
-
-	std::map<std::string, std::string> map =
-		vecArgs.size() > 1 ? channelMap(split(vecArgs[0], ','), vecArgs[1])
-						   : channelMap(split(vecArgs[0], ','), "");
-
-	std::vector<Channel*> channels = getTrueChannels(client, map);
-	if (channels.empty())
+	if (!splitArgs(client, args) || channels.empty())
 		return;
 
-	for (size_t i = 0; i < channels.size(); i++) {
-		if (channels[i] == NULL)
+	for (size_t i = 0; i < channels.size(); ++i) {
+		if (channels[i].name.empty())
 			continue;
-		if (badChannelKey(client, channels[i],
-						  map.at(channels[i]->getName())) ||
-			isChannelFull(client, channels[i]) ||
-			inviteOnlyChan(client, channels[i])) {
-			map.erase(channels[i]->getName());
-			channels.erase(channels.begin() + i);
-			i--;
-			continue;
-		}
-	}
 
-	std::map<std::string, std::string>::iterator jt = map.begin();
-	for (size_t i = 0; i < channels.size(); i++) {
 		if (client->getJoinedChannels().size() >=
 			(size_t)std::atoi(Server::getInstance()
 								  .getConfiguration()
 								  .getValue("chanlimit")
 								  .c_str())) {
-			client->sendError(ERR_TOOMANYCHANNELS,
-							  client->getClientnickName() + " " + jt->first,
-							  _405);
+			client->sendError(
+				ERR_TOOMANYCHANNELS,
+				client->getClientnickName() + " " + channels[i].name, _405);
 			continue;
 		}
 
-		if (channels[i] == NULL) {
-			Channel::createChannel(client, jt->first, jt->second);
-			channels[i] = Server::getInstance().getChannel(jt->first);
+		if (channels[i].ptr == NULL) {
+			Channel::createChannel(client, channels[i].name, channels[i].key);
+			channels[i].ptr =
+				Server::getInstance().getChannel(channels[i].name);
 		} else {
-			if (channels[i]->isUserOnChannel(client)) {
-				client->sendError(ERR_USERONCHANNEL,
-								  client->getClientnickName() + " " +
-									  channels[i]->getName(),
-								  _443);
+			if (channels[i].ptr->isUserOnChannel(client)) {
+				client->sendError(
+					ERR_USERONCHANNEL,
+					client->getClientnickName() + " " + channels[i].name, _443);
 				continue;
-			} else if (channels[i]->isUserBanned(client)) {
-				client->sendError(ERR_BANNEDFROMCHAN,
-								  client->getClientnickName() + " " +
-									  channels[i]->getName(),
-								  _474);
+			} else if (channels[i].ptr->isUserBanned(client)) {
+				client->sendError(
+					ERR_BANNEDFROMCHAN,
+					client->getClientnickName() + " " + channels[i].name, _474);
 				continue;
 			}
-			channels[i]->addUser(client);
+			channels[i].ptr->addUser(client);
 		}
-		sendReplies(client, channels[i]);
-		jt++;
+		sendReplies(client, i);
 	}
 }
