@@ -30,7 +30,7 @@ void ClientSocket::onPoll() {
 		bzero(buff, SIZE);
 	}
 
-	if (content.size() == 0) {
+	if (content.empty()) {
 		try {
 			Server::getInstance().deleteClient(
 				Server::getInstance().getClient(fd));

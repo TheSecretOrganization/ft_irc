@@ -1,5 +1,6 @@
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Command.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
 
@@ -69,6 +70,8 @@ std::vector<Client*>& Channel::getOperators(void) { return operators; }
 
 std::vector<Client*>& Channel::getInviteList(void) { return inviteList; }
 
+std::vector<std::string>& Channel::getBans() { return bans; }
+
 const std::string& Channel::getName(void) const { return name; }
 
 bool Channel::isUserOnChannel(Client* client) {
@@ -77,9 +80,9 @@ bool Channel::isUserOnChannel(Client* client) {
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); ++it) {
 		if ((*it)->getSocket().getFd() == clientFd)
-			return 1;
+			return true;
 	}
-	return 0;
+	return false;
 }
 
 bool Channel::isUserOperator(Client* client) {
@@ -91,9 +94,9 @@ bool Channel::isUserOperator(Client* client) {
 	for (std::vector<Client*>::iterator it = operators.begin();
 		 it != operators.end(); ++it) {
 		if ((*it)->getSocket().getFd() == clientFd)
-			return 1;
+			return true;
 	}
-	return 0;
+	return false;
 }
 
 bool Channel::isUserInvited(Client* client) {
@@ -102,9 +105,38 @@ bool Channel::isUserInvited(Client* client) {
 	for (std::vector<Client*>::iterator it = inviteList.begin();
 		 it != inviteList.end(); ++it) {
 		if ((*it)->getSocket().getFd() == clientFd)
-			return 1;
+			return true;
 	}
-	return 0;
+	return false;
+}
+
+bool Channel::isUserBanned(Client* client) const {
+	std::string nickname = "";
+	std::string username = "";
+	std::string hostname = "";
+	size_t x = 0;
+	size_t y = 0;
+
+	for (size_t i = 0; i < bans.size(); ++i) {
+		x = bans[i].find('!');
+		if (x == std::string::npos)
+			continue;
+
+		nickname = bans[i].substr(0, x);
+
+		y = bans[i].find('@');
+		if (y == std::string::npos)
+			continue;
+
+		username = bans[i].substr(x + 1, y - (x + 1));
+		hostname = bans[i].substr(y + 1, bans[i].size() - (y + 1));
+
+		if ((client->getClientnickName() == nickname || nickname == "*") &&
+			(client->getUsername() == username || username == "*") &&
+			(client->getHostname() == hostname || hostname == "*"))
+			return true;
+	}
+	return false;
 }
 
 void Channel::setInviteMode(bool newInviteMode) { inviteOnly = newInviteMode; }
@@ -139,6 +171,9 @@ void Channel::addUser(Client* user) { usersOnChannel.push_back(user); }
 void Channel::removeUser(Client* user) {
 	std::vector<Client*>::iterator it =
 		std::find(usersOnChannel.begin(), usersOnChannel.end(), user);
+	if (it == usersOnChannel.end()) {
+		throw Server::ClientNotFoundException();
+	}
 	usersOnChannel.erase(it);
 }
 
@@ -247,4 +282,30 @@ void Channel::rplTopicWhoTime(Client* client) const {
 						client->getClientnickName() + " " + name + " " +
 							topic.setBy + " " +
 							Command::size_tToString(topic.setAt));
+}
+
+void Channel::addBan(const std::string& ban) {
+	std::vector<std::string>::iterator it =
+		std::find(bans.begin(), bans.end(), ban);
+	if (it == bans.end())
+		bans.push_back(ban);
+}
+
+void Channel::deleteBan(const std::string& ban) {
+	std::vector<std::string>::iterator it =
+		std::find(bans.begin(), bans.end(), ban);
+	if (it != bans.end())
+		bans.erase(it);
+}
+
+bool Channel::checkBanSyntax(const std::string& ban) const {
+	std::vector<std::string> split1 = Command::split(ban, '!');
+	if (split1.size() != 2)
+		return false;
+
+	std::vector<std::string> split2 = Command::split(split1[1], '@');
+	if (split2.size() != 2)
+		return false;
+
+	return true;
 }

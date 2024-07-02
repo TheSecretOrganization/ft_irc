@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Channel.hpp"
 #include "Client.hpp"
 #include "Command.hpp"
+
 #include <string>
 
-class NickCommand : public Command {
+class NamesCommand : public Command {
   private:
-	std::vector<Client*> getAffectedUsers(Client* client) const;
+	std::string getNames(Client* client, Channel* channel) const;
 
   public:
-	NickCommand();
-	~NickCommand();
+	NamesCommand();
+	~NamesCommand();
 
 	void execute(Client* client, const std::string& args);
 };

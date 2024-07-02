@@ -32,12 +32,15 @@ SRC         :=	main.cpp \
 	SocketObserver.cpp \
 	$(addprefix $(CMDS_DIR)/, \
 		CapCommand.cpp \
+		InviteCommand.cpp \
 		JoinCommand.cpp \
 		KickCommand.cpp \
 		LusersCommand.cpp \
 		ModeCommand.cpp \
 		MotdCommand.cpp \
+		NamesCommand.cpp \
 		NickCommand.cpp \
+		PartCommand.cpp \
 		PassCommand.cpp \
 		PingCommand.cpp \
 		PrivmsgCommand.cpp \

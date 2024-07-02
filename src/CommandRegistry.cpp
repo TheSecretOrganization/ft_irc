@@ -1,12 +1,15 @@
 #include "CommandRegistry.hpp"
 
 #include "commands/CapCommand.hpp"
+#include "commands/InviteCommand.hpp"
 #include "commands/JoinCommand.hpp"
 #include "commands/KickCommand.hpp"
 #include "commands/LusersCommand.hpp"
 #include "commands/ModeCommand.hpp"
 #include "commands/MotdCommand.hpp"
+#include "commands/NamesCommand.hpp"
 #include "commands/NickCommand.hpp"
+#include "commands/PartCommand.hpp"
 #include "commands/PassCommand.hpp"
 #include "commands/PingCommand.hpp"
 #include "commands/PrivmsgCommand.hpp"
@@ -17,6 +20,7 @@
 
 CommandRegistry::CommandRegistry() {
 	registerCommand("CAP", new CapCommand());
+	registerCommand("INVITE", new InviteCommand());
 	registerCommand("NICK", new NickCommand());
 	registerCommand("PING", new PingCommand());
 	registerCommand("USER", new UserCommand());
@@ -30,6 +34,8 @@ CommandRegistry::CommandRegistry() {
 	registerCommand("TOPIC", new TopicCommand());
 	registerCommand("WHO", new WhoCommand());
 	registerCommand("KICK", new KickCommand());
+	registerCommand("PART", new PartCommand());
+	registerCommand("NAMES", new NamesCommand());
 }
 
 CommandRegistry::~CommandRegistry() {

@@ -1,13 +1,16 @@
 #include "Client.hpp"
+#include "Channel.hpp"
 #include "ClientSocket.hpp"
 #include "Server.hpp"
 
+#include <cstddef>
 #include <iostream>
 #include <string>
+#include <vector>
 
 Client::Client(int fd)
 	: socket(fd), realname(""), username(""), nickname(""), hostname(""),
-	  servername(""), status(UNKNOWN), away(false), bot(false) {
+	  servername(""), status(UNKNOWN), away(false), invisible(false), bot(false) {
 	std::cout << "new client " << fd << std::endl;
 }
 
@@ -22,14 +25,14 @@ void Client::sendMessage(const std::string& prefix, const std::string& command,
 						 const std::string& trailing) const {
 	std::string packet = prefix + " " + command;
 
-	if (bot) 
+	if (bot)
 		return;
 
 	if (!parameters.empty())
 		packet += " " + parameters;
 
 	if (!trailing.empty())
-		packet += " :" + trailing;
+		packet += (trailing[0] == ':' ? " " : " :") + trailing;
 
 	try {
 		socket.sendPacket(packet);
@@ -60,6 +63,18 @@ std::string Client::getModes() const {
 		modes += "a";
 
 	return modes.empty() ? "" : "+" + modes;
+}
+
+std::vector<Channel*> Client::getJoinedChannels() const {
+	const std::vector<Channel*>& channels = Server::getInstance().getChannels();
+	std::vector<Channel*> userChan;
+
+	for (size_t i = 0; i < channels.size(); ++i) {
+		if (channels[i]->isUserOnChannel(const_cast<Client*>(this)))
+			userChan.push_back(channels[i]);
+	}
+
+	return userChan;
 }
 
 const std::string& Client::getNickname() const { return nickname; }
@@ -99,5 +114,9 @@ void Client::setStatus(int newStatus) { status = newStatus; }
 bool Client::isAway() const { return away; }
 
 void Client::setAway(bool newAway) { away = newAway; }
+
+bool Client::isInvisible() const { return invisible; }
+
+void Client::setInvisible(bool newInvisible) { invisible = newInvisible; }
 
 bool Client::isBot() const { return bot; }

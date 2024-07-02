@@ -28,6 +28,11 @@ Server::~Server() {
 			return;
 		std::cerr << e.what() << std::endl;
 	}
+
+	for (std::vector<Channel*>::iterator it = channels.begin();
+		 it != channels.end(); it++) {
+		delete *it;
+	}
 }
 
 Server& Server::getInstance() {

@@ -1,9 +1,11 @@
 #include "commands/NickCommand.hpp"
+#include "Channel.hpp"
 #include "Client.hpp"
 #include "Command.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
 
+#include <algorithm>
 #include <cctype>
 #include <cstddef>
 #include <cstring>
@@ -34,6 +36,25 @@ static bool checkAlreadyInUse(const std::string& nickname) {
 	return true;
 }
 
+std::vector<Client*> NickCommand::getAffectedUsers(Client* client) const {
+	std::vector<Channel*> channels = client->getJoinedChannels();
+	std::vector<Client*> channelUsers;
+	std::vector<Client*> affectedUsers;
+
+	affectedUsers.push_back(client);
+
+	for (size_t i = 0; i < channels.size(); ++i) {
+		channelUsers = channels[i]->getUsers();
+		for (size_t j = 0; j < channelUsers.size(); ++j) {
+			if (std::find(affectedUsers.begin(), affectedUsers.end(),
+						  channelUsers[j]) == affectedUsers.end())
+				affectedUsers.push_back(channelUsers[j]);
+		}
+	}
+
+	return affectedUsers;
+}
+
 void NickCommand::execute(Client* client, const std::string& args) {
 	if (args.empty())
 		return client->sendError(ERR_NONICKNAMEGIVEN,
@@ -45,7 +66,19 @@ void NickCommand::execute(Client* client, const std::string& args) {
 	if (checkAlreadyInUse(args) == false)
 		return client->sendError(
 			ERR_NICKNAMEINUSE, client->getClientnickName() + " " + args, _433);
+
+	if (client->getStatus() == REGISTRED) {
+
+		std::vector<Client*> affectedUsers = getAffectedUsers(client);
+
+		for (size_t i = 0; i < affectedUsers.size(); ++i) {
+			affectedUsers[i]->sendMessage(client->getPrefix(), "NICK", "",
+										  args);
+		}
+	}
+
 	client->setNickname(args);
-	if (client->getStatus() == PASSWD_OK)
+
+	if (client->getStatus() != REGISTRED && client->getStatus() == PASSWD_OK)
 		client->setStatus(NICK_OK);
 }

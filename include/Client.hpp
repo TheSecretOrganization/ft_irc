@@ -3,6 +3,9 @@
 #include "ClientSocket.hpp"
 
 #include <string>
+#include <vector>
+
+class Channel;
 
 enum { UNKNOWN = 0, PASSWD_OK, NICK_OK, USER_OK, REGISTRED };
 
@@ -17,6 +20,7 @@ class Client {
 	std::string servername;
 	int status;
 	bool away;
+	bool invisible;
 	bool bot;
 
   public:
@@ -31,6 +35,7 @@ class Client {
 				   const std::string& trailing = "") const;
 	std::string getPrefix() const;
 	std::string getModes() const;
+	std::vector<Channel*> getJoinedChannels() const;
 
 	ClientSocket& getSocket();
 	const std::string& getClientnickName(void);
@@ -48,5 +53,7 @@ class Client {
 	void setStatus(int newStatus);
 	bool isAway() const;
 	void setAway(bool newAway);
+	bool isInvisible() const;
+	void setInvisible(bool newInvisible);
 	bool isBot() const;
 };
