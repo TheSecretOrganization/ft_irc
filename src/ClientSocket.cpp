@@ -35,7 +35,7 @@ void ClientSocket::onPoll() {
 		content[content.size() - 2] != '\r' ||
 		content[content.size() - 1] != '\n') {
 		try {
-			std::cout << "Invalid packet" << std::endl;
+			std::cout << "Killing Client" << std::endl;
 			Server::getInstance().deleteClient(
 				Server::getInstance().getClient(fd));
 		} catch (const std::exception& e) {

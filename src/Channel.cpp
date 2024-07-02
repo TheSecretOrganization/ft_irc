@@ -3,6 +3,7 @@
 #include "Command.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
+#include "commands/KickCommand.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -216,7 +217,7 @@ void Channel::broadcast(const std::string& prefix, const std::string& command,
 						const std::string& parameter,
 						const std::string& trailing) {
 	if (command == "PRIVMSG" &&
-		!Server::getInstance().getGuardian()->isMessageAuthorized(prefix, name,
+		!Server::getInstance().getGuardian()->isMessageAuthorized(prefix, this,
 																  trailing))
 		return;
 
@@ -310,4 +311,9 @@ bool Channel::checkBanSyntax(const std::string& ban) const {
 		return false;
 
 	return true;
+}
+
+void Channel::kick(Client* client, Client* user, const std::string& message) {
+	KickCommand().execute(client, name + " " + user->getClientnickName() + " " +
+									  message);
 }
