@@ -26,6 +26,7 @@ class Channel {
 	std::vector<Client*> operators;
 	std::vector<Client*> usersOnChannel;
 	std::vector<Client*> inviteList;
+	std::vector<std::string> bans;
 	bool inviteOnly;
 	size_t userLimit;
 	topic_t topic;
@@ -58,11 +59,13 @@ class Channel {
 	std::vector<Client*>& getUsers(void);
 	std::vector<Client*>& getOperators(void);
 	std::vector<Client*>& getInviteList(void);
+	std::vector<std::string>& getBans();
 
 	const std::string& getName(void) const;
 	bool isUserOnChannel(Client* client);
 	bool isUserOperator(Client* client);
 	bool isUserInvited(Client* client);
+	bool isUserBanned(Client* client) const;
 
 	void setInviteMode(bool newInviteMode);
 	bool isInviteMode(void) const;
@@ -97,4 +100,8 @@ class Channel {
 	void rplTopic(Client* client) const;
 	void rplNoTopic(Client* client) const;
 	void rplTopicWhoTime(Client* client) const;
+
+	void addBan(const std::string& ban);
+	void deleteBan(const std::string& ban);
+	bool checkBanSyntax(const std::string& ban) const;
 };

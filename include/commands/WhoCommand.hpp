@@ -5,6 +5,10 @@
 #include <string>
 
 class WhoCommand : public Command {
+  private:
+	std::string getUserInfo(Client* user, bool isUserOperator) const;
+	void channel(Client* client, const std::string& args) const;
+	void user(Client* client, const std::string& args) const;
 
   public:
 	WhoCommand();

@@ -20,6 +20,7 @@ class Client {
 	std::string servername;
 	int status;
 	bool away;
+	bool invisible;
 
   public:
 	Client(int fd);
@@ -51,4 +52,6 @@ class Client {
 	void setStatus(int newStatus);
 	bool isAway() const;
 	void setAway(bool newAway);
+	bool isInvisible() const;
+	void setInvisible(bool newInvisible);
 };

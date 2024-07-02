@@ -36,6 +36,7 @@ SRC         :=	main.cpp \
 		LusersCommand.cpp \
 		ModeCommand.cpp \
 		MotdCommand.cpp \
+		NamesCommand.cpp \
 		NickCommand.cpp \
 		PartCommand.cpp \
 		PassCommand.cpp \
