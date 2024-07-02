@@ -4,7 +4,7 @@
 
 #include <string>
 
-#define BOT_SOCKET -2
+const int BOT_SOCKET = -2;
 
 class Bot : public Client {
   private:
