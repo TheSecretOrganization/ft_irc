@@ -2,6 +2,7 @@
 #include "Server.hpp"
 #include "Socket.hpp"
 
+#include <cstddef>
 #include <cstdio>
 #include <exception>
 #include <iostream>
@@ -30,17 +31,20 @@ void ClientSocket::onPoll() {
 		bzero(buff, SIZE);
 	}
 
-	if (content.empty()) {
+	if (content.empty() || content.size() < 2 ||
+		content[content.size() - 2] != '\r' ||
+		content[content.size() - 1] != '\n') {
 		try {
+			std::cout << "Invalid packet" << std::endl;
 			Server::getInstance().deleteClient(
 				Server::getInstance().getClient(fd));
 		} catch (const std::exception& e) {
 			std::cerr << e.what() << std::endl;
 		}
 		return;
-	} else {
-		content = content.erase(content.size() - 2, content.size());
 	}
+
+	content = content.substr(0, content.size() - 2);
 
 	size_t cs;
 	do {
