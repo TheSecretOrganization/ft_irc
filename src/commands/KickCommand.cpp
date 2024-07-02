@@ -61,9 +61,9 @@ void KickCommand::execute(Client* client, const std::string& args) {
 
 		std::string message = "";
 
-		for (size_t i = 2; i < splitArgs.size(); ++i) {
-			message += splitArgs[i];
-			if (i + 1 != splitArgs.size())
+		for (size_t j = 2; j < splitArgs.size(); ++j) {
+			message += splitArgs[j];
+			if (j + 1 != splitArgs.size())
 				message += " ";
 		}
 

@@ -4,6 +4,7 @@
 #include "commands/KickCommand.hpp"
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 Bot::Bot() : Client(BOT_SOCKET) {
@@ -30,7 +31,7 @@ bool Bot::isMessageAuthorized(const std::string& prefix,
 
 	for (std::vector<std::string>::const_iterator it = forbiddenWords.begin();
 		 it != forbiddenWords.end(); it++) {
-		if (message.find((*it), 0) != message.npos) {
+		if (message.find((*it), 0) != std::string::npos) {
 			KickCommand().execute(this, channelName + " " +
 											getNameFromPrefix(prefix) +
 											" Use of forbidden word: " + *it);
