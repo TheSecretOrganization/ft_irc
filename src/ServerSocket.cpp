@@ -17,9 +17,12 @@ ServerSocket::~ServerSocket() {}
 
 void ServerSocket::init(int port) {
 	this->port = port;
-	fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP);
+	fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (fd == -1)
 		throw ServerSocket();
+	
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
+		throw FcntlException();
 
 	sockaddr_in addr;
 	addr.sin_family = AF_INET;
