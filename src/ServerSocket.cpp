@@ -20,7 +20,7 @@ void ServerSocket::init(int port) {
 	fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (fd == -1)
 		throw ServerSocket();
-	
+
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
 		throw FcntlException();
 
