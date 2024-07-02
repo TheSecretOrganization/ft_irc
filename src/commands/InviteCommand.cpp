@@ -1,7 +1,6 @@
 #include "commands/InviteCommand.hpp"
 #include "IrcReplies.hpp"
 #include "Server.hpp"
-#include <iostream>
 
 InviteCommand::InviteCommand() : Command("INVITE", 2, 2) {}
 
@@ -13,10 +12,10 @@ void InviteCommand::execute(Client* client, const std::string& args) {
 		return;
 	}
 
-	Client* destinationClient = Server::getInstance().getClient(vecArgs[1]);
+	Client* destinationClient = Server::getInstance().getClient(vecArgs[0]);
 	if (!destinationClient) {
 		return client->sendError(ERR_NOSUCHNICK,
-								 client->getClientnickName() + " " + vecArgs[1],
+								 client->getClientnickName() + " " + vecArgs[0],
 								 _401);
 	}
 
@@ -33,27 +32,20 @@ void InviteCommand::execute(Client* client, const std::string& args) {
 		return;
 	}
 
-	if (userOnChannel(client, channel, vecArgs[1])) {
+	if (userOnChannel(client, channel,
+					  destinationClient->getClientnickName())) {
 		return;
 	}
 
-	try {
-		client->sendMessage(Server::getInstance().getPrefix(), RPL_INVITING,
-							client->getClientnickName() + " " +
-								destinationClient->getClientnickName() + " " +
-								channel->getName());
-	} catch (const ClientSocket::SendException& e) {
-		std::cerr << e.what() << '\n';
-	}
+	client->sendMessage(Server::getInstance().getPrefix(), RPL_INVITING,
+						client->getClientnickName() + " " +
+							destinationClient->getClientnickName(),
+						channel->getName());
 
 	if (!channel->isUserInvited(destinationClient))
 		channel->inviteUser(destinationClient);
 
-	try {
-		destinationClient->sendMessage(client->getPrefix(), "INVITE",
-									   destinationClient->getClientnickName(),
-									   channel->getName());
-	} catch (const ClientSocket::SendException& e) {
-		std::cerr << e.what() << '\n';
-	}
+	destinationClient->sendMessage(client->getPrefix(), "INVITE",
+								   destinationClient->getClientnickName(),
+								   channel->getName());
 }
