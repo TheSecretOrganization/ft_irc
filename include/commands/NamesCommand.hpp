@@ -7,7 +7,7 @@
 
 class NamesCommand : public Command {
   private:
-	std::string getNames(Channel* channel) const;
+	std::string getNames(Client* client, Channel* channel) const;
 
   public:
 	NamesCommand();

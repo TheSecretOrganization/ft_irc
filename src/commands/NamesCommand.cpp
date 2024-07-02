@@ -12,15 +12,16 @@ NamesCommand::NamesCommand() : Command("NAMES", 1, 0){};
 
 NamesCommand::~NamesCommand() {}
 
-std::string NamesCommand::getNames(Channel* channel) const {
+std::string NamesCommand::getNames(Client* client, Channel* channel) const {
 	std::string stringUsers = "";
 	std::vector<Client*> users = channel->getUsers();
 
 	for (std::vector<Client*>::iterator it = users.begin(); it != users.end();
 		 ++it) {
-		stringUsers = stringUsers + " " +
-					  (channel->isUserOperator(*it) ? "@" : "") +
-					  (*it)->getNickname();
+		if (channel->isUserOnChannel(client) || !(*it)->isInvisible())
+			stringUsers = stringUsers + " " +
+						  (channel->isUserOperator(*it) ? "@" : "") +
+						  (*it)->getNickname();
 	}
 
 	return stringUsers;
@@ -38,7 +39,7 @@ void NamesCommand::execute(Client* client, const std::string& args) {
 			client->sendMessage(Server::getInstance().getPrefix(), RPL_NAMREPLY,
 								client->getClientnickName() + " = " +
 									channel->getName(),
-								getNames(channel));
+								getNames(client, channel));
 		client->sendMessage(
 			Server::getInstance().getPrefix(), RPL_ENDOFNAMES,
 			client->getClientnickName() + " " + channel->getName(), _366);
