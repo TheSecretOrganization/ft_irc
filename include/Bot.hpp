@@ -8,7 +8,7 @@ const int BOT_SOCKET = -2;
 
 class Bot : public Client {
   private:
-	const std::string getNameFromPrefix(const std::string& prefix) const;
+	std::string getNameFromPrefix(const std::string& prefix) const;
 
   public:
 	Bot();

@@ -17,7 +17,7 @@ Bot::Bot() : Client(BOT_SOCKET) {
 
 Bot::~Bot() {}
 
-const std::string Bot::getNameFromPrefix(const std::string& prefix) const {
+std::string Bot::getNameFromPrefix(const std::string& prefix) const {
 	return prefix.substr(0, prefix.find("!"));
 }
 
