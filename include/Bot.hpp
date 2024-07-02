@@ -7,12 +7,13 @@
 #define BOT_SOCKET -2
 
 class Bot : public Client {
+  private:
+	const std::string getNameFromPrefix(const std::string& prefix) const;
+
   public:
 	Bot();
 	~Bot();
 
-	Client& getBot();
-	const std::string getNameFromPrefix(const std::string& prefix);
-	void kickUser(const std::string& prefix, const std::string& channel, const std::string& word);
-	void scanMessage(const std::string& prefix, const std::string& channel, const std::string& message);
+	bool isMessageAuthorized(const std::string& prefix, const std::string& channel,
+						const std::string& message);
 };

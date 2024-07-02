@@ -215,9 +215,11 @@ const char* Channel::ForbiddenChannelNameException::what() const throw() {
 void Channel::broadcast(const std::string& prefix, const std::string& command,
 						const std::string& parameter,
 						const std::string& trailing) {
-	if (command == "PRIVMSG") {
-		Server::getInstance().getGuardian()->scanMessage(prefix, name, trailing);
-	}
+	if (command == "PRIVMSG" &&
+		!Server::getInstance().getGuardian()->isMessageAuthorized(prefix, name,
+																  trailing))
+		return;
+
 	for (std::vector<Client*>::iterator it = usersOnChannel.begin();
 		 it != usersOnChannel.end(); it++) {
 		if (command == "PRIVMSG" && prefix == (*it)->getPrefix())

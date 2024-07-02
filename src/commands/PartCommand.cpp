@@ -37,7 +37,7 @@ void PartCommand::execute(Client* client, const std::string& args) {
 			std::cerr << e.what() << std::endl;
 		}
 
-		if (channel->getUsers().empty()) {
+		if (channel->getUsers().size() - 1 == 0) {
 			try {
 				Server::getInstance().deleteChannel(channel);
 			} catch (const Server::ChannelNotFoundException& e) {

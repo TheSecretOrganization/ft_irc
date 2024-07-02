@@ -26,7 +26,7 @@ void QuitCommand::execute(Client* client, const std::string& args) {
 						 args.empty() ? "has been absorbed by the Black Hole"
 									  : args);
 
-		if ((*it)->getUsers().empty()) {
+		if ((*it)->getUsers().size() - 1 == 0) {
 			try {
 				Server::getInstance().deleteChannel(*it);
 			} catch (const Server::ChannelNotFoundException& e) {

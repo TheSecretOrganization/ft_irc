@@ -26,7 +26,7 @@ class Configuration {
 	Configuration();
 	~Configuration();
 
-	std::vector<std::string> getForbiddenWords() const;
+	const std::vector<std::string>& getForbiddenWords() const;
 	std::string getValue(const std::string& key) const;
 	void setPassword(const std::string& newPassword);
 };

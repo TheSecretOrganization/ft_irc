@@ -1,7 +1,6 @@
 #include "Configuration.hpp"
 #include "Command.hpp"
 
-#include <iostream>
 #include <string>
 
 Configuration::Configuration() {
@@ -22,7 +21,7 @@ Configuration::Configuration() {
 
 Configuration::~Configuration() {}
 
-std::vector<std::string> Configuration::getForbiddenWords() const {
+const std::vector<std::string>& Configuration::getForbiddenWords() const {
 	return forbiddenWords;
 }
 
