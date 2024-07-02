@@ -20,8 +20,9 @@ const std::string Bot::getNameFromPrefix(const std::string& prefix) const {
 	return prefix.substr(0, prefix.find("!"));
 }
 
-bool Bot::isMessageAuthorized(const std::string& prefix, const std::string& channelName,
-					  const std::string& message) {
+bool Bot::isMessageAuthorized(const std::string& prefix,
+							  const std::string& channelName,
+							  const std::string& message) {
 	const std::vector<std::string>& forbiddenWords =
 		Server::getInstance().getConfiguration().getForbiddenWords();
 

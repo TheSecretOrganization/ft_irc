@@ -14,6 +14,7 @@ class Bot : public Client {
 	Bot();
 	~Bot();
 
-	bool isMessageAuthorized(const std::string& prefix, const std::string& channel,
-						const std::string& message);
+	bool isMessageAuthorized(const std::string& prefix,
+							 const std::string& channel,
+							 const std::string& message);
 };

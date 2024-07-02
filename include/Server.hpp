@@ -3,13 +3,13 @@
 #include <string>
 #include <vector>
 
+#include "Bot.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "CommandRegistry.hpp"
 #include "Configuration.hpp"
 #include "ServerSocket.hpp"
 #include "SocketObserver.hpp"
-#include "Bot.hpp"
 
 class Server {
 

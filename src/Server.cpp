@@ -144,6 +144,4 @@ std::vector<Channel*> Server::getChannels(Client* client) const {
 	return clientChannels;
 }
 
-Bot* Server::getGuardian() {
-	return guardian;
-}
+Bot* Server::getGuardian() { return guardian; }
