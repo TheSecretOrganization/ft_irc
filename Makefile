@@ -31,6 +31,7 @@ SRC         :=	main.cpp \
 	SocketObserver.cpp \
 	$(addprefix $(CMDS_DIR)/, \
 		CapCommand.cpp \
+		InviteCommand.cpp \
 		JoinCommand.cpp \
 		KickCommand.cpp \
 		LusersCommand.cpp \
