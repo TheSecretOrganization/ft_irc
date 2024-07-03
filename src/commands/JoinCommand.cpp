@@ -88,9 +88,8 @@ bool JoinCommand::splitArgs(Client* client, const std::string& args,
 	names = split(names[0], ',');
 
 	for (size_t i = 0; i < names.size(); ++i) {
-		channels.push_back(
-			s_channel(Server::getInstance().getChannel(channels[i].name),
-					  names[i], keys.size() ? keys[i] : ""));
+		channels.push_back(s_channel(Server::getInstance().getChannel(names[i]),
+									 names[i], keys.size() ? keys[i] : ""));
 
 		if (channels[i].ptr == NULL) {
 			try {
