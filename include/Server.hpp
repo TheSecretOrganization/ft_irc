@@ -34,6 +34,7 @@ class Server {
 	void deleteClient(Client* client);
 	void addChannel(Channel* channel);
 	void deleteChannel(Channel* channel);
+	bool deleteIfGhostChannel(Channel* channel);
 	std::string getPrefix() const;
 
 	static Server& getInstance();

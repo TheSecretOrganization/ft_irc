@@ -15,14 +15,7 @@ Client::Client(int fd)
 	std::cout << "new client " << fd << std::endl;
 }
 
-Client::~Client() {
-	const std::vector<Channel*>& channels = getJoinedChannels();
-
-	for (size_t i = 0; i < channels.size(); ++i) {
-		channels[i]->kick(Server::getInstance().getGuardian(), this,
-						  "Client is dead...");
-	}
-}
+Client::~Client() {}
 
 ClientSocket& Client::getSocket() { return socket; }
 

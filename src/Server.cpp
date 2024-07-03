@@ -92,6 +92,18 @@ void Server::deleteChannel(Channel* channel) {
 	delete channel;
 }
 
+bool Server::deleteIfGhostChannel(Channel* channel) {
+	if (channel->getUsers().size() - 1 == 0) {
+		try {
+			deleteChannel(channel);
+		} catch (const Server::ChannelNotFoundException& e) {
+			std::cerr << e.what() << std::endl;
+		}
+		return true;
+	}
+	return false;
+}
+
 std::string Server::getPrefix() const {
 	return getConfiguration().getValue("serverName");
 }
