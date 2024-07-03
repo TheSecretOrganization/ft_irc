@@ -5,7 +5,6 @@
 
 #include <cstddef>
 #include <string>
-#include <vector>
 
 typedef struct s_channel {
 	Channel* ptr;
@@ -19,14 +18,13 @@ typedef struct s_channel {
 
 class JoinCommand : public Command {
   private:
-	std::vector<channel_t> channels;
 	bool badChannelKey(Client* client, Channel const* channel,
 					   const std::string& password) const;
 	bool isChannelFull(Client* client, Channel* channel) const;
 	bool inviteOnlyChan(Client* client, Channel* channel) const;
-	void sendReplies(Client* client, size_t i) const;
+	void sendReplies(Client* client, Channel* channel) const;
 	void joinZero(Client* client) const;
-	bool splitArgs(Client* client, const std::string& args);
+	bool splitArgs(Client* client, const std::string& args, std::vector<channel_t>& channels);
 
   public:
 	JoinCommand();

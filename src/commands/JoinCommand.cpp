@@ -9,7 +9,6 @@
 #include <cstddef>
 #include <cstdlib>
 #include <exception>
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -49,38 +48,34 @@ bool JoinCommand::inviteOnlyChan(Client* client, Channel* channel) const {
 	return false;
 }
 
-void JoinCommand::sendReplies(Client* client, size_t i) const {
-	client->sendMessage(client->getPrefix(), "JOIN",
-						channels[i].ptr->getName());
+void JoinCommand::sendReplies(Client* client, Channel* channel) const {
+	client->sendMessage(client->getPrefix(), "JOIN", channel->getName());
 
-	if (!channels[i].ptr->getTopic().empty())
+	if (!channel->getTopic().empty())
 		client->sendMessage(Server::getInstance().getPrefix(), RPL_TOPIC,
-							client->getNickname() + " " +
-								channels[i].ptr->getName(),
-							channels[i].ptr->getTopic());
+							client->getNickname() + " " + channel->getName(),
+							channel->getTopic());
 
-	NamesCommand().execute(client, channels[i].ptr->getName());
+	NamesCommand().execute(client, channel->getName());
 
-	for (std::vector<Client*>::iterator it =
-			 channels[i].ptr->getUsers().begin();
-		 it != channels[i].ptr->getUsers().end(); ++it) {
+	for (std::vector<Client*>::iterator it = channel->getUsers().begin();
+		 it != channel->getUsers().end(); ++it) {
 		if ((*it) == client)
 			continue;
-		(*it)->sendMessage(client->getPrefix(), "JOIN",
-						   channels[i].ptr->getName());
+		(*it)->sendMessage(client->getPrefix(), "JOIN", channel->getName());
 	}
 }
 
 void JoinCommand::joinZero(Client* client) const {
-	std::vector<Channel*> chans = client->getJoinedChannels();
-	for (size_t i = 0; i < chans.size(); ++i) {
-		if (chans[i]->isUserOnChannel(client)) {
-			PartCommand().execute(client, chans[i]->getName());
-		}
+	std::vector<Channel*> channels = client->getJoinedChannels();
+
+	for (size_t i = 0; i < channels.size(); ++i) {
+		PartCommand().execute(client, channels[i]->getName());
 	}
 }
 
-bool JoinCommand::splitArgs(Client* client, const std::string& args) {
+bool JoinCommand::splitArgs(Client* client, const std::string& args,
+							std::vector<channel_t>& channels) {
 	std::vector<std::string> names = Command::split(args, ' ');
 
 	if (needMoreParams(client, names))
@@ -91,10 +86,6 @@ bool JoinCommand::splitArgs(Client* client, const std::string& args) {
 		keys = split(names[1], ',');
 
 	names = split(names[0], ',');
-
-	for (size_t i = 0; i < names.size(); ++i) {
-		std::cout << names[i] << std::endl;
-	}
 
 	for (size_t i = 0; i < names.size(); ++i) {
 		channels.push_back(
@@ -122,10 +113,11 @@ bool JoinCommand::splitArgs(Client* client, const std::string& args) {
 }
 
 void JoinCommand::execute(Client* client, const std::string& args) {
+	std::vector<channel_t> channels;
 	if (args == "0")
 		return joinZero(client);
 
-	if (!splitArgs(client, args) || channels.empty())
+	if (!splitArgs(client, args, channels) || channels.empty())
 		return;
 
 	for (size_t i = 0; i < channels.size(); ++i) {
@@ -161,6 +153,6 @@ void JoinCommand::execute(Client* client, const std::string& args) {
 			}
 			channels[i].ptr->addUser(client);
 		}
-		sendReplies(client, i);
+		sendReplies(client, channels[i].ptr);
 	}
 }
