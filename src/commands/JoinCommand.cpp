@@ -29,7 +29,7 @@ bool JoinCommand::badChannelKey(Client* client, Channel const* channel,
 
 bool JoinCommand::isChannelFull(Client* client, Channel* channel) const {
 	if (channel->getUserLimit() != 0 &&
-		channel->getUsers().size() >= channel->getUserLimit()) {
+		channel->getUsers().size() - 1 >= channel->getUserLimit()) {
 		client->sendError(
 			ERR_CHANNELISFULL,
 			client->getClientnickName() + " " + channel->getName(), _471);
