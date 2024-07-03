@@ -5,7 +5,6 @@
 #include "Server.hpp"
 
 #include <cstddef>
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -78,11 +77,5 @@ void KickCommand::execute(Client* client, const std::string& args) {
 		channel->removeUser(user);
 	}
 
-	if (channel->getUsers().size() - 1 == 0) {
-		try {
-			Server::getInstance().deleteChannel(channel);
-		} catch (const Server::ChannelNotFoundException& e) {
-			std::cerr << e.what() << std::endl;
-		}
-	}
+	Server::getInstance().deleteIfGhostChannel(channel);
 }
