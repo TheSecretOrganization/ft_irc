@@ -75,7 +75,7 @@ void JoinCommand::joinZero(Client* client) const {
 }
 
 bool JoinCommand::splitArgs(Client* client, const std::string& args,
-							std::vector<channel_t>& channels) {
+							std::vector<channel_t>& channels) const {
 	std::vector<std::string> names = Command::split(args, ' ');
 
 	if (needMoreParams(client, names))
