@@ -6,20 +6,27 @@
 #include <string>
 #include <vector>
 
+typedef struct s_mode {
+	bool action;
+	char name;
+	std::string param;
+
+	s_mode() : action(false), name('\0'), param("") {}
+	s_mode(bool action, char name, std::string param)
+		: action(action), name(name), param(param) {}
+} t_mode;
+
 class ModeCommand : public Command {
   private:
-	std::vector<std::string> splitArgs;
-
-	bool checkModes(Client* client) const;
-	void parseModes(Client* client, Channel* channel) const;
-	void parseModes(Client* client) const;
-	void setMode(Client* client, bool action, char mode,
-				 const std::string& param = "") const;
-	void setMode(Client* client, Channel* channel, bool action, char mode,
-				 const std::string& param = "") const;
-	void setBan(Client* client, Channel* channel, bool action,
-				const std::string& ban) const;
+	bool createModes(Client* client, std::vector<t_mode>& modes,
+					 const std::vector<std::string>& splitArgs) const;
+	void sendModes(Client* client, Channel* channel) const;
 	void sendBanList(Client* client, Channel* channel) const;
+	void setMode(Client* client, const t_mode& mode) const;
+	void setMode(Client* client, Channel* channel, const t_mode& mode) const;
+	bool setBan(Client* client, Channel* channel, const t_mode& mode) const;
+	bool setOperator(Client* client, Channel* channel,
+					 const t_mode& mode) const;
 
   public:
 	ModeCommand();

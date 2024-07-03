@@ -6,6 +6,7 @@
 
 #include <cstddef>
 #include <cstdlib>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -13,135 +14,32 @@ ModeCommand::ModeCommand() : Command("MODE", 0, 1){};
 
 ModeCommand::~ModeCommand() {}
 
-bool ModeCommand::checkModes(Client* client) const {
+bool ModeCommand::createModes(Client* client, std::vector<t_mode>& modes,
+							  const std::vector<std::string>& splitArgs) const {
 	if (splitArgs[1][0] != '+' && splitArgs[1][0] != '-') {
 		client->sendError(ERR_UMODEUNKNOWNFLAG, client->getClientnickName(),
 						  _501);
 		return false;
 	}
 
-	size_t n = 0;
-	for (size_t i = 1; i < splitArgs.size(); ++i) {
-		if (Server::getInstance().getConfiguration().getValue("cpmodes").find(
-				splitArgs[1][i]) != std::string::npos) {
-			++n;
-			if (i + n > splitArgs.size() - 1) {
-				client->sendError(ERR_NEEDMOREPARAMS,
-								  client->getClientnickName() + " MODE", _461);
-				return false;
-			}
-		}
+	for (size_t i = 1; i < splitArgs[1].size(); ++i) {
+		modes.push_back(
+			t_mode(splitArgs[1][0] == '+', splitArgs[1][i],
+				   i + 1 < splitArgs.size() ? splitArgs[i + 1] : ""));
 	}
 
 	return true;
 }
 
-void ModeCommand::parseModes(Client* client, Channel* channel) const {
-	if (splitArgs.size() == 1)
-		return client->sendMessage(
-			Server::getInstance().getPrefix(), RPL_CHANNELMODEIS,
-			client->getClientnickName() + " " + channel->getName() + " " +
-				channel->getModes());
-
-	if (splitArgs[1] == "b")
-		return sendBanList(client, channel);
-
-	if (!checkModes(client))
-		return;
-
-	if (!channel->isUserOperator(client))
-		return client->sendError(
-			ERR_CHANOPRIVSNEEDED,
-			client->getClientnickName() + " " + channel->getName(), _482);
-
-	size_t n = 2;
-	for (size_t i = 1; splitArgs[1][i]; ++i) {
-		if (Server::getInstance().getConfiguration().getValue("cpmodes").find(
-				splitArgs[1][i]) != std::string::npos) {
-
-			setMode(client, channel, splitArgs[1][0] == '+', splitArgs[1][i],
-					splitArgs[n]);
-			++n;
-		} else {
-			setMode(client, channel, splitArgs[1][0] == '+', splitArgs[1][i]);
-		}
-	}
-}
-
-void ModeCommand::parseModes(Client* client) const {
-	if (splitArgs.size() == 1)
-		return client->sendMessage(
-			Server::getInstance().getPrefix(), RPL_UMODEIS,
-			client->getClientnickName() + " " + client->getModes());
-
-	if (!checkModes(client))
-		return;
-
-	for (size_t i = 1; splitArgs[1][i]; ++i) {
-		setMode(client, splitArgs[1][0] == '+', splitArgs[1][i]);
-	}
-}
-
-void ModeCommand::setMode(Client* client, bool action, char mode,
-						  const std::string& param) const {
-	(void)param;
-	if (mode == 'a')
-		client->setAway(action);
-	else if (mode == 'i')
-		client->setInvisible(action);
-	else {
-		client->sendError(ERR_UMODEUNKNOWNFLAG,
-						  client->getClientnickName() + " " + mode, _501);
-		return;
-	}
-	client->sendMessage(Server::getInstance().getPrefix(), name,
-						client->getClientnickName() + " " +
-							(action ? "+" : "-") + std::string(1, mode));
-}
-
-void ModeCommand::setMode(Client* client, Channel* channel, bool action,
-						  char mode, const std::string& param) const {
-	if (mode == 'i')
-		channel->setInviteMode(action);
-	else if (mode == 't')
-		channel->setTopicLocked(action);
-	else if (mode == 'k')
-		channel->setPassword(action ? param : "");
-	else if (mode == 'o') {
-		Client* target = Server::getInstance().getClient(param);
-		if (!target)
-			return client->sendError(ERR_NOSUCHNICK,
-									 client->getClientnickName() + " " + param,
-									 _401);
-		if (!channel->isUserOnChannel(target))
-			return client->sendError(ERR_USERNOTINCHANNEL,
-									 client->getClientnickName() + " " + param +
-										 " " + channel->getName(),
-									 _441);
-		channel->addOperator(target);
-	} else if (mode == 'l')
-		channel->setUserLimit(action ? std::atoi(param.c_str()) : 0);
-	else if (mode == 'b') {
-		setBan(client, channel, action, param);
-	} else {
-		client->sendError(ERR_UMODEUNKNOWNFLAG,
-						  client->getClientnickName() + " " + mode, _501);
-		return;
-	}
-	channel->broadcast(client->getPrefix(), name,
-					   (action ? "+" : "-") + std::string(1, mode));
-}
-
-void ModeCommand::setBan(Client* client, Channel* channel, bool action,
-						 const std::string& ban) const {
-	if (!channel->checkBanSyntax(ban))
-		return client->sendError(ERR_NEEDMOREPARAMS,
-								 client->getClientnickName() + " MODE", _461);
-	if (action)
-		channel->addBan(ban);
-	else
-		channel->deleteBan(ban);
-	sendBanList(client, channel);
+void ModeCommand::sendModes(Client* client, Channel* channel) const {
+	return channel
+			   ? client->sendMessage(
+					 Server::getInstance().getPrefix(), RPL_CHANNELMODEIS,
+					 client->getClientnickName() + " " + channel->getName() +
+						 " " + channel->getModes())
+			   : client->sendMessage(
+					 Server::getInstance().getPrefix(), RPL_UMODEIS,
+					 client->getClientnickName() + " " + client->getModes());
 }
 
 void ModeCommand::sendBanList(Client* client, Channel* channel) const {
@@ -159,20 +57,127 @@ void ModeCommand::sendBanList(Client* client, Channel* channel) const {
 						_368);
 }
 
-void ModeCommand::execute(Client* client, const std::string& args) {
-	splitArgs = split(args, ' ');
-	if (needMoreParams(client, splitArgs)) {
+void ModeCommand::setMode(Client* client, const t_mode& mode) const {
+	if (mode.name == 'a')
+		client->setAway(mode.action);
+	else if (mode.name == 'i')
+		client->setInvisible(mode.action);
+	else {
+		client->sendError(ERR_UMODEUNKNOWNFLAG,
+						  client->getClientnickName() + " " + mode.name, _501);
 		return;
 	}
+	client->sendMessage(Server::getInstance().getPrefix(), name,
+						client->getClientnickName() + " " +
+							(mode.action ? "+" : "-") +
+							std::string(1, mode.name));
+}
+
+void ModeCommand::setMode(Client* client, Channel* channel,
+						  const t_mode& mode) const {
+	if (mode.name == 'i')
+		channel->setInviteMode(mode.action);
+	else if (mode.name == 't')
+		channel->setTopicLocked(mode.action);
+	else if (mode.name == 'k') {
+		if (mode.action && mode.param.empty())
+			return client->sendError(ERR_NEEDMOREPARAMS,
+									 client->getClientnickName() + " " + name,
+									 _461);
+		channel->setPassword(mode.action ? mode.param : "");
+	} else if (mode.name == 'l') {
+		if (mode.action && mode.param.empty())
+			return client->sendError(ERR_NEEDMOREPARAMS,
+									 client->getClientnickName() + " " + name,
+									 _461);
+		channel->setUserLimit(mode.action ? std::atoi(mode.param.c_str()) : 0);
+	} else if (mode.name == 'o') {
+		if (!setOperator(client, channel, mode))
+			return;
+	} else if (mode.name == 'b') {
+		if (!setBan(client, channel, mode))
+			return;
+	} else
+		return client->sendError(ERR_UMODEUNKNOWNFLAG,
+								 client->getClientnickName() + " " + mode.name,
+								 _501);
+
+	channel->broadcast(client->getPrefix(), name,
+					   (mode.action ? "+" : "-") + std::string(1, mode.name),
+					   mode.param);
+}
+
+bool ModeCommand::setBan(Client* client, Channel* channel,
+						 const t_mode& mode) const {
+	if (mode.param.empty() || !channel->checkBanSyntax(mode.param)) {
+		client->sendError(ERR_NEEDMOREPARAMS,
+						  client->getClientnickName() + " " + name, _461);
+		return false;
+	}
+
+	mode.action ? channel->addBan(mode.param) : channel->deleteBan(mode.param);
+	sendBanList(client, channel);
+	return true;
+}
+
+bool ModeCommand::setOperator(Client* client, Channel* channel,
+							  const t_mode& mode) const {
+	if (mode.param.empty()) {
+		client->sendError(ERR_NEEDMOREPARAMS,
+						  client->getClientnickName() + " " + name, _461);
+		return false;
+	}
+
+	Client* target = Server::getInstance().getClient(mode.param);
+
+	if (!target) {
+		client->sendError(ERR_NOSUCHNICK,
+						  client->getClientnickName() + " " +
+							  channel->getName() + " " + mode.param,
+						  _401);
+		return false;
+	}
+
+	if (!channel->isUserOnChannel(target)) {
+		client->sendError(ERR_USERNOTINCHANNEL,
+						  client->getClientnickName() + " " +
+							  channel->getName() + " " + mode.param,
+						  _441);
+		return false;
+	}
+
+	if (target->isBot()) {
+		client->sendError(
+			ERR_CHANOPRIVSNEEDED,
+			client->getClientnickName() + " " + channel->getName(),
+			"You are not permitted to remove the Guardian's powers");
+		return false;
+	}
+
+	try {
+		mode.action ? channel->addOperator(target)
+					: channel->removeOperator(target);
+	} catch (const std::logic_error& e) {
+		(void)e;
+		return false;
+	}
+
+	return true;
+}
+
+void ModeCommand::execute(Client* client, const std::string& args) {
+	std::vector<std::string> splitArgs = split(args, ' ');
+	if (needMoreParams(client, splitArgs))
+		return;
+
+	Channel* channel = NULL;
 
 	if (splitArgs[0][0] == '#') {
-		Channel* channel = Server::getInstance().getChannel(splitArgs[0]);
+		channel = Server::getInstance().getChannel(splitArgs[0]);
 		if (!channel)
 			return client->sendError(
 				ERR_NOSUCHCHANNEL,
 				client->getClientnickName() + " " + splitArgs[0], _403);
-
-		parseModes(client, channel);
 	} else {
 		try {
 			Server::getInstance().getClient(splitArgs[0]);
@@ -186,7 +191,25 @@ void ModeCommand::execute(Client* client, const std::string& args) {
 		if (client->getNickname() != splitArgs[0])
 			return client->sendError(ERR_USERSDONTMATCH,
 									 client->getClientnickName(), _502);
+	}
 
-		parseModes(client);
+	if (splitArgs.size() == 1)
+		return sendModes(client, channel);
+
+	if (channel && splitArgs[1] == "b")
+		return sendBanList(client, channel);
+
+	std::vector<t_mode> modes;
+	if (!createModes(client, modes, splitArgs))
+		return;
+
+	if (channel && !channel->isUserOperator(client))
+		return client->sendError(
+			ERR_CHANOPRIVSNEEDED,
+			client->getClientnickName() + " " + channel->getName(), _482);
+
+	for (size_t i = 0; i < modes.size(); ++i) {
+		channel ? setMode(client, channel, modes[i])
+				: setMode(client, modes[i]);
 	}
 }
