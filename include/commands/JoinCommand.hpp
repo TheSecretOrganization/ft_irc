@@ -24,7 +24,8 @@ class JoinCommand : public Command {
 	bool inviteOnlyChan(Client* client, Channel* channel) const;
 	void sendReplies(Client* client, Channel* channel) const;
 	void joinZero(Client* client) const;
-	bool splitArgs(Client* client, const std::string& args, std::vector<channel_t>& channels);
+	bool splitArgs(Client* client, const std::string& args,
+				   std::vector<channel_t>& channels);
 
   public:
 	JoinCommand();
