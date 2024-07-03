@@ -12,7 +12,7 @@ typedef struct s_mode {
 	std::string param;
 
 	s_mode() : action(false), name('\0'), param("") {}
-	s_mode(bool action, char name, std::string param)
+	s_mode(bool action, char name, const std::string& param)
 		: action(action), name(name), param(param) {}
 } t_mode;
 
