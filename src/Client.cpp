@@ -22,6 +22,7 @@ Client::~Client() {
 		if ((*it)->isUserOperator(this))
 			(*it)->removeOperator(this);
 		(*it)->removeUser(this);
+		Server::getInstance().deleteIfGhostChannel(*it);
 	}
 }
 
