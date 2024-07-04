@@ -22,6 +22,8 @@ Client::~Client() {
 		if ((*it)->isUserOperator(this))
 			(*it)->removeOperator(this);
 		(*it)->removeUser(this);
+		(*it)->broadcast(this->getPrefix(), "QUIT", "",
+						 "has been absorbed by the Black Hole");
 		Server::getInstance().deleteIfGhostChannel(*it);
 	}
 }
