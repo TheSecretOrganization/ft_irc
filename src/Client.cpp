@@ -15,7 +15,16 @@ Client::Client(int fd)
 	std::cout << "new client " << fd << std::endl;
 }
 
-Client::~Client() {}
+Client::~Client() {
+	std::vector<Channel*> channels = getJoinedChannels();
+	for (std::vector<Channel*>::iterator it = channels.begin();
+		 it != channels.end(); it++) {
+		if ((*it)->isUserOperator(this))
+			(*it)->removeOperator(this);
+		(*it)->removeUser(this);
+		Server::getInstance().deleteIfGhostChannel(*it);
+	}
+}
 
 ClientSocket& Client::getSocket() { return socket; }
 
